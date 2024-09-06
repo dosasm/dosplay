@@ -3,15 +3,15 @@
 	url = https://github.com/floooh/sokol.git
 [submodule "native/dosbox"]
 	path = native/dosbox
-	url = git@github.com:js-dos/dosbox.git
+	url = https://github.com/js-dos/dosbox.git
 [submodule "native/dosbox-x"]
 	path = native/dosbox-x
-	url = git@github.com:js-dos/dosbox-x.git
+	url = https://github.com/js-dos/dosbox-x.git
 [submodule "native/sockdrive"]
 	path = native/sockdrive
-	url = git@github.com:caiiiycuk/sockdrive.git
+	url = https://github.com/caiiiycuk/sockdrive.git
 	branch = main
 [submodule "native/sokol-tools-bin"]
 	path = native/sokol-tools-bin
-	url = git@github.com:floooh/sokol-tools-bin.git
+	url = https://github.com/floooh/sokol-tools-bin.git
 	branch = master
