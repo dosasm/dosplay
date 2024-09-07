@@ -4,31 +4,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>DOSASM</title>
   <script src="/dist/emulators.js"></script>
   <script src="/dist/test/audio-node.js"></script>
   <script src="/dist/test/webgl.js"></script>
 </head>
 
 <body>
-  <div class="layout">
-    <div id="controls">
-      <button id="dosboxWorker">dosboxWorker</button>
-      <button id="dosboxDirect">dosboxDirect</button>
-      <button id="xWorker">xWorker</button>
-      <button id="xDirect">xDirect</button>
+  <div class="container">
+    <div class="left-column">
+      <div class="layout">
+        <div id="controls">
+          <button id="dosboxWorker">dosboxWorker</button>
+          <button id="dosboxDirect">dosboxDirect</button>
+          <button id="xWorker">xWorker</button>
+          <button id="xDirect">xDirect</button>
+        </div>
+
+        <div>
+          Frame:
+          <canvas id="canvas"></canvas>
+          Stdout History:
+          <div id="terminal"></div>
+        </div>
+      </div>
+
+      <p id="stats"></p>
     </div>
-    <p>FRAME:</p>
-    <div>
-      <canvas id="canvas"></canvas>
-      <div id="terminal"></div>
-    </div>
-    <p id="stats"></p>
+    <div class="right-column">右栏内容</div>
   </div>
 
-  <script>
-
-  </script>
 </body>
 
 </html>

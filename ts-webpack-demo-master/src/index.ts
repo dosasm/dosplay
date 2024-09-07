@@ -2,10 +2,10 @@ import { Terminal } from "@xterm/xterm"
 import "./index.css"
 import Stats from "stats.js"
 import { HtmlKeyCode2jsdos } from "./key/map";
+import { Emulators } from "../dist/dist/types/emulators";
 
 
-
-declare const emulators: any
+declare const emulators: Emulators
 
 emulators.pathPrefix = "/dist/";
 
@@ -31,7 +31,7 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
     // promise is resolved when emulator is started
     const ci = await (options.worker ?
         (options.x ? emulators.dosboxXWorker(bundle) : emulators.dosboxWorker(bundle)) :
-        (options.x ? emulators.dosboxXDirect(bundle) : emulators.dosDirect(bundle)));
+        (options.x ? emulators.dosboxXDirect(bundle) : emulators.dosboxDirect(bundle)));
 
     let intervalStartedAt = Date.now();
     let prevNonSkippableSleepCount = 0;
@@ -69,32 +69,23 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
         term.write(message)
     });
 
-    // ci.events().onMessage(console.log.bind(console));
-
-    function getKeyCode(code: number) {
-        switch (code) {
-            case 13: return 257;
-            case 38: return 265;
-            case 39: return 262;
-            case 37: return 263;
-            case 40: return 264;
-            case 17: return 342;
-            case 190: return 46;
-            default: return code;
-        }
-    }
-
-    debugger
+    ci.events().onMessage(console.log.bind(console));
 
     window.addEventListener("keydown", (e) => {
-        ci.sendKeyEvent(HtmlKeyCode2jsdos(e.code), true);
-        e.stopPropagation();
-        e.preventDefault();
+        let ke = HtmlKeyCode2jsdos(e.code)
+        if (ke) {
+            ci.sendKeyEvent(ke, true);
+            e.stopPropagation();
+            e.preventDefault();
+        }
     });
     window.addEventListener("keyup", (e) => {
-        ci.sendKeyEvent(HtmlKeyCode2jsdos(e.code), false);
-        e.stopPropagation();
-        e.preventDefault();
+        let ke = HtmlKeyCode2jsdos(e.code)
+        if (ke) {
+            ci.sendKeyEvent(ke, false);
+            e.stopPropagation();
+            e.preventDefault();
+        }
     });
     canvas.addEventListener("mousemove", (e) => {
         ci.sendMouseMotion(
@@ -135,7 +126,7 @@ function downloadBundleAndRun(options: { x: boolean, worker: boolean }) {
 };
 
 
-document.getElementById("dosboxWorker")?.addEventListener("click",()=>downloadBundleAndRun({worker: true, x: false}))
-document.getElementById("dosboxDirect")?.addEventListener("click",()=>downloadBundleAndRun({worker: false, x: false}))
-document.getElementById("xWorker")?.addEventListener("click",()=>downloadBundleAndRun({worker: true, x: true}))
-document.getElementById("xDirect")?.addEventListener("click",()=>downloadBundleAndRun({worker: false, x: true}))
+document.getElementById("dosboxWorker")?.addEventListener("click", () => downloadBundleAndRun({ worker: true, x: false }))
+document.getElementById("dosboxDirect")?.addEventListener("click", () => downloadBundleAndRun({ worker: false, x: false }))
+document.getElementById("xWorker")?.addEventListener("click", () => downloadBundleAndRun({ worker: true, x: true }))
+document.getElementById("xDirect")?.addEventListener("click", () => downloadBundleAndRun({ worker: false, x: true }))
