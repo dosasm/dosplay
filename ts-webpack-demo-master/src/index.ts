@@ -1,6 +1,7 @@
 import { Terminal } from "@xterm/xterm"
 import "./index.css"
 import Stats from "stats.js"
+import { HtmlKeyCode2jsdos } from "./key/map";
 
 
 
@@ -83,13 +84,15 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
         }
     }
 
+    debugger
+
     window.addEventListener("keydown", (e) => {
-        ci.sendKeyEvent(getKeyCode(e.keyCode), true);
+        ci.sendKeyEvent(HtmlKeyCode2jsdos(e.code), true);
         e.stopPropagation();
         e.preventDefault();
     });
     window.addEventListener("keyup", (e) => {
-        ci.sendKeyEvent(getKeyCode(e.keyCode), false);
+        ci.sendKeyEvent(HtmlKeyCode2jsdos(e.code), false);
         e.stopPropagation();
         e.preventDefault();
     });

@@ -1,1 +1,11 @@
 @import url("~@xterm/xterm/css/xterm.css");
+
+#canvas{
+    display: inline;
+}
+#terminal{
+    display: inline;
+    position: absolute;
+    width: 640px;
+    height: 640px;
+}
