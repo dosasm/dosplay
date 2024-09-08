@@ -2,9 +2,10 @@ import { Terminal } from "@xterm/xterm"
 import "./index.css"
 import Stats from "stats.js"
 import { HtmlKeyCode2jsdos } from "./key/map";
-import { Emulators } from "../dist/dist/types/emulators";
+import { CommandInterface, Emulators } from "../dist/dist/types/emulators";
+import { FsNode } from "../dist/dist/types/protocol/protocol";
 
-
+let global_ci:CommandInterface|undefined=undefined;
 declare const emulators: Emulators
 
 emulators.pathPrefix = "/dist/";
@@ -55,6 +56,7 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
     }, 3000);
 
     (window as any).ci = ci;
+    global_ci=ci;
 
     //@ts-ignore
     webGl({
@@ -130,3 +132,33 @@ document.getElementById("dosboxWorker")?.addEventListener("click", () => downloa
 document.getElementById("dosboxDirect")?.addEventListener("click", () => downloadBundleAndRun({ worker: false, x: false }))
 document.getElementById("xWorker")?.addEventListener("click", () => downloadBundleAndRun({ worker: true, x: true }))
 document.getElementById("xDirect")?.addEventListener("click", () => downloadBundleAndRun({ worker: false, x: true }))
+function renderFileTree(nodes:FsNode[], container:HTMLDivElement|HTMLUListElement) {  
+    const ul = document.createElement('ul');  
+    nodes && nodes.forEach(item => {  
+        const li = document.createElement('li');  
+        li.textContent = item.name;  
+        li.className = item.nodes?"file":"folder"; // 简单的类名区分文件和文件夹  
+  
+        if (item.nodes && item.nodes.length > 0) {  
+            const childUl = document.createElement('ul');  
+            renderFileTree(item.nodes, childUl); // 递归渲染子文件夹  
+            li.appendChild(childUl);  
+        }  
+        ul.appendChild(li);  
+    });  
+  
+    container.appendChild(ul);  
+}  
+async function renderFileTreeHandle(){
+    const ele=document.getElementById("filetree") as HTMLDivElement;
+    const tree=await global_ci?.fsTree()
+    if (ele && tree){
+        ele.innerHTML=""
+        renderFileTree([tree], ele);
+    }
+}
+document.getElementById("filetree")?.addEventListener(
+    "click",renderFileTreeHandle
+)
+setInterval(renderFileTreeHandle, 1000);
+// renderFileTreeHandle()

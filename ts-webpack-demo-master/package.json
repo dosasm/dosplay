@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "html-webpack-plugin": "^5.6.0",
+    "jszip": "^3.10.1",
     "ts-loader": "^ 9.5.1",
     "typescript": "^5.5.4",
     "webpack": "^5.94.0"
