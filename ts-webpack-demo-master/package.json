@@ -1,5 +1,5 @@
 {
-  "name": "ts-webpack-demo",
+  "name": "jsdos_assembly_in_dos",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@types/stats.js": "^0.17.3",
     "@xterm/xterm": "^5.5.0",
+    "copy": "^0.3.2",
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^7.1.2",
     "mini-css-extract-plugin": "^2.9.1",

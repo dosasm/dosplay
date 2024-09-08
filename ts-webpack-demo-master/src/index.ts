@@ -2,13 +2,13 @@ import { Terminal } from "@xterm/xterm"
 import "./index.css"
 import Stats from "stats.js"
 import { HtmlKeyCode2jsdos } from "./key/map";
-import { CommandInterface, Emulators } from "../dist/dist/types/emulators";
-import { FsNode } from "../dist/dist/types/protocol/protocol";
+import { CommandInterface, Emulators } from "../jsdos/types/emulators";
+import { FsNode } from "../jsdos/types/protocol/protocol";
 
 let global_ci:CommandInterface|undefined=undefined;
 declare const emulators: Emulators
 
-emulators.pathPrefix = "/dist/";
+emulators.pathPrefix = "jsdos/";
 
 //changes
 const stats = new Stats();
@@ -110,7 +110,8 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
 
 function downloadBundleAndRun(options: { x: boolean, worker: boolean }) {
     (document.getElementById("controls") as HTMLDivElement).style.display = "none";
-    const bundleUrl = "/dist/test/helloworld.jsdos?timestamp=" + Date.now();
+    const ele=document.getElementById("jsdosbundle") as HTMLSelectElement;
+    const bundleUrl = `jsdos/bundle/${ele.value}.jsdos?timestamp=` + Date.now();
 
     // we need to download bundle, emulators accept only Uint8Array
     const xhr = new XMLHttpRequest();

@@ -5,9 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DOSASM</title>
-  <script src="/dist/emulators.js"></script>
-  <script src="/dist/test/audio-node.js"></script>
-  <script src="/dist/test/webgl.js"></script>
+  <script src="/jsdos/emulators.js"></script>
+  <script src="/jsdos/test/audio-node.js"></script>
+  <script src="/jsdos/test/webgl.js"></script>
 </head>
 
 <body>
@@ -15,6 +15,12 @@
     <div class="left-column">
       <div class="layout">
         <div id="controls">
+          <select id="jsdosbundle">
+            <option value="TASM">TASM</option>
+            <option value="MASM-v5.00">MASM-v5.00</option>
+            <option value="MASM-v6.11">MASM-v6.11</option>
+            <option value="helloworld" selected>helloworld</option>
+          </select>
           <button id="dosboxWorker">dosboxWorker</button>
           <button id="dosboxDirect">dosboxDirect</button>
           <button id="xWorker">xWorker</button>
@@ -32,7 +38,7 @@
         </div>
       </div>
       <p id="stats"></p>
-      <p id="filetree"> file tree  hello</p>
+      <p id="filetree"> file tree hello</p>
     </div>
     <div class="right-column">右栏内容</div>
   </div>
