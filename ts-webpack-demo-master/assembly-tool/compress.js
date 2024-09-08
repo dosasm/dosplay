@@ -45,11 +45,11 @@ function zipfoloder(folderPath) {
     // 将文件夹添加到zip  
     addFolderToZip(zip, folderPath);
 
-    if(zip.files[".jsdos"] && zip.files[".jsdos"]["dosbox.conf"]){
+    // if(zip.files[".jsdos"] && zip.files[".jsdos/dosbox.conf"]){
 
-    }else{
-        zip.file(".jsdos/dosbox.conf","")
-    }
+    // }else{
+    //     zip.file(".jsdos/dosbox.conf","")
+    // }
 
     // 生成ZIP文件  
     const outputPath = path.resolve(__dirname, path.basename(folderPath) + '.jsdos');

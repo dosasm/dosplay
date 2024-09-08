@@ -133,7 +133,7 @@ document.getElementById("dosboxWorker")?.addEventListener("click", () => downloa
 document.getElementById("dosboxDirect")?.addEventListener("click", () => downloadBundleAndRun({ worker: false, x: false }))
 document.getElementById("xWorker")?.addEventListener("click", () => downloadBundleAndRun({ worker: true, x: true }))
 document.getElementById("xDirect")?.addEventListener("click", () => downloadBundleAndRun({ worker: false, x: true }))
-function renderFileTree(nodes:FsNode[], container:HTMLDivElement|HTMLUListElement) {  
+function renderFileTree(nodes:FsNode[], container:HTMLDivElement|HTMLUListElement,path="./") {  
     const ul = document.createElement('ul');  
     nodes && nodes.forEach(item => {  
         const li = document.createElement('li');  
@@ -142,9 +142,19 @@ function renderFileTree(nodes:FsNode[], container:HTMLDivElement|HTMLUListElemen
   
         if (item.nodes && item.nodes.length > 0) {  
             const childUl = document.createElement('ul');  
-            renderFileTree(item.nodes, childUl); // 递归渲染子文件夹  
+            renderFileTree(item.nodes, childUl,path+item.name+"/"); // 递归渲染子文件夹  
             li.appendChild(childUl);  
-        }  
+        }else{
+            li.addEventListener("click",async function(){
+                let text=await global_ci?.fsReadFile(path+item.name)
+                let ele=document.getElementById("editor")
+                if(ele && text){
+                    // 创建一个TextDecoder实例，指定编码为'utf-8'  
+                    const decoder = new TextDecoder('utf-8');  
+                    ele.textContent=decoder.decode(text)
+                }
+            })
+        }
         ul.appendChild(li);  
     });  
   
