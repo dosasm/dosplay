@@ -165,7 +165,8 @@ async function renderFileTreeHandle(){
     const tree=await global_ci?.fsTree()
     if (ele && tree){
         ele.innerHTML=""
-        renderFileTree([tree], ele);
+        if(tree.nodes)
+        renderFileTree(tree.nodes, ele);
     }
 }
 document.getElementById("filetree")?.addEventListener(
