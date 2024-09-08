@@ -19,8 +19,8 @@
             <option value="TASM">TASM</option>
             <option value="MASM-v5.00">MASM-v5.00</option>
             <option value="MASM-v6.11">MASM-v6.11</option>
-            <option value="TurboC">TurboC</option>
-            <option value="helloworld" selected>helloworld</option>
+            <option value="TurboC" selected>TurboC</option>
+            <option value="helloworld">helloworld</option>
             <option value="dhry2">dhry2</option>
             <option value="mousetst">mousetst</option>
           </select>
@@ -35,9 +35,6 @@
           <br>
           <canvas id="canvas"></canvas>
           <br>
-          File Tree:
-          <br>
-          <div id="filetree"> file tree hello</div>
           Stdout History:
           <br>
           <div id="terminal"></div>
@@ -46,9 +43,14 @@
     </div>
     <div class="right-column">
       <p id="stats">Stats</p>
-      <button id="editor-reset">reset</button>
-      <button id="editor-write">write</button>
+      FileTree in the wasm
+      <div id="filetree"> file tree hello</div>
+      <button id="editor-reset" hidden>reset</button>
+      <label for="editor-path">path:</label>
       <input id="editor-path" type="text">
+      <button id="editor-write">write</button>
+      <button id="editor-download-file">download this file</button>
+      <button id="editor-download-bundle">download whole bundle</button>
       <br>
       <textarea id="editor" name="text-editor" cols="100" rows="40"></textarea>
     </div>

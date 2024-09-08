@@ -3,3 +3,7 @@
 If the code doesn’t compile, check Options > Directories and make sure that the path is set correctly (e.g., C:\TC\INCLUDE for the include directories). Also check Options > Linker and turn on linking for Graphics Library. 
 
 - https://www.codeproject.com/Articles/5358258/Revisiting-Borland-Turbo-C-Cplusplus-a-great-IDE-b
+
+A better copy maybe follows, but I have little knowledge to test them
+
+- https://winworldpc.com/product/borland-turbo-c/2x

@@ -7,7 +7,8 @@ import { FsNode } from "../jsdos/types/protocol/protocol";
 
 let global_ci: CommandInterface | undefined = undefined;
 let global_editor_focused: boolean = false;
-const editorPanel=(document.getElementById("editor") as HTMLTextAreaElement)
+const editorPanel = (document.getElementById("editor") as HTMLTextAreaElement)
+const path_ele = document.getElementById("editor-path") as HTMLInputElement
 
 declare const emulators: Emulators
 
@@ -159,8 +160,8 @@ function renderFileTree(nodes: FsNode[], container: HTMLDivElement | HTMLUListEl
                 if (text) {
                     // 创建一个TextDecoder实例，指定编码为'utf-8'  
                     const decoder = new TextDecoder('utf-8');
-                    const t=decoder.decode(text);
-                    editorPanel.value=t;
+                    const t = decoder.decode(text);
+                    editorPanel.value = t;
                     (document.getElementById("editor-path") as HTMLInputElement).value = path + item.name
                 }
             })
@@ -187,15 +188,48 @@ setInterval(renderFileTreeHandle, 1000);
 
 
 
+
 document.getElementById("editor-write")?.addEventListener("click", function () {
-    let path = (document.getElementById("editor-path") as HTMLInputElement).value;
-    let text = (document.getElementById("editor") as HTMLTextAreaElement).textContent;
+    let path = path_ele.value;
+    let text = (document.getElementById("editor") as HTMLTextAreaElement).value;
+    if (!text) {
+        return
+    }
     const e = new TextEncoder()
     if (text) {
         global_ci?.fsWriteFile(path, e.encode(text));
-        editorPanel.value=`writed`
+        editorPanel.value = `writed`
+        path_ele.value = ""
     }
 });
+
+function download(data: Uint8Array,filename:string) {
+    const blob = new Blob([data], { type: 'text/plain' });
+
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+}
+
+document.getElementById("editor-download-file")?.addEventListener(
+    "click", async function () {
+        if(!path_ele.value){return}
+        const data = await global_ci?.fsReadFile(path_ele.value)
+        if (data) {
+            download(data,path_ele.value)
+        }
+    }
+)
+document.getElementById("editor-download-bundle")?.addEventListener(
+    "click", async function () {
+        const data = await global_ci?.persist()
+        if (data) {
+            download(data,"bundle.jsdos")
+        }
+
+    }
+)
 
 editorPanel.addEventListener("focus", (e) => {
     global_editor_focused = true
