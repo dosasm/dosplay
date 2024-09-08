@@ -195,7 +195,7 @@ document.getElementById("editor-write")?.addEventListener("click", function () {
     }
     const e = new TextEncoder()
     if (text) {
-        global_ci?.fsWriteFile(path, e.encode(text));
+        global_ci?.fsWriteFile(path, e.encode(text.replace(/\n/g, '\r\n')));
         editorPanel.value = `writed`
         path_ele.value = ""
     }
