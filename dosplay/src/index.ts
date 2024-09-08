@@ -12,8 +12,6 @@ const path_ele = document.getElementById("editor-path") as HTMLInputElement
 
 declare const emulators: Emulators
 
-emulators.pathPrefix = "jsdos/";
-
 //changes
 const stats = new Stats();
 stats.showPanel(0);
@@ -121,7 +119,7 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
 function downloadBundleAndRun(options: { x: boolean, worker: boolean }) {
     (document.getElementById("controls") as HTMLDivElement).style.display = "none";
     const ele = document.getElementById("jsdosbundle") as HTMLSelectElement;
-    const bundleUrl = `jsdos/bundle/${ele.value}.jsdos?timestamp=` + Date.now();
+    const bundleUrl = emulators.pathPrefix+`/bundle/${ele.value}.jsdos?timestamp=` + Date.now();
 
     // we need to download bundle, emulators accept only Uint8Array
     const xhr = new XMLHttpRequest();

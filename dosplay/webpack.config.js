@@ -3,17 +3,17 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const devMode = process.env.NODE_ENV !== "production";
 const CopyPlugin = require('copy-webpack-plugin');
 const copy = require('copy');
+const path = require('path');
 const { fork } = require('child_process');
 
 fork("assembly-tool/compress.js")
 copy("../dist/types/**", "jsdos/types", function () { })
 
 module.exports = {
-  // 入口设置为ts
   entry: './src/index.ts',
-  // 输出文件
   output: {
-    filename: 'app.js'
+    filename: 'app.js',
+    publicPath: "./"
   },
   resolve: {
     // 模块导入 扩展名的处理，js、ts、tsx后缀的文件需要导入
@@ -78,4 +78,11 @@ module.exports = {
       template: './public/index.html'
     })
   ].concat(devMode ? [] : [new MiniCssExtractPlugin()]),
+  devServer: {
+    open: '/dosplay/', // And here
+    static: {
+      directory: path.join(__dirname, 'dist'),
+      publicPath: '/dosplay/',
+    },
+  },
 }
