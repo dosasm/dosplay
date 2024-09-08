@@ -5,7 +5,10 @@ import { HtmlKeyCode2jsdos } from "./key/map";
 import { CommandInterface, Emulators } from "../jsdos/types/emulators";
 import { FsNode } from "../jsdos/types/protocol/protocol";
 
-let global_ci:CommandInterface|undefined=undefined;
+let global_ci: CommandInterface | undefined = undefined;
+let global_editor_focused: boolean = false;
+const editorPanel=(document.getElementById("editor") as HTMLTextAreaElement)
+
 declare const emulators: Emulators
 
 emulators.pathPrefix = "jsdos/";
@@ -56,7 +59,7 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
     }, 3000);
 
     (window as any).ci = ci;
-    global_ci=ci;
+    global_ci = ci;
 
     //@ts-ignore
     webGl({
@@ -75,7 +78,7 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
 
     window.addEventListener("keydown", (e) => {
         let ke = HtmlKeyCode2jsdos(e.code)
-        if (ke) {
+        if (ke && !global_editor_focused) {
             ci.sendKeyEvent(ke, true);
             e.stopPropagation();
             e.preventDefault();
@@ -83,34 +86,40 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
     });
     window.addEventListener("keyup", (e) => {
         let ke = HtmlKeyCode2jsdos(e.code)
-        if (ke) {
+        if (ke && !global_editor_focused) {
             ci.sendKeyEvent(ke, false);
             e.stopPropagation();
             e.preventDefault();
         }
     });
     canvas.addEventListener("mousemove", (e) => {
-        ci.sendMouseMotion(
-            (e.clientX - canvas.offsetLeft) / canvas.width,
-            (e.clientY - canvas.offsetTop) / canvas.height);
-        e.stopPropagation();
-        e.preventDefault();
+        if (!global_editor_focused) {
+            ci.sendMouseMotion(
+                (e.clientX - canvas.offsetLeft) / canvas.width,
+                (e.clientY - canvas.offsetTop) / canvas.height);
+            e.stopPropagation();
+            e.preventDefault();
+        }
     });
     canvas.addEventListener("mousedown", (e) => {
-        ci.sendMouseButton(0, true);
-        e.stopPropagation();
-        e.preventDefault();
+        if (!global_editor_focused) {
+            ci.sendMouseButton(0, true);
+            e.stopPropagation();
+            e.preventDefault();
+        }
     });
     canvas.addEventListener("mouseup", (e) => {
-        ci.sendMouseButton(0, false);
-        e.stopPropagation();
-        e.preventDefault();
+        if (!global_editor_focused) {
+            ci.sendMouseButton(0, false);
+            e.stopPropagation();
+            e.preventDefault();
+        }
     });
 }
 
 function downloadBundleAndRun(options: { x: boolean, worker: boolean }) {
     (document.getElementById("controls") as HTMLDivElement).style.display = "none";
-    const ele=document.getElementById("jsdosbundle") as HTMLSelectElement;
+    const ele = document.getElementById("jsdosbundle") as HTMLSelectElement;
     const bundleUrl = `jsdos/bundle/${ele.value}.jsdos?timestamp=` + Date.now();
 
     // we need to download bundle, emulators accept only Uint8Array
@@ -133,44 +142,64 @@ document.getElementById("dosboxWorker")?.addEventListener("click", () => downloa
 document.getElementById("dosboxDirect")?.addEventListener("click", () => downloadBundleAndRun({ worker: false, x: false }))
 document.getElementById("xWorker")?.addEventListener("click", () => downloadBundleAndRun({ worker: true, x: true }))
 document.getElementById("xDirect")?.addEventListener("click", () => downloadBundleAndRun({ worker: false, x: true }))
-function renderFileTree(nodes:FsNode[], container:HTMLDivElement|HTMLUListElement,path="./") {  
-    const ul = document.createElement('ul');  
-    nodes && nodes.forEach(item => {  
-        const li = document.createElement('li');  
-        li.textContent = item.name;  
-        li.className = item.nodes?"file":"folder"; // 简单的类名区分文件和文件夹  
-  
-        if (item.nodes && item.nodes.length > 0) {  
-            const childUl = document.createElement('ul');  
-            renderFileTree(item.nodes, childUl,path+item.name+"/"); // 递归渲染子文件夹  
-            li.appendChild(childUl);  
-        }else{
-            li.addEventListener("click",async function(){
-                let text=await global_ci?.fsReadFile(path+item.name)
-                let ele=document.getElementById("editor")
-                if(ele && text){
+function renderFileTree(nodes: FsNode[], container: HTMLDivElement | HTMLUListElement, path = "./") {
+    const ul = document.createElement('ul');
+    nodes && nodes.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item.name;
+        li.className = item.nodes ? "file" : "folder"; // 简单的类名区分文件和文件夹  
+
+        if (item.nodes && item.nodes.length > 0) {
+            const childUl = document.createElement('ul');
+            renderFileTree(item.nodes, childUl, path + item.name + "/"); // 递归渲染子文件夹  
+            li.appendChild(childUl);
+        } else {
+            li.addEventListener("click", async function () {
+                let text = await global_ci?.fsReadFile(path + item.name)
+                if (text) {
                     // 创建一个TextDecoder实例，指定编码为'utf-8'  
-                    const decoder = new TextDecoder('utf-8');  
-                    ele.textContent=decoder.decode(text)
+                    const decoder = new TextDecoder('utf-8');
+                    const t=decoder.decode(text);
+                    editorPanel.value=t;
+                    (document.getElementById("editor-path") as HTMLInputElement).value = path + item.name
                 }
             })
         }
-        ul.appendChild(li);  
-    });  
-  
-    container.appendChild(ul);  
-}  
-async function renderFileTreeHandle(){
-    const ele=document.getElementById("filetree") as HTMLDivElement;
-    const tree=await global_ci?.fsTree()
-    if (ele && tree){
-        ele.innerHTML=""
-        if(tree.nodes)
-        renderFileTree(tree.nodes, ele);
+        ul.appendChild(li);
+    });
+
+    container.appendChild(ul);
+}
+async function renderFileTreeHandle() {
+    const ele = document.getElementById("filetree") as HTMLDivElement;
+    const tree = await global_ci?.fsTree()
+    if (ele && tree) {
+        ele.innerHTML = ""
+        if (tree.nodes)
+            renderFileTree(tree.nodes, ele);
     }
 }
 document.getElementById("filetree")?.addEventListener(
-    "click",renderFileTreeHandle
+    "click", renderFileTreeHandle
 )
 setInterval(renderFileTreeHandle, 1000);
 // renderFileTreeHandle()
+
+
+
+document.getElementById("editor-write")?.addEventListener("click", function () {
+    let path = (document.getElementById("editor-path") as HTMLInputElement).value;
+    let text = (document.getElementById("editor") as HTMLTextAreaElement).textContent;
+    const e = new TextEncoder()
+    if (text) {
+        global_ci?.fsWriteFile(path, e.encode(text));
+        editorPanel.value=`writed`
+    }
+});
+
+editorPanel.addEventListener("focus", (e) => {
+    global_editor_focused = true
+});
+editorPanel.addEventListener("blur", (e) => {
+    global_editor_focused = false
+});

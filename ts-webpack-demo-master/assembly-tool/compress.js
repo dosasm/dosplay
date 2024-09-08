@@ -15,7 +15,7 @@ function addFolderToZip(zip, folderPath, base = '') {
         } else {
             // 如果是文件，则添加到zip
             const ext=path.extname(filePath).toLocaleLowerCase()
-            const isTextFile=[".conf",".asm",".bat",".c"].some(x=>x==ext)
+            const isTextFile=[".conf",".asm",".bat",".c",".h",".map"].some(x=>x==ext)
             if (isTextFile) {
                 let text = fs.readFileSync(filePath, { encoding: 'utf-8' });
                 // 检查LF和CRLF的数量  
