@@ -57,3 +57,7 @@ li {
     height: 200px;
     background-color: beige;
 }
+
+#control-2{
+    display:none;
+}

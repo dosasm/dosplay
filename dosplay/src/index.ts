@@ -1,7 +1,7 @@
 import { Terminal } from "@xterm/xterm"
 import "./index.css"
 import Stats from "stats.js"
-import { HtmlKeyCode2jsdos } from "./key/map";
+import { HtmlKeyCode2jsdos, String2jsdosCode } from "./key/map";
 import { CommandInterface, Emulators } from "../jsdos/types/emulators";
 import { FsNode } from "../jsdos/types/protocol/protocol";
 
@@ -57,9 +57,6 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
         });
     }, 3000);
 
-    (window as any).ci = ci;
-    global_ci = ci;
-
     //@ts-ignore
     webGl({
         canvas,
@@ -114,23 +111,89 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
             e.preventDefault();
         }
     });
+
+    return ci
 }
 
 function downloadBundleAndRun(options: { x: boolean, worker: boolean }) {
     (document.getElementById("controls") as HTMLDivElement).style.display = "none";
     const ele = document.getElementById("jsdosbundle") as HTMLSelectElement;
-    const bundleUrl = emulators.pathPrefix+`/bundle/${ele.value}.jsdos?timestamp=` + Date.now();
+    const bundleUrl = emulators.pathPrefix + `/bundle/${ele.value}.jsdos?timestamp=` + Date.now();
 
     // we need to download bundle, emulators accept only Uint8Array
     const xhr = new XMLHttpRequest();
     xhr.open("GET", bundleUrl, true);
     xhr.overrideMimeType("text/plain; charset=x-user-defined");
     xhr.responseType = "arraybuffer";
-    xhr.onreadystatechange = () => {
+    xhr.onreadystatechange = async () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
             // do not forget to create Uint8Array, 
             // arraybuffer will not work!
-            runBundle(new Uint8Array(xhr.response), options);
+            const cipromise = runBundle(new Uint8Array(xhr.response), options);
+            let ctrl2 = (document.getElementById("controls-2") as HTMLDivElement);
+            ctrl2.hidden = false
+
+            const pause = document.createElement("button");
+            pause.innerText = "pause"
+            let isPause = true;
+            pause.addEventListener("click", () => {
+                if (isPause) {
+                    global_ci?.pause()
+                    pause.innerHTML = "resume"
+                } else {
+                    global_ci?.resume()
+                    pause.innerHTML = "pause"
+                }
+                isPause = !isPause
+            })
+            ctrl2.append(pause)
+
+            const ver = document.createElement("button");
+            ver.innerText = "Version"
+            ver.addEventListener("click", () => {
+                const codes = String2jsdosCode("ver");
+                for (const c of codes) {
+                    global_ci?.simulateKeyPress(...c)
+                }
+            })
+            ctrl2.append(ver)
+
+            const ci = await cipromise;
+            (window as any).ci = ci;
+            global_ci = ci;
+
+            const data = await global_ci?.fsReadFile("./.jsdos/button_commands.bat")
+
+            const decoder = new TextDecoder('utf-8');
+            const text = decoder.decode(data);
+            const cmds = text.split("@REM").map((val) => {
+                const lines = val.split("\n")
+                const name = lines[0].trim();
+                const cmd = lines.slice(1).join("\n").trim()
+                return { name, cmd }
+            }).filter(x => x.name && x.cmd);
+            for (const { name, cmd } of cmds) {
+
+                const button_cmd = document.createElement("button");
+                button_cmd.innerText = name
+                const codes = String2jsdosCode(cmd, false, false);
+                button_cmd.addEventListener("click", () => {
+                    let i = 0;
+                    const id = setInterval(() => {
+                        if (i >= codes.length) {
+                            clearInterval(id)
+                            setTimeout(() => {
+                                global_ci?.simulateKeyPress(257)
+                            }, 1000);
+                        }
+                        global_ci?.simulateKeyPress(...codes[i])
+                        i++
+                    }, 100);
+                    
+                })
+                ctrl2.append(button_cmd)
+
+            }
         }
     };
     xhr.send();
@@ -201,7 +264,7 @@ document.getElementById("editor-write")?.addEventListener("click", function () {
     }
 });
 
-function download(data: Uint8Array,filename:string) {
+function download(data: Uint8Array, filename: string) {
     const blob = new Blob([data], { type: 'text/plain' });
 
     const link = document.createElement('a');
@@ -212,10 +275,10 @@ function download(data: Uint8Array,filename:string) {
 
 document.getElementById("editor-download-file")?.addEventListener(
     "click", async function () {
-        if(!path_ele.value){return}
+        if (!path_ele.value) { return }
         const data = await global_ci?.fsReadFile(path_ele.value)
         if (data) {
-            download(data,path_ele.value)
+            download(data, path_ele.value)
         }
     }
 )
@@ -223,7 +286,7 @@ document.getElementById("editor-download-bundle")?.addEventListener(
     "click", async function () {
         const data = await global_ci?.persist()
         if (data) {
-            download(data,"bundle.jsdos")
+            download(data, "bundle.jsdos")
         }
 
     }
@@ -235,3 +298,5 @@ editorPanel.addEventListener("focus", (e) => {
 editorPanel.addEventListener("blur", (e) => {
     global_editor_focused = false
 });
+
+console.log("fuck")
