@@ -13,7 +13,6 @@ module.exports = {
   entry: './src/index.ts',
   output: {
     filename: 'app.js',
-    publicPath: "./"
   },
   resolve: {
     // 模块导入 扩展名的处理，js、ts、tsx后缀的文件需要导入
@@ -75,14 +74,15 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       // 自动在html中导入 output里配置的输出的js
-      template: './public/index.html'
+      template: './public/index.html',
+      publicPath:"/dosplay/"
     })
   ].concat(devMode ? [] : [new MiniCssExtractPlugin()]),
   devServer: {
-    open: '/dosplay/', // And here
-    static: {
-      directory: path.join(__dirname, 'dist'),
-      publicPath: '/dosplay/',
-    },
+    proxy:[{
+      context: ['/dosplay'],
+      target: 'http://localhost:8080',
+      pathRewrite: { '^/dosplay': '' },
+    }],
   },
 }
