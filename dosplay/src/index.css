@@ -33,7 +33,7 @@
 .right-column {
     width: 50%;
     /* 右栏宽度 */
-    /* background-color: lightgreen; */
+    background-color: lightgreen;
     margin-left: 2%;
     /* 可选，为右栏添加一些左边距，使其与左栏有一定间隔 */
 }
@@ -56,8 +56,5 @@ li {
     overflow-y: scroll;
     height: 200px;
     background-color: beige;
-}
-
-#control-2{
-    display:none;
+    width: 50%;
 }

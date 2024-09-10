@@ -167,6 +167,7 @@ function downloadBundleAndRun(options: { x: boolean, worker: boolean }) {
             const decoder = new TextDecoder('utf-8');
             const text = decoder.decode(data);
             const cmds = text.split("@REM").map((val) => {
+                val=val.replace(/\r\n/g,"\n")
                 const lines = val.split("\n")
                 const name = lines[0].trim();
                 const cmd = lines.slice(1).join("\n").trim()
