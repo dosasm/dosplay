@@ -7,7 +7,7 @@
     "dev": "webpack-dev-server --config ./webpack.config.js --mode development",
     "build": "webpack --config ./webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "gh-pages -d dist --no-history --remote gh" 
+    "deploy": "gh-pages -d dist --no-history --remote gh"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +22,7 @@
   "devDependencies": {
     "@types/stats.js": "^0.17.3",
     "@xterm/xterm": "^5.5.0",
+    "ace-builds": "^1.36.2",
     "copy": "^0.3.2",
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^7.1.2",

@@ -4,13 +4,15 @@ import Stats from "stats.js"
 import { HtmlKeyCode2jsdos, String2jsdosCode } from "./key/map";
 import { CommandInterface, Emulators } from "../jsdos/types/emulators";
 import { FsNode } from "../jsdos/types/protocol/protocol";
+import ace from "ace-builds"
 
 let global_ci: CommandInterface | undefined = undefined;
 let global_editor_focused: boolean = false;
-const editorPanel = (document.getElementById("editor") as HTMLTextAreaElement)
 const path_ele = document.getElementById("editor-path") as HTMLInputElement
 
 declare const emulators: Emulators
+const editor=ace.edit("editor");
+(window as any).editor=editor;
 
 //changes
 const stats = new Stats();
@@ -22,12 +24,12 @@ document.body.appendChild(stats.dom);
 let runId = 0;
 var term = new Terminal();
 const ele = document.getElementById('terminal') as HTMLDivElement
+const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 term.open(ele);
 
 async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: boolean }) {
     const id = runId++;
     const stdout = document.getElementById("stdout") as HTMLPreElement;
-    const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     const gl = canvas.getContext("webgl");
     const statsEl = document.getElementById("stats") as HTMLParagraphElement;
 
@@ -162,7 +164,13 @@ function downloadBundleAndRun(options: { x: boolean, worker: boolean }) {
             (window as any).ci = ci;
             global_ci = ci;
 
-            const data = await global_ci?.fsReadFile("./.jsdos/button_commands.bat")
+            const nodes=await global_ci.fsTree();
+            if(!nodes) return
+            const profile=nodes.nodes?.find(v=>v.name==".jsdos");
+            if(!profile) return
+            const profile1=profile.nodes?.find(v=>v.name=="button_commands.bat");
+            if(!profile1) return
+            const data = await global_ci?.fsReadFile("./.jsdos/button_commands.bat");
 
             const decoder = new TextDecoder('utf-8');
             const text = decoder.decode(data);
@@ -223,7 +231,7 @@ function renderFileTree(nodes: FsNode[], container: HTMLDivElement | HTMLUListEl
                     // 创建一个TextDecoder实例，指定编码为'utf-8'  
                     const decoder = new TextDecoder('utf-8');
                     const t = decoder.decode(text);
-                    editorPanel.value = t;
+                    editor.setValue(t);
                     (document.getElementById("editor-path") as HTMLInputElement).value = path + item.name
                 }
             })
@@ -253,14 +261,14 @@ setInterval(renderFileTreeHandle, 1000);
 
 document.getElementById("editor-write")?.addEventListener("click", function () {
     let path = path_ele.value;
-    let text = (document.getElementById("editor") as HTMLTextAreaElement).value;
+    let text = editor.getValue();
     if (!text) {
         return
     }
     const e = new TextEncoder()
     if (text) {
         global_ci?.fsWriteFile(path, e.encode(text.replace(/\n/g, '\r\n')));
-        editorPanel.value = `writed`
+        editor.setValue(`writed to file ${path}`);
         path_ele.value = ""
     }
 });
@@ -293,11 +301,16 @@ document.getElementById("editor-download-bundle")?.addEventListener(
     }
 )
 
-editorPanel.addEventListener("focus", (e) => {
+editor.container.addEventListener("focus", (e) => {
     global_editor_focused = true
 });
-editorPanel.addEventListener("blur", (e) => {
+editor.container.addEventListener("click", (e) => {
+    global_editor_focused = true
+});
+editor.container.addEventListener("blur", (e) => {
+    global_editor_focused = false
+});
+canvas.addEventListener("click", (e) => {
     global_editor_focused = false
 });
 
-console.log("fuck")

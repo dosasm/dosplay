@@ -58,3 +58,9 @@ li {
     background-color: beige;
     width: 50%;
 }
+
+#editor {
+    position: absolute;
+    width: 700px;
+    height: 50%;
+}
