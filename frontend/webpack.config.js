@@ -47,21 +47,9 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: "../dist/*.*",
+          from: "./node_modules/emulators/dist/*.*",
           to({ context, absoluteFilename }) {
             return Promise.resolve("jsdos/[name][ext]");
-          },
-        },
-        {
-          from: "../dist/test/*.js",
-          to({ context, absoluteFilename }) {
-            return Promise.resolve("jsdos/test/[name][ext]");
-          },
-        },
-        {
-          from: "../dist/test/*.jsdos",
-          to({ context, absoluteFilename }) {
-            return Promise.resolve("jsdos/bundle/[name][ext]");
           },
         },
         {

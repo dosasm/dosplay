@@ -1,8 +1,7 @@
 import { Terminal } from "@xterm/xterm"
 import "./index.css"
 import Stats from "stats.js"
-import { HtmlKeyCode2jsdos, String2jsdosCode } from "./key/map";
-import {CommandInterface,get_emulators } from "emulators"
+import {CommandInterface,get_emulators,utils } from "emulators"
 import ace from "ace-builds"
 import { FsNode } from "emulators/dist/out/protocol/protocol";
 import {webGl} from "./webgl"
@@ -78,7 +77,7 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
     ci
 
     window.addEventListener("keydown", (e) => {
-        let ke = HtmlKeyCode2jsdos(e.code)
+        let ke = utils.HtmlKeyCode2jsdos(e.code)
         if (ke && !global_editor_focused) {
             ci.sendKeyEvent(ke, true);
             e.stopPropagation();
@@ -86,7 +85,7 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
         }
     });
     window.addEventListener("keyup", (e) => {
-        let ke = HtmlKeyCode2jsdos(e.code)
+        let ke = utils.HtmlKeyCode2jsdos(e.code)
         if (ke && !global_editor_focused) {
             ci.sendKeyEvent(ke, false);
             e.stopPropagation();
@@ -156,7 +155,7 @@ function downloadBundleAndRun(options: { x: boolean, worker: boolean }) {
             const ver = document.createElement("button");
             ver.innerText = "Version"
             ver.addEventListener("click", () => {
-                const codes = String2jsdosCode("ver");
+                const codes = utils.String2jsdosCode("ver");
                 for (const c of codes) {
                     global_ci?.simulateKeyPress(...c)
                 }
@@ -188,7 +187,7 @@ function downloadBundleAndRun(options: { x: boolean, worker: boolean }) {
 
                 const button_cmd = document.createElement("button");
                 button_cmd.innerText = name
-                const codes = String2jsdosCode(cmd, false, false);
+                const codes = utils.String2jsdosCode(cmd, false, false);
                 codes.unshift([257]); // add a enter key to prevent previous program not exit
                 button_cmd.addEventListener("click", () => {
                     let i = 0;

@@ -1,6 +1,5 @@
 import { readFile } from "fs/promises";
-import { CommandInterface, get_emulators } from "emulators";
-import { String2jsdosCode } from './key/map';
+import { CommandInterface, get_emulators,utils } from "emulators";
 
 
 export async function simple_cli(wasm_prefix:string,bundlepath:string,log_message = true, log_ci = true,plugins:Array<(ci:CommandInterface)=>void> = []) {
@@ -29,7 +28,7 @@ export async function simple_cli(wasm_prefix:string,bundlepath:string,log_messag
     process.stdin.on('data', async (data) => {
         
         const chars = String(data);
-        const jsdos = String2jsdosCode(chars);
+        const jsdos = utils.String2jsdosCode(chars);
         if(log_ci){
             console.log('data', data,jsdos);
         }

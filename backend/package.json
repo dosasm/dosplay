@@ -1,11 +1,12 @@
 {
     "dependencies": {
-        "emulators": "file:../../emulators/emulators-v8.3.3-dosasm1.tgz",
+        "emulators": "file:../../emulators/emulators-v8.3.3-dosasm2.tgz",
         "typescript": "^5.5.4",
         "ws": "^8.18.0"
     },
     "scripts": {
-        "dev": "tsc -w -p ."
+        "dev": "tsc -w -p .",
+        "build": "tsc  -p ."
     },
     "devDependencies": {
         "@types/ws": "^8.5.13"
