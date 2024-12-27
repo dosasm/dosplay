@@ -1,0 +1,66 @@
+@import url("~@xterm/xterm/css/xterm.css");
+
+#canvas {
+    background-color: beige;
+    width: 640px;
+    height: 400px;
+}
+
+#terminal {
+    width: 640px;
+    height: 400px;
+}
+
+.container {
+    overflow: auto;
+    /* 防止浮动造成的父容器高度塌陷 */
+}
+
+.left-column,
+.right-column {
+    float: left;
+    /* 左栏浮动 */
+    height: 100%;
+    /* 示例高度 */
+}
+
+.left-column {
+    /* width: 640px; */
+    /* 左栏宽度 */
+    background-color: lightblue;
+}
+
+.right-column {
+    width: 50%;
+    /* 右栏宽度 */
+    background-color: lightgreen;
+    margin-left: 2%;
+    /* 可选，为右栏添加一些左边距，使其与左栏有一定间隔 */
+}
+
+ul {  
+    list-style-type: none;  
+}  
+li {  
+    margin-left: 20px;  
+}  
+.folder {  
+    color: blue;  
+}  
+.file {  
+    color: green;  
+} 
+
+#filetree{
+    /* position: absolute; */
+    overflow-y: scroll;
+    height: 200px;
+    background-color: beige;
+    width: 50%;
+}
+
+#editor {
+    position: absolute;
+    width: 700px;
+    height: 50%;
+}
