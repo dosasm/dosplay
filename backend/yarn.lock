@@ -16,9 +16,9 @@
   dependencies:
     "@types/node" "*"
 
-"emulators@file:../../emulators-v8.3.3-6.tgz":
-  version "8.3.3"
-  resolved "file:../../emulators-v8.3.3-6.tgz#dcf881260e4382380f2f6981c936e31dde1fa5f7"
+"emulators@file:../../emulators/emulators-v8.3.3-dosasm1.tgz":
+  version "8.3.3-dosasm1"
+  resolved "file:../../emulators/emulators-v8.3.3-dosasm1.tgz#933bdfa885fba6352a0c3bafa0eda4ccff6aaa0f"
 
 typescript@^5.5.4:
   version "5.7.2"

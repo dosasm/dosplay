@@ -1,6 +1,6 @@
 {
     "dependencies": {
-        "emulators": "file:../../emulators-v8.3.3-6.tgz",
+        "emulators": "file:../../emulators/emulators-v8.3.3-dosasm1.tgz",
         "typescript": "^5.5.4",
         "ws": "^8.18.0"
     },
