@@ -1,0 +1,13 @@
+{
+    "dependencies": {
+        "emulators": "file:../../emulators-v8.3.3-6.tgz",
+        "typescript": "^5.5.4",
+        "ws": "^8.18.0"
+    },
+    "scripts": {
+        "dev": "tsc -w -p ."
+    },
+    "devDependencies": {
+        "@types/ws": "^8.5.13"
+    }
+}
