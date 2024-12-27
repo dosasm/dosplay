@@ -1,3 +1,5 @@
+import { CommandInterface } from "emulators";
+
 // 顶点着色器源码，这里定义为字符串类型常量
 const vsSource: string = `
 attribute vec4 aVertexPosition;
@@ -23,9 +25,9 @@ void main(void) {
 `;
 
 // webGl函数接受特定类型的参数，并返回void（无返回值）
-export function webGl(layers: any, ci: any, stats: any): void {
+export function webGl(layers: HTMLCanvasElement, ci: CommandInterface, stats: Stats): void {
     // 获取canvas元素，并断言其不为null（因为后续要使用其方法）
-    const canvas = layers.canvas as HTMLCanvasElement;
+    const canvas = layers;
     if (!canvas) {
         throw new Error("Canvas element not found in layers object");
     }
@@ -78,12 +80,14 @@ export function webGl(layers: any, ci: any, stats: any): void {
         canvas.style.width = width + "px";
         canvas.style.height = height + "px";
     };
-    const onResizeLayer = (w: number, h: number) => {
+    const onResizeLayer = (event:UIEvent) => {
+        const w = layers.width;
+        const h = layers.height;
         containerWidth = w;
         containerHeight = h;
         onResize();
     };
-    layers.addOnResize(onResizeLayer);
+    window.addEventListener('resize', onResizeLayer);
     const onResizeFrame = (w: number, h: number) => {
         frameWidth = w;
         frameHeight = h;
@@ -114,7 +118,7 @@ export function webGl(layers: any, ci: any, stats: any): void {
         frame = null;
     };
     ci.events().onExit(() => {
-        layers.removeOnResize(onResizeLayer);
+        layers.removeEventListener("resize",onResizeLayer);
     });
 }
 // 将webGl函数添加到exports对象上，以便外部使用（在符合相应模块规范的场景下）

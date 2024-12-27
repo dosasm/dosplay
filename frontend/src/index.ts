@@ -6,6 +6,7 @@ import ace from "ace-builds"
 import { FsNode } from "emulators/dist/out/protocol/protocol";
 import {webGl} from "./webgl"
 import {audioNode} from "./audionode"
+import { RemoteCI } from "./remote_ci"
 
 let global_ci: CommandInterface | undefined = undefined;
 let global_editor_focused: boolean = false;
@@ -62,10 +63,7 @@ async function runBundle(bundle: Uint8Array, options: { x: boolean, worker: bool
         });
     }, 3000);
 
-    webGl({
-        canvas,
-        addOnResize: () => { },
-    }, ci, stats);
+    webGl(canvas, ci, stats);
     audioNode(ci);
 
     ci.events().onStdout((message: string) => {
@@ -321,17 +319,8 @@ canvas.addEventListener("click", (e) => {
 
 const url=window.location.href;
 const urlObj=new URL(url);
-const socket=new WebSocket(`ws://${urlObj.hostname}:8091/frame`);
-socket.binaryType = 'arraybuffer';
-
-socket.addEventListener('open', () => {
-    const float32Array = new Float32Array([1.0, 2.0, 3.0]);
-    const buffer = float32Array.buffer;
-    socket.send(buffer);
-});
-
-socket.addEventListener('message', (event: MessageEvent) => {
-    const receivedBuffer = event.data;
-    const receivedArray = new Uint8Array(receivedBuffer);
-    console.log('Received response Uint8Array:', receivedArray);
-});
+const remote_ci=new RemoteCI(`ws://${urlObj.hostname}:8091`);
+(window as any).ci=remote_ci;
+remote_ci.ready.then(async ()=>{
+    webGl(canvas, remote_ci, stats);
+})

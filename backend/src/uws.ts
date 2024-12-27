@@ -47,6 +47,28 @@ export function start_websocket(ci:CommandInterface,port:number) {
         }
     });
 
+    app.ws('/config', {
+        open: (ws) => {
+            console.log('Client connected');
+        },
+        message: async (ws, message: ArrayBuffer, isBinary: boolean) => {
+            if (isBinary) {
+                console.log('Received ', message);
+            }else{
+                const data:any=Buffer.from(message).toString();
+                console.log('Received ', data,isBinary);
+                const {id,cmd,args}=JSON.parse(data);
+                const r=await (ci as any)[cmd](...args)
+                const response=JSON.stringify({id,data:r});
+                ws.send(response,false);
+            }
+            
+        },
+        close: (ws, code, message) => {
+            console.log('Client disconnected');
+        }
+    });
+
     app.listen(port, (listenSocket) => {
         console.log('Server started successfully, listening on port ' + port);
         console.log(listenSocket);

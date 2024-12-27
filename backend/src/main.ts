@@ -16,6 +16,7 @@ const jsdos_bundles={
 
 async function main() {
     const argv=await yargs_opt.parse();
+    console.log(argv)
 
     process.stdin.setEncoding('utf8');
     process.stdin.on('data', async (data) => {
