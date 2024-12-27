@@ -15,6 +15,7 @@ export function serve_data_via_ws(ci: CommandInterface) {
         ws.send('connected');
 
         ci.events().onSoundPush((data) => {
+            console.trace(data.length)
             ws.send(data)
         }
         )
