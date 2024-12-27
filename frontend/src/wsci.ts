@@ -1,94 +1,115 @@
-import { CommandInterface, DosConfig, NetworkType } from "emulators";
+import { CommandInterface, CommandInterfaceEvents, DosConfig, NetworkType } from "emulators";
 import { AsyncifyStats, FsNode } from "emulators/dist/out/protocol/protocol";
 
 class RemoteCI implements CommandInterface {
     private ws: WebSocket;
+    private basic = { height: 600, width: 800, soundFrequency: 44100 };
+    private id = 0;
+    private listeners: Map<string, (data: any) => void> = new Map();
+
+    private send_command(type: string, data: any): Promise<any> {
+        return new Promise((resolve) => {
+            const id = this.id++;
+            this.ws.send(JSON.stringify({ id, type, data }));
+            this.listeners.set(id.toString(), (data: any) => {
+                resolve(data);
+                this.listeners.delete(id.toString());
+            });
+        });
+    }
+
+    private sync_basic() {
+        this.send_command("basic", {}).then((data) => {
+            this.basic = data;
+        });
+    }
 
     constructor(ws: WebSocket) {
         this.ws = ws;
+        this.ws.onmessage = (event) => {
+            if (typeof event.data === "string") {
+                const data = JSON.parse(event.data);
+                if (data.id) {
+                    const func = this.listeners.get(data.id)
+                    if (func) func(data.data);
+                }
+            }
+            if (event.data instanceof ArrayBuffer) {
+                const data = new Uint8Array(event.data);
+                const id = data[0];
+                const func = this.listeners.get(id.toString());
+                if (func) func(data);
+            }
+        }
+        this.sync_basic();
     }
 
-    config = async (): Promise<DosConfig> => {
-        this.ws.send(JSON.stringify({ type: "config" }));
-        return new Promise((resolve) => {
-            this.ws.onmessage = (event) => {
-                resolve(JSON.parse(event.data));
-            };
-        });
+    async config(): Promise<DosConfig> {
+        const data = this.send_command("config", {});
+        return data;
     };
 
-    height = (): number => {
-        // Implement the logic to get height
-        return 600; // Example value
+    height(): number {
+        return this.basic.height;
     };
 
-    width = (): number => {
-        // Implement the logic to get width
-        return 800; // Example value
+    width(): number {
+        return this.basic.width;
     };
 
-    soundFrequency = (): number => {
-        // Implement the logic to get sound frequency
-        return 44100; // Example value
+    soundFrequency(): number {
+        return this.basic.soundFrequency;
     };
 
-    screenshot = async (): Promise<ImageData> => {
-        this.ws.send(JSON.stringify({ type: "screenshot" }));
-        return new Promise((resolve) => {
-            this.ws.onmessage = (event) => {
-                const imageData = new ImageData(new Uint8ClampedArray(event.data), this.width(), this.height());
-                resolve(imageData);
-            };
-        });
+    async screenshot(): Promise<ImageData> {
+        const data = await this.send_command("screenshot", {});
+        const imageData = new ImageData(new Uint8ClampedArray(data), this.width(), this.height());
+        return imageData;
     };
 
     pause = (): void => {
-        this.ws.send(JSON.stringify({ type: "pause" }));
+        this.send_command("pause", {});
     };
 
     resume = (): void => {
-        this.ws.send(JSON.stringify({ type: "resume" }));
+        this.send_command("resume", {});
     };
 
     mute = (): void => {
-        this.ws.send(JSON.stringify({ type: "mute" }));
+        this.send_command("mute", {});
     };
 
     unmute = (): void => {
-        this.ws.send(JSON.stringify({ type: "unmute" }));
+        this.send_command("unmute", {});
     };
 
     sendKeyEvent = (keyCode: number, pressed: boolean): void => {
-        this.ws.send(JSON.stringify({ type: "keyEvent", keyCode, pressed }));
+        this.send_command("keyEvent", [keyCode, pressed]);
     };
 
     sendMouseMotion = (x: number, y: number): void => {
-        this.ws.send(JSON.stringify({ type: "mouseMotion", x, y }));
+        this.send_command("mouseMotion", [x, y]);
     };
 
     sendMouseRelativeMotion = (x: number, y: number): void => {
-        this.ws.send(JSON.stringify({ type: "mouseRelativeMotion", x, y }));
+        this.send_command("mouseRelativeMotion", [x, y]);
     };
 
     sendMouseButton = (button: number, pressed: boolean): void => {
-        this.ws.send(JSON.stringify({ type: "mouseButton", button, pressed }));
+        this.send_command("mouseButton", [button, pressed]);
     };
 
     sendMouseSync = (): void => {
-        this.ws.send(JSON.stringify({ type: "mouseSync" }));
+        this.send_command("mouseSync", {});
     };
 
     sendBackendEvent = (event: any): void => {
-        this.ws.send(JSON.stringify({ type: "backendEvent", event }));
+        this.send_command("backendEvent", event);
     };
 
     persist = async (onlyChanges?: boolean): Promise<Uint8Array | null> => {
-        this.ws.send(JSON.stringify({ type: "persist", onlyChanges }));
-        return new Promise((resolve) => {
-            this.ws.onmessage = (event) => {
-                resolve(new Uint8Array(event.data));
-            };
-        });
+        const data = await this.send_command("persist", { onlyChanges });
+        return new Uint8Array(data);
     };
 
     networkConnect = async (networkType: NetworkType, address: string): Promise<void> => {
@@ -158,65 +179,13 @@ class RemoteCI implements CommandInterface {
         this.ws.send(JSON.stringify({ type: "keypress", keyCodes }));
     };
 
-    shell = (cmd: string): void => {
-        this.ws.send(JSON.stringify({ type: "shell", cmd }));
-    };
 
     exit = async (): Promise<void> => {
         this.ws.send(JSON.stringify({ type: "exit" }));
     };
 
-    events = (): any => {
-        throw new Error("Method not implemented.");
-    };
-}
-    width: () => number;
-    soundFrequency: () => number;
-    screenshot: () => Promise<ImageData>;
-    pause: () => void;
-    resume: () => void;
-    mute: () => void;
-    unmute: () => void;
-    sendKeyEvent: (keyCode: number, pressed: boolean) => void;
-    sendMouseMotion: (x: number, y: number) => void;
-    sendMouseRelativeMotion: (x: number, y: number) => void;
-    sendMouseButton: (button: number, pressed: boolean) => void;
-    sendMouseSync: () => void;
-    sendBackendEvent: (event: any) => void;
-    persist(onlyChanges?: boolean): Promise<Uint8Array | null> {
+    public events(): CommandInterfaceEvents {
         throw new Error("Method not implemented.");
     }
-    networkConnect(networkType: NetworkType, address: string): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-    networkDisconnect(networkType: NetworkType): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-    asyncifyStats(): Promise<AsyncifyStats> {
-        throw new Error("Method not implemented.");
-    }
-    fsTree(): Promise<FsNode> {
-        throw new Error("Method not implemented.");
-    }
-    fsReadFile(file: string): Promise<Uint8Array> {
-        throw new Error("Method not implemented.");
-    }
-    fsWriteFile(file: string, contents: ReadableStream<Uint8Array> | Uint8Array): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-    fsDeleteFile(file: string): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-    simulateKeyPress(...keyCodes: number[]): void {
-        this.ws.send(JSON.stringify({type:"keypress", keyCodes: keyCodes}));
-    }
-    shell(cmd: string): void {
-        this.ws.send(JSON.stringify({type:"shell",cmd:cmd}));
-    }
-    async exit(): Promise<void> {
-        this.ws.send(JSON.stringify({type:"exit"}));
-    }
-    events(): any {
-        throw new Error("Method not implemented.");
-    }
+
 }

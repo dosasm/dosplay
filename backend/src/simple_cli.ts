@@ -1,7 +1,6 @@
 import { readFile } from "fs/promises";
-import { CommandInterface, get_emulators, utils } from "emulators";
-import { serve_data_via_ws } from "./server";
-import { WebSocketServer } from "ws";
+import {  get_emulators, utils } from "emulators";
+import { App,start_websocket } from "./uws";
 
 export enum LogType {
     stdout="",
@@ -14,7 +13,7 @@ function log(type: LogType, message: string) {
 }
 
 
-export async function simple_cli(wasm_prefix: string, bundlepath: string) {
+export async function simple_cli(wasm_prefix: string, bundlepath: string,wsport?:number) {
 
     const bundle: Buffer = await readFile(bundlepath, { encoding: null });
     const bundleUint8Array = new Uint8Array(bundle);
@@ -33,7 +32,7 @@ export async function simple_cli(wasm_prefix: string, bundlepath: string) {
     })
 
 
-    let server:WebSocketServer|null = null;
+    let server:App|null = null;
     process.stdin.on('data', async (data) => {
         const chars = String(data);
         if (chars.startsWith("shell ")) {
@@ -58,7 +57,7 @@ export async function simple_cli(wasm_prefix: string, bundlepath: string) {
             }
             try{
                 const port = parseInt(chars.substring(3));
-                server=serve_data_via_ws(ci, port);
+                server=start_websocket(ci,port);
             }catch(e){
                 if(chars.startsWith("ws close")){
 
@@ -67,7 +66,13 @@ export async function simple_cli(wasm_prefix: string, bundlepath: string) {
                 }
             }
         }
+
+        
     });
+
+    if(wsport){
+        server=start_websocket(ci, wsport);
+    }
 
     return ci;
 }

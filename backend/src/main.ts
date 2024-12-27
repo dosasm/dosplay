@@ -5,7 +5,7 @@ import yargs from 'yargs/yargs';
 const yargs_opt = yargs(process.argv.slice(2)).options({
     log: { type: 'boolean', default: false,help:"log message" },
     inspect: { type: 'boolean', default: false,help:"inspect mode" },
-    ws: { type: 'number', default: false,help:"serve frames and sound " },
+    ws: { type: 'number', default: undefined,help:"serve frames and sound in a web socket" },
     start: { type: 'boolean', default: false,help:"start" },
   });
 
@@ -23,7 +23,7 @@ async function main() {
     });
 
     if (argv.start){
-        await simple_cli(jsdos_wasm,jsdos_bundles.turboC);
+        await simple_cli(jsdos_wasm,jsdos_bundles.turboC,argv.ws);
     }
 }
 

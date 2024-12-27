@@ -317,3 +317,21 @@ canvas.addEventListener("click", (e) => {
     global_editor_focused = false
 });
 
+
+
+const url=window.location.href;
+const urlObj=new URL(url);
+const socket=new WebSocket(`ws://${urlObj.hostname}:8091/frame`);
+socket.binaryType = 'arraybuffer';
+
+socket.addEventListener('open', () => {
+    const float32Array = new Float32Array([1.0, 2.0, 3.0]);
+    const buffer = float32Array.buffer;
+    socket.send(buffer);
+});
+
+socket.addEventListener('message', (event: MessageEvent) => {
+    const receivedBuffer = event.data;
+    const receivedArray = new Uint8Array(receivedBuffer);
+    console.log('Received response Uint8Array:', receivedArray);
+});

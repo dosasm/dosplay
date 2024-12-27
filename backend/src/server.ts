@@ -13,47 +13,18 @@ export function serve_data_via_ws(ci: CommandInterface,port: number) {
         });
 
         ws.send('connected');
-
-        ci.events().onSoundPush((data) => {
-            console.trace(data.length)
-            ws.send(data)
-        }
-        )
-        ci.events().onFrame((data) => {
-            if (data){
-                ws.send(data)
-            }
-        })
-    }
-    );
-    return server;
-}
-
-export function serve_ci_via_ws(ci: CommandInterface, port: number) {
-    const server = new WebSocket.Server({ port });
-
-    server.on('connection', function connection(ws:WebSocket.WebSocket) {
-        ws.on('message', function incoming(message: any) {
-            console.log('received: %s', message);
-            const data = JSON.parse(message);
-            if (data.type === 'keypress') {
-                ci.simulateKeyPress(data.key);
-            }
-            if (data.type === 'shell') {
-                ci.shell(data.cmd);
-                ci.
-            }
+        ci.events().onFrameSize((width,height) => {
+            ws.send(JSON.stringify({width,height}))
         });
 
-        ws.send('connected');
-
-        ci.events().onSoundPush((data) => {
-            console.trace(data.length)
+        ci.events().onSoundPush((samples) => {
+            const data=samples.buffer;
             ws.send(data)
         }
         )
-        ci.events().onFrame((data) => {
-            if (data){
+        ci.events().onFrame((rgb,rgba) => {
+            if (rgb){
+                const data=rgb.buffer;
                 ws.send(data)
             }
         })
