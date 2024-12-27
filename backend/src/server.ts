@@ -4,8 +4,8 @@ import { CommandInterface } from 'emulators';
 import * as path from 'path';
 import * as fs from 'fs';
 
-export function serve_data_via_ws(ci: CommandInterface) {
-    const server = new WebSocket.Server({ port: 8090 });
+export function serve_data_via_ws(ci: CommandInterface,port: number) {
+    const server = new WebSocket.Server({ port });
 
     server.on('connection', function connection(ws:WebSocket.WebSocket) {
         ws.on('message', function incoming(message: any) {
@@ -26,6 +26,40 @@ export function serve_data_via_ws(ci: CommandInterface) {
         })
     }
     );
+    return server;
+}
+
+export function serve_ci_via_ws(ci: CommandInterface, port: number) {
+    const server = new WebSocket.Server({ port });
+
+    server.on('connection', function connection(ws:WebSocket.WebSocket) {
+        ws.on('message', function incoming(message: any) {
+            console.log('received: %s', message);
+            const data = JSON.parse(message);
+            if (data.type === 'keypress') {
+                ci.simulateKeyPress(data.key);
+            }
+            if (data.type === 'shell') {
+                ci.shell(data.cmd);
+                ci.
+            }
+        });
+
+        ws.send('connected');
+
+        ci.events().onSoundPush((data) => {
+            console.trace(data.length)
+            ws.send(data)
+        }
+        )
+        ci.events().onFrame((data) => {
+            if (data){
+                ws.send(data)
+            }
+        })
+    }
+    );
+    return server;
 }
 
 

@@ -1,7 +1,9 @@
 import { readFile } from "fs/promises";
 import { CommandInterface, get_emulators, utils } from "emulators";
+import { serve_data_via_ws } from "./server";
+import { WebSocketServer } from "ws";
 
-enum LogType {
+export enum LogType {
     stdout="",
     dosboxMessage="[dosboxMessage]",
     message="[message]",
@@ -30,6 +32,8 @@ export async function simple_cli(wasm_prefix: string, bundlepath: string) {
         log(LogType.dosboxMessage, message);
     })
 
+
+    let server:WebSocketServer|null = null;
     process.stdin.on('data', async (data) => {
         const chars = String(data);
         if (chars.startsWith("shell ")) {
@@ -41,6 +45,26 @@ export async function simple_cli(wasm_prefix: string, bundlepath: string) {
                 }
                 // wait for 100ms
                 await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+        if (chars.startsWith("exit")){
+            ci.exit();
+            process.exit(0);
+        }
+
+        if (chars.startsWith("ws ")) {
+            if (server) {
+                server.close();
+            }
+            try{
+                const port = parseInt(chars.substring(3));
+                server=serve_data_via_ws(ci, port);
+            }catch(e){
+                if(chars.startsWith("ws close")){
+
+                }else{
+                    console.error(e);
+                }
             }
         }
     });
