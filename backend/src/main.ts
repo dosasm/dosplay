@@ -19,7 +19,8 @@ async function main() {
     }
 
     let plugins=[]
-    if (process.argv.includes('--ws')) {
+    if (process.argv.includes('--serve')) {
+        start_http_server(8091,path.resolve(__dirname, "../www/"))
         plugins.push(serve_data_via_ws)
     }
 

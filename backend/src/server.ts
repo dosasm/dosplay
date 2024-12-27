@@ -1,42 +1,76 @@
 import * as WebSocket from 'ws';
 import * as http from 'http';
 import { CommandInterface } from 'emulators';
+import * as path from 'path';
+import * as fs from 'fs';
 
 export function serve_data_via_ws(ci: CommandInterface) {
     const server = new WebSocket.Server({ port: 8090 });
 
-    server.on('connection', function connection(ws:any) {
+    server.on('connection', function connection(ws:WebSocket.WebSocket) {
         ws.on('message', function incoming(message: any) {
             console.log('received: %s', message);
         });
 
-        ws.send('something');
+        ws.send('connected');
 
         ci.events().onSoundPush((data) => {
             ws.send(data)
         }
         )
         ci.events().onFrame((data) => {
-            if (data)
+            if (data){
                 ws.send(data)
+            }
         })
     }
     );
 }
 
-export function start_http_server(port: number) {
+
+export function start_http_server(port: number, folder: string) {
     const server = http.createServer((req, res) => {
-        res.writeHead(200, {
-            'Content-Type': 'text/html'
+        let url=req.url;
+        if (url==='/') url='/index.html';
+        if (url===undefined) url='/index.html';
+        
+        const filePath = path.join(folder, url);
+        fs.readFile(filePath, (err, data) => {
+            if (err) {
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
+                res.write('404 Not Found');
+                res.end();
+            } else {
+                res.writeHead(200, { 'Content-Type': getContentType(filePath) });
+                res.write(data);
+                res.end();
+            }
         });
-        res.write('<html><body><h1>欢迎访问这个简单的HTTP服务器！</h1></body></html>');
-
-        res.end();
     });
-
 
     server.listen(port, () => {
-        console.log(`服务器已启动，正在监听端口 ${port}`);
+        console.log(`File server started, listening on port ${port}`);
     });
+}
 
+function getContentType(filePath: string): string {
+    const extname = path.extname(filePath).toLowerCase();
+    switch (extname) {
+        case '.html':
+            return 'text/html';
+        case '.js':
+            return 'application/javascript';
+        case '.css':
+            return 'text/css';
+        case '.json':
+            return 'application/json';
+        case '.png':
+            return 'image/png';
+        case '.jpg':
+            return 'image/jpeg';
+        case '.gif':
+            return 'image/gif';
+        default:
+            return 'application/octet-stream';
+    }
 }
