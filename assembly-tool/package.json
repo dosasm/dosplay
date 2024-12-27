@@ -1,0 +1,15 @@
+{
+    "name": "jsdos_assembly_in_dos",
+    "version": "1.0.0",
+    "description": "",
+    "main": "compress.js",
+    "scripts": {
+      "build": "node compress.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+      "jszip": "^3.10.1"
+    }
+  }
+  

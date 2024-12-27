@@ -117,13 +117,13 @@ export class RemoteCI implements CommandInterface {
     public ready:Promise<boolean>=Promise.resolve(false);
     constructor(baseurl:string) {
         this.ws = new WebSocket(baseurl+"/config");
-        this.ws.onopen=()=>{
-            console.log("ws open");
-            this.ready=Promise.all([this.sync_height(), this.sync_width(), this.sync_soundFrequency()]).then(()=>{
-                console.log("ready");
-                return true
-            })
-        }
+        this.ready=new Promise((resolve)=>{
+            this.ws.onopen=()=>{
+                Promise.all([this.sync_height(), this.sync_width(), this.sync_soundFrequency()]).then(()=>{
+                    resolve(true);
+                })
+            }
+        });
         this._events = new RemoteEvents(baseurl);
         this.ws.onmessage = (event) => {
             if (typeof event.data === "string") {
