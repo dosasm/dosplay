@@ -7,10 +7,13 @@ export function start_websocket(ci:CommandInterface,port:number) {
     const app = uws.App();
     const events=ci.events();
 
+    let soundClient=false;
     app.ws('/sound', {
         open: (ws) => {
-            console.log('Client connected');
+            console.log('Sound Client connected');
+            soundClient=true;
             events.onSoundPush((samples)=>{
+                if(!soundClient) return;
                 const data=samples;
                 ws.send(data,true);
             });
@@ -22,15 +25,18 @@ export function start_websocket(ci:CommandInterface,port:number) {
             
         },
         close: (ws, code, message) => {
+            soundClient=false;
             console.log('Client disconnected');
         }
     });
 
+    let frameClient=false;
     app.ws('/frame', {
         open: (ws) => {
-            console.log('Client connected');
+            console.log('Frame Client connected');
+            frameClient=true;
             events.onFrame((rgb,rgba)=>{
-                if(rgb){
+                if(rgb&&frameClient){
                     const data=rgb;
                     ws.send(data,true);
                 }
@@ -38,12 +44,13 @@ export function start_websocket(ci:CommandInterface,port:number) {
         },
         message: (ws, message: ArrayBuffer, isBinary: boolean) => {
             if (isBinary) {
-                console.log('Received ', message);
+                console.log('Frame Received ', message);
             }
             
         },
         close: (ws, code, message) => {
-            console.log('Client disconnected');
+            frameClient=false;
+            console.log('Frame Client disconnected');
         }
     });
 
