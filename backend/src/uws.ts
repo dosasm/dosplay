@@ -7,15 +7,16 @@ export function start_websocket(ci:CommandInterface,port:number) {
     const app = uws.App();
     const events=ci.events();
 
-    let soundClient=false;
     app.ws('/sound', {
         open: (ws) => {
             console.log('Sound Client connected');
-            soundClient=true;
             events.onSoundPush((samples)=>{
-                if(!soundClient) return;
                 const data=samples;
-                ws.send(data,true);
+                try{
+                    ws.send(data,true);
+                }catch(e){
+                    console.error(e);
+                }
             });
         },
         message: (ws, message: ArrayBuffer, isBinary: boolean) => {
@@ -25,20 +26,22 @@ export function start_websocket(ci:CommandInterface,port:number) {
             
         },
         close: (ws, code, message) => {
-            soundClient=false;
             console.log('Client disconnected');
         }
     });
 
-    let frameClient=false;
     app.ws('/frame', {
         open: (ws) => {
             console.log('Frame Client connected');
-            frameClient=true;
             events.onFrame((rgb,rgba)=>{
-                if(rgb&&frameClient){
+                
+                if(rgb){
                     const data=rgb;
-                    ws.send(data,true);
+                    try{
+                        ws.send(data,true);
+                    }catch(e){
+                        console.error(e);
+                    }
                 }
             });
         },
@@ -49,7 +52,6 @@ export function start_websocket(ci:CommandInterface,port:number) {
             
         },
         close: (ws, code, message) => {
-            frameClient=false;
             console.log('Frame Client disconnected');
         }
     });
