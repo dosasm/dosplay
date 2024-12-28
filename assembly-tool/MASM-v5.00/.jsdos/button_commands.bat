@@ -1,6 +1,11 @@
 @REM run
-C:\masm\script\Run.bat
+masm %1.asm;
+link %1.obj;
+%1.exe
 @REM list
-C:\masm\script\List.bat  
+masm /la %1.asm;
+type %1.lst
 @REM debug
-C:\masm\script\Debug.bat
+masm %1.asm;
+link %1.obj;
+debug %1.exe

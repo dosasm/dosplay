@@ -42,6 +42,7 @@ export class Editor{
                 }
                 const filename=this.select_open_file.value;
                 const data=await this.ci.fsReadFile(filename);
+               
                 const decoder=new TextDecoder("utf-8");
                 const text=decoder.decode(data);
                 this.editor.setValue(text);

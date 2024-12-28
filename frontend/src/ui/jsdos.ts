@@ -17,6 +17,7 @@ export class Jsdos {
     jsdos_editor=new Editor(undefined);
     jsdos_canvas?:JsdosCanvas;
     ci?:CommandInterface;
+    buttons_command:HTMLButtonElement[]=[];
 
     constructor() {
         this.emulators.pathPrefix = this.dist;
@@ -46,6 +47,9 @@ export class Jsdos {
             this.ci = ci;
             this.jsdos_editor.ci=ci;
             this.jsdos_canvas=new JsdosCanvas(ci);
+            this.buttons_command.forEach((btn)=>{
+                btn.remove();
+            })
             
 
             this.button_stop.addEventListener("click", async () => {
@@ -80,6 +84,14 @@ export class Jsdos {
                 this.button_stop.disabled = true;
                 this.p_status.innerHTML = "stopped";
             });
+
+            const commands=await this.get_commands_button(ci)
+            if(commands){
+                this.buttons_command=commands;
+                for(const cmd of commands){
+                    (this.button_stop.parentElement as HTMLDivElement).append(cmd)
+                }
+            }
         })
     }
 
@@ -123,19 +135,12 @@ export class Jsdos {
             button_cmd.innerText = name
             const codes = utils.String2jsdosCode(cmd, false, false);
             codes.unshift([257]); // add a enter key to prevent previous program not exit
-            button_cmd.addEventListener("click", () => {
-                let i = 0;
-                const id = setInterval(() => {
-                    if (i >= codes.length) {
-                        clearInterval(id)
-                        setTimeout(() => {
-                            ci?.simulateKeyPress(257)
-                        }, 1000);
-                    }
-                    ci?.simulateKeyPress(...codes[i])
-                    i++
-                }, 100);
-
+            codes.push([257]);// add a enter key to ensure current program launched
+            button_cmd.addEventListener("click", async () => {
+                for (const code of codes) {
+                    ci?.simulateKeyPress(...code);
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                }
             })
             ctrl2.push(button_cmd)
 
