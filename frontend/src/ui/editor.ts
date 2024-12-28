@@ -41,7 +41,7 @@ export class Editor{
                     return;
                 }
                 const filename=this.select_open_file.value;
-                this.open_file(filename);
+                this.open_file(filename,true);
             }
         )
         
