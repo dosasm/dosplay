@@ -25,9 +25,9 @@ void main(void) {
 `;
 
 // webGl函数接受特定类型的参数，并返回void（无返回值）
-export function webGl(layers: HTMLCanvasElement, ci: CommandInterface, stats: Stats): void {
+export function webGl(canvas: HTMLCanvasElement, ci: CommandInterface, stats: Stats): void {
     // 获取canvas元素，并断言其不为null（因为后续要使用其方法）
-    const canvas = layers;
+    const layers=canvas.parentElement as HTMLDivElement;
     if (!canvas) {
         throw new Error("Canvas element not found in layers object");
     }
@@ -59,9 +59,9 @@ export function webGl(layers: HTMLCanvasElement, ci: CommandInterface, stats: St
     gl.activeTexture(gl.TEXTURE0);
     gl.uniform1i(uSampler, 0);
     // 获取容器宽度，类型为number
-    let containerWidth = layers.width;
+    let containerWidth = layers.clientWidth;
     // 获取容器高度，类型为number
-    let containerHeight = layers.height;
+    let containerHeight = layers.clientHeight;
     // 帧宽度，初始化为0，类型为number
     let frameWidth = 0;
     // 帧高度，初始化为0，类型为number
@@ -81,8 +81,8 @@ export function webGl(layers: HTMLCanvasElement, ci: CommandInterface, stats: St
         canvas.style.height = height + "px";
     };
     const onResizeLayer = (event:UIEvent) => {
-        const w = layers.width;
-        const h = layers.height;
+        const w = layers.clientWidth;
+        const h = layers.clientHeight;
         containerWidth = w;
         containerHeight = h;
         onResize();

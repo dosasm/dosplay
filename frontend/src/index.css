@@ -6,11 +6,6 @@
     height: 400px;
 }
 
-#terminal {
-    width: 640px;
-    height: 400px;
-}
-
 .container {
     overflow: auto;
     /* 防止浮动造成的父容器高度塌陷 */
@@ -31,36 +26,25 @@
 }
 
 .right-column {
-    width: 50%;
+    width: 500px;
     /* 右栏宽度 */
     background-color: lightgreen;
-    margin-left: 2%;
+    margin-left: 1%;
     /* 可选，为右栏添加一些左边距，使其与左栏有一定间隔 */
 }
 
-ul {  
-    list-style-type: none;  
-}  
-li {  
-    margin-left: 20px;  
-}  
-.folder {  
-    color: blue;  
-}  
-.file {  
-    color: green;  
-} 
-
-#filetree{
-    /* position: absolute; */
-    overflow-y: scroll;
-    height: 200px;
-    background-color: beige;
-    width: 50%;
+#editor {
+    width: 600px;
+    height: 600px;
 }
 
-#editor {
-    position: absolute;
-    width: 700px;
-    height: 50%;
+#terminal {
+    width: 600px;
+    height: 400px;
+}
+
+.jsdos-canvas-layout {
+    width: 640px;
+    height: 400px;
+    background-color: blueviolet;
 }
