@@ -1,0 +1,2 @@
+@REM run
+digger.com

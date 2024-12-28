@@ -13,13 +13,17 @@ export class Editor{
     button_download_file=document.getElementById("editor-download-file") as HTMLButtonElement;
     button_download_bundle = document.getElementById("editor-download-bundle") as HTMLButtonElement
     
-    constructor(public ci:CommandInterface){
+    constructor(public ci:CommandInterface|undefined){
         this.button_open_file.addEventListener(
             "click",
             async ()=>{
+                if(!this.ci){
+                    return;
+                }
                 this.select_open_file.disabled=false;
                 this.select_open_file.hidden=false;
-                const list=await this.listfiles();
+                this.select_open_file.innerHTML="";
+                const list=await this.listfiles(this.ci);
                 if(list){
                     for(const file of list){
                         const option=document.createElement("option");
@@ -33,11 +37,21 @@ export class Editor{
         this.select_open_file.addEventListener(
             "change",
             async ()=>{
+                if(!this.ci){
+                    return;
+                }
                 const filename=this.select_open_file.value;
                 const data=await this.ci.fsReadFile(filename);
                 const decoder=new TextDecoder("utf-8");
                 const text=decoder.decode(data);
                 this.editor.setValue(text);
+                if(filename.endsWith(".c")){
+                    this.editor.getSession().setMode("ace/mode/c_cpp");
+                }else if(filename.endsWith(".h")){
+                    this.editor.getSession().setMode("ace/mode/c_cpp");
+                }else if(filename.endsWith(".asm")){
+                    this.editor.getSession().setMode("ace/mode/assembly_x86");
+                }
                 this.select_open_file.hidden=true;
                 this.input_filepath.value=filename;
             }
@@ -46,6 +60,9 @@ export class Editor{
         this.button_write_file.addEventListener(
             "click",
             async ()=>{
+                if(!this.ci){
+                    return;
+                }
                 const filename=this.input_filepath.value;
                 const text=this.editor.getValue();
                 const encoder=new TextEncoder();
@@ -56,6 +73,9 @@ export class Editor{
         this.button_download_file.addEventListener(
             "click",
             async ()=>{
+                if(!this.ci){
+                    return;
+                }
                 const filename=this.input_filepath.value;
                 const data=await this.ci.fsReadFile(filename);
                 download(data,filename);
@@ -64,6 +84,9 @@ export class Editor{
         this.button_download_bundle.addEventListener(
             "click",
             async ()=>{
+                if(!this.ci){
+                    return;
+                }
                 const bundle=await this.ci.persist(false);
                 if(!bundle){
                     return;
@@ -72,8 +95,8 @@ export class Editor{
             })
     }
 
-    public async listfiles(){
-        const root=await this.ci.fsTree();
+    public async listfiles(ci:CommandInterface):Promise<string[]|undefined>{
+        const root=await ci.fsTree();
         const fileList:string[]=[];
         function traverse(node:FsNode[],parent:string=""){
             for(const child of node){

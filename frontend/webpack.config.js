@@ -53,8 +53,20 @@ module.exports = {
           },
         },
         {
+          from:"./node_modules/ace-builds/src-min-noconflict/mode-c_cpp.js",
+          to({ context, absoluteFilename }) {
+            return Promise.resolve("[name][ext]");
+          },
+        },
+        {
+          from:"./node_modules/ace-builds/src-min-noconflict/mode-assembly_x86.js",
+          to({ context, absoluteFilename }) {
+            return Promise.resolve("[name][ext]");
+          },
+        },
+        {
           from: "../assembly-tool/*.jsdos", to({ context, absoluteFilename }) {
-            return Promise.resolve("jsdos/bundle/[name][ext]");
+            return Promise.resolve("jsdos-bundle/[name][ext]");
           },
         }
       ],

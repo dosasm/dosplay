@@ -1,7 +1,7 @@
 import { CommandInterface,utils } from "emulators";
 import { webGl } from "./webgl";
 import Stats from "stats.js"
-import { audioNode } from "../audionode";
+import { audioNode } from "./audionode";
 
 export class JsdosCanvas {
     canvas_jsdos = document.getElementById("jsdos-canvas") as HTMLCanvasElement

@@ -14,8 +14,28 @@ export class Jsdos {
 
 
     emulators = get_emulators()
+    jsdos_editor=new Editor(undefined);
+    jsdos_canvas?:JsdosCanvas;
+    ci?:CommandInterface;
+
     constructor() {
         this.emulators.pathPrefix = this.dist;
+
+        this.jsdos_editor.editor.container.addEventListener("focus", (e) => {
+            if(this.jsdos_canvas){
+                this.jsdos_canvas.prevent_canvas_keymouse=true;
+            }
+        });
+        this.jsdos_editor.editor.container.addEventListener("click", (e) => {
+            if(this.jsdos_canvas){
+                this.jsdos_canvas.prevent_canvas_keymouse=true;
+            }
+        });
+        this.jsdos_editor.editor.container.addEventListener("blur", (e) => {
+            if(this.jsdos_canvas){
+                this.jsdos_canvas.prevent_canvas_keymouse=false;
+            }
+        });
         this.button_start.addEventListener("click", async () => {
             this.button_start.disabled = true;
             this.button_stop.disabled = false;
@@ -23,18 +43,10 @@ export class Jsdos {
             const url = this.bundles + bundle+".jsdos";
             const ci = await this.download_run_bundle(url);
             if (!ci) return
-            (window as any).ci=ci;
-            const jsdos_canvas=new JsdosCanvas(ci);
-            const editor=new Editor(ci);
-            editor.editor.container.addEventListener("focus", (e) => {
-                jsdos_canvas.prevent_canvas_keymouse = true
-            });
-            editor.editor.container.addEventListener("click", (e) => {
-                jsdos_canvas.prevent_canvas_keymouse = true
-            });
-            editor.editor.container.addEventListener("blur", (e) => {
-                jsdos_canvas.prevent_canvas_keymouse = false
-            });
+            this.ci = ci;
+            this.jsdos_editor.ci=ci;
+            this.jsdos_canvas=new JsdosCanvas(ci);
+            
 
             this.button_stop.addEventListener("click", async () => {
                 await ci?.exit();
@@ -62,6 +74,12 @@ export class Jsdos {
                         ", cycles p/ms: " + Math.round(avgCycles);
                 });
             }, 3000);
+
+            ci.events().onExit(() => {
+                this.button_start.disabled = false;
+                this.button_stop.disabled = true;
+                this.p_status.innerHTML = "stopped";
+            });
         })
     }
 

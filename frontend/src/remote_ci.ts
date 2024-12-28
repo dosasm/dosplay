@@ -1,4 +1,4 @@
-import { CommandInterface, CommandInterfaceEvents, DosConfig, MessageType, NetworkType } from "emulators";
+import { CommandInterface, CommandInterfaceEvents, DosConfig, MessageType, NetworkType,Emulators } from "emulators";
 import { AsyncifyStats, FsNode } from "emulators/dist/out/protocol/protocol";
 
 class RemoteEvents implements CommandInterfaceEvents {
