@@ -29,3 +29,4 @@ Parameter `content` can be replace to `bc` for a base64 string.
 - `content`: the content to write to the editor
 - `write`: the path for the content
 
+
