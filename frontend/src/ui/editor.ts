@@ -1,6 +1,7 @@
 import { CommandInterface } from "emulators";
 import ace from "ace-builds"
 import { FsNode } from "emulators/dist/out/protocol/protocol";
+import { download } from "./download";
 
 export class Editor{
     editor=ace.edit("editor");
@@ -9,6 +10,9 @@ export class Editor{
     input_filepath=document.getElementById("editor-file-path") as HTMLInputElement;
 
     button_write_file=document.getElementById("editor-write-file") as HTMLButtonElement;
+    button_download_file=document.getElementById("editor-download-file") as HTMLButtonElement;
+    button_download_bundle = document.getElementById("editor-download-bundle") as HTMLButtonElement
+    
     constructor(public ci:CommandInterface){
         this.button_open_file.addEventListener(
             "click",
@@ -47,6 +51,24 @@ export class Editor{
                 const encoder=new TextEncoder();
                 const data=encoder.encode(text);
                 await this.ci.fsWriteFile(filename,data);
+            })
+
+        this.button_download_file.addEventListener(
+            "click",
+            async ()=>{
+                const filename=this.input_filepath.value;
+                const data=await this.ci.fsReadFile(filename);
+                download(data,filename);
+            })
+
+        this.button_download_bundle.addEventListener(
+            "click",
+            async ()=>{
+                const bundle=await this.ci.persist(false);
+                if(!bundle){
+                    return;
+                }
+                download(bundle,"bundle.jsdos");
             })
     }
 

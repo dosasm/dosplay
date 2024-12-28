@@ -10,7 +10,6 @@ export class Jsdos {
     select_emulators = document.getElementById("emulators") as HTMLSelectElement
     button_start = document.getElementById("start") as HTMLButtonElement
     button_stop = document.getElementById("stop") as HTMLButtonElement
-    button_download = document.getElementById("editor-download-bundle") as HTMLButtonElement
     p_status=document.getElementById("stats") as HTMLParagraphElement
 
 
