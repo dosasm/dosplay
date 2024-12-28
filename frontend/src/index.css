@@ -1,10 +1,6 @@
 @import url("~@xterm/xterm/css/xterm.css");
 
-#canvas {
-    background-color: beige;
-    width: 640px;
-    height: 400px;
-}
+
 
 .container {
     overflow: auto;
@@ -44,7 +40,12 @@
 }
 
 .jsdos-canvas-layout {
+    width: 50vw;
+    height: 60vh;
+    background-color: gray;
+}
+#canvas {
     width: 640px;
     height: 400px;
-    background-color: blueviolet;
+    position: relative;
 }

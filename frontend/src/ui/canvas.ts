@@ -24,16 +24,18 @@ export class JsdosCanvas {
         ci
 
         window.addEventListener("keydown", (e) => {
+            if(this.prevent_canvas_keymouse)return;
             let ke = utils.HtmlKeyCode2jsdos(e.code)
-            if (ke && !this.prevent_canvas_keymouse) {
+            if (ke) {
                 ci.sendKeyEvent(ke, true);
                 e.stopPropagation();
                 e.preventDefault();
             }
         });
         window.addEventListener("keyup", (e) => {
+            if(this.prevent_canvas_keymouse)return;
             let ke = utils.HtmlKeyCode2jsdos(e.code)
-            if (ke && !this.prevent_canvas_keymouse) {
+            if (ke) {
                 ci.sendKeyEvent(ke, false);
                 e.stopPropagation();
                 e.preventDefault();

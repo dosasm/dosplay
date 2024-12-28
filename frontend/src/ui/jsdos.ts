@@ -11,6 +11,8 @@ export class Jsdos {
     button_start = document.getElementById("start") as HTMLButtonElement
     button_stop = document.getElementById("stop") as HTMLButtonElement
     button_download = document.getElementById("editor-download-bundle") as HTMLButtonElement
+    p_status=document.getElementById("stats") as HTMLParagraphElement
+
 
     emulators = get_emulators()
     constructor() {
@@ -40,6 +42,27 @@ export class Jsdos {
                 this.button_start.disabled = false;
                 this.button_stop.disabled = true;
             });
+
+            let intervalStartedAt = Date.now();
+            let prevNonSkippableSleepCount = 0;
+            let prevSleepCount = 0;
+            let prevCycles = 0;
+            setInterval(() => {
+                ci.asyncifyStats().then((stats: any) => {
+                    const dt = Date.now() - intervalStartedAt;
+                    const nonSkippableSleep = stats.nonSkippableSleepCount - prevNonSkippableSleepCount;
+                    const avgSleep = (stats.sleepCount - prevSleepCount) * 1000 / dt;
+                    const avgNonSkippableSleep = (stats.nonSkippableSleepCount - prevNonSkippableSleepCount) * 1000 / dt;
+                    const avgCycles = (stats.cycles - prevCycles) / dt;
+                    intervalStartedAt = Date.now();
+                    prevNonSkippableSleepCount = stats.nonSkippableSleepCount;
+                    prevSleepCount = stats.sleepCount;
+                    prevCycles = stats.cycles;
+                    this.p_status.innerHTML = "Avg sleep p/sec: " + Math.round(avgSleep) +
+                        ", avg non skippable sleep p/sec: " + Math.round(avgNonSkippableSleep) +
+                        ", cycles p/ms: " + Math.round(avgCycles);
+                });
+            }, 3000);
         })
     }
 
