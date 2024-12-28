@@ -83,9 +83,12 @@ export class Editor{
             })
     }
 
-    public async open_file(filename:string){
+    public async open_file(filename:string,force=false){
         if(!this.ci){
             return;
+        }
+        if(force==false && this.input_filepath.value){
+            return
         }
         this.input_filepath.value=filename;
         const data=await this.ci.fsReadFile(filename);

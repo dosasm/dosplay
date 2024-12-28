@@ -2,6 +2,7 @@ import { Jsdos } from "./ui/jsdos";
 import "./index.css"
 
 var jsdos=new Jsdos();
+(window as any).jsdos=jsdos;
 
 const urlParams = new URLSearchParams(window.location.search);
 const start= urlParams.get('start');
