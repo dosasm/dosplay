@@ -1,4 +1,11 @@
 @REM run
-C:\masm\script\Run.bat
+masm hello.asm;
+link hello.obj;
+hello.exe
+@REM list
+masm /la hello.asm;
+type hello.lst
 @REM debug
-C:\masm\script\Debug.bat
+masm hello.asm;
+link hello.obj;
+debug hello.exe

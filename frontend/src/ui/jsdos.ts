@@ -1,5 +1,5 @@
 import { CommandInterface, get_emulators, utils } from "emulators";
-import { jsdos } from "../config"
+import { jsdos ,bundle_config} from "../config"
 import { JsdosCanvas } from "./canvas";
 import { Editor } from "./editor";
 
@@ -92,6 +92,11 @@ export class Jsdos {
                     (this.button_stop.parentElement as HTMLDivElement).append(cmd)
                 }
             }
+
+            if(Object.keys(bundle_config).includes(bundle)){
+                const p=(bundle_config as any)[bundle].path;
+                this.jsdos_editor.open_file(p)
+            }
         })
     }
 
@@ -139,7 +144,7 @@ export class Jsdos {
             button_cmd.addEventListener("click", async () => {
                 for (const code of codes) {
                     ci?.simulateKeyPress(...code);
-                    await new Promise(resolve => setTimeout(resolve, 200));
+                    await new Promise(resolve => setTimeout(resolve, 60));
                 }
             })
             ctrl2.push(button_cmd)

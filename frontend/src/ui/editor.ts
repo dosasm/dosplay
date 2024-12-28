@@ -41,20 +41,7 @@ export class Editor{
                     return;
                 }
                 const filename=this.select_open_file.value;
-                const data=await this.ci.fsReadFile(filename);
-               
-                const decoder=new TextDecoder("utf-8");
-                const text=decoder.decode(data);
-                this.editor.setValue(text);
-                if(filename.endsWith(".c")){
-                    this.editor.getSession().setMode("ace/mode/c_cpp");
-                }else if(filename.endsWith(".h")){
-                    this.editor.getSession().setMode("ace/mode/c_cpp");
-                }else if(filename.endsWith(".asm")){
-                    this.editor.getSession().setMode("ace/mode/assembly_x86");
-                }
-                this.select_open_file.hidden=true;
-                this.input_filepath.value=filename;
+                this.open_file(filename);
             }
         )
         
@@ -94,6 +81,27 @@ export class Editor{
                 }
                 download(bundle,"bundle.jsdos");
             })
+    }
+
+    public async open_file(filename:string){
+        if(!this.ci){
+            return;
+        }
+        this.input_filepath.value=filename;
+        const data=await this.ci.fsReadFile(filename);
+        
+        const decoder=new TextDecoder("utf-8");
+        const text=decoder.decode(data);
+        this.editor.setValue(text);
+        if(filename.endsWith(".c")){
+            this.editor.getSession().setMode("ace/mode/c_cpp");
+        }else if(filename.endsWith(".h")){
+            this.editor.getSession().setMode("ace/mode/c_cpp");
+        }else if(filename.endsWith(".asm")){
+            this.editor.getSession().setMode("ace/mode/assembly_x86");
+        }
+        this.select_open_file.hidden=true;
+        this.input_filepath.value=filename;
     }
 
     public async listfiles(ci:CommandInterface):Promise<string[]|undefined>{

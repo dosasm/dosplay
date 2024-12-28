@@ -1,6 +1,7 @@
-# Dosplay
+# Dosplay: Run old DOS code in your browser
 
-Dosplay is 
+Dosplay is a work-in-progress project to run old DOS code in your browser.
+It's 
 
 - a js-dos bundle editor to edit your old dos game and softwares
 - a online compiler for Assembly and Turbo C, feel free to add more software in the `assembly-tools` folder.
