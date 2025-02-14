@@ -25,7 +25,7 @@
     "style-loader": "^4.0.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0",
-    "emulators": "file:../../emulators/emulators-v8.3.3-dosasm3.tgz",
+    "emulators": "file:../../emulators/emulators-v8.3.3-dosasm6.tgz",
     "gh-pages": "^6.1.1",
     "html-webpack-plugin": "^5.6.0",
     "ts-loader": "^ 9.5.1",

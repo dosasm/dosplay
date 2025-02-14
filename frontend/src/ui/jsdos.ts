@@ -1,4 +1,4 @@
-import { CommandInterface, get_emulators, utils } from "emulators";
+import { CommandInterface, getEmulators, utils } from "emulators";
 import { jsdos ,bundle_config} from "../config"
 import { JsdosCanvas } from "./canvas";
 import { Editor } from "./editor";
@@ -13,7 +13,7 @@ export class Jsdos {
     p_status=document.getElementById("stats") as HTMLParagraphElement
 
 
-    emulators = get_emulators()
+    emulators = getEmulators(undefined)
     jsdos_editor=new Editor(undefined);
     jsdos_canvas?:JsdosCanvas;
     ci?:CommandInterface;
@@ -138,7 +138,7 @@ export class Jsdos {
 
             const button_cmd = document.createElement("button");
             button_cmd.innerText = name
-            const codes = utils.String2jsdosCode(cmd, false, false);
+            const codes = utils.string2jsdosKey(cmd, false, false);
             codes.unshift([257]); // add a enter key to prevent previous program not exit
             codes.push([257]);// add a enter key to ensure current program launched
             button_cmd.addEventListener("click", async () => {
@@ -163,10 +163,10 @@ export class Jsdos {
             case "dosboxWorker":
                 ci = await this.emulators.dosboxWorker(bundle);
                 break;
-            case "dosboxXDirect":
+            case "xDirect":
                 ci = await this.emulators.dosboxXDirect(bundle);
                 break;
-            case "dosboxXWorker":
+            case "xWorker":
                 ci = await this.emulators.dosboxXWorker(bundle);
                 break;
             default:
