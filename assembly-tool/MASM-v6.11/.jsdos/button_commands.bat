@@ -1,11 +1,11 @@
 @REM run
-masm hello.asm;
-link hello.obj;
-hello.exe
+masm main.asm;
+link main.obj;
+main.exe
 @REM list
-masm /la hello.asm;
-type hello.lst
+masm /la main.asm;
+type main.lst
 @REM debug
-masm hello.asm;
-link hello.obj;
-debug hello.exe
+masm main.asm;
+link main.obj;
+debug main.exe

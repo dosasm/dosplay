@@ -102,6 +102,8 @@ export class Editor{
             this.editor.getSession().setMode("ace/mode/c_cpp");
         }else if(filename.endsWith(".asm")){
             this.editor.getSession().setMode("ace/mode/assembly_x86");
+        }else{
+            this.editor.getSession().setMode("ace/mode/text");
         }
         this.select_open_file.hidden=true;
         this.input_filepath.value=filename;

@@ -9,11 +9,14 @@ It's
 This project will not work without js-dos's port of dosbox(x) to wasm.
 Thanks to [caiiiycuk/js-dos](https://github.com/caiiiycuk/js-dos/).
 
+- [ ] hide the emscripten FS and only expose the DOSBox FS
+- [ ] use indexdb to store history
+
 ## Supported Urlparams
 
 - `emu`: the emulation type, can be
     - `dosboxDirect` or `dosboxWorker`
-    - `XDirect` or `XWorkder`
+    - `xDirect` or `xWorkder`
 - `bundle`: the bundle file name, the site hosted following bundles
     - `MASM-v6.11`: 
     - `MASM-v5.00`: 

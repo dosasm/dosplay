@@ -136,6 +136,11 @@ export class Jsdos {
         const ctrl2 = [];
         for (const { name, cmd } of cmds) {
 
+            const filepath=(document.getElementById("editor-file-path") as HTMLInputElement).value;
+            if (typeof filepath === "string") {
+                
+            }
+
             const button_cmd = document.createElement("button");
             button_cmd.innerText = name
             const codes = utils.string2jsdosKey(cmd, false, false);
