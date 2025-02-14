@@ -65,6 +65,8 @@ function zipfoloder(folderPath) {
             console.error('生成ZIP文件时出错:', err);
         });
 
+    fs.copyFileSync(outputPath, path.resolve(__dirname,"../frontend/dist/jsdos-bundle",path.basename(folderPath) + '.jsdos'))
+
 }
 
 zipfoloder(path.resolve(__dirname, "TASM"))

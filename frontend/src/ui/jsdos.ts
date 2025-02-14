@@ -1,7 +1,26 @@
 import { CommandInterface, getEmulators, utils } from "emulators";
-import { jsdos ,bundle_config} from "../config"
+import { jsdos, bundle_config } from "../config"
 import { JsdosCanvas } from "./canvas";
 import { Editor } from "./editor";
+import * as cache from "./cacheBundle";
+
+class DosPath {
+    full: string
+    filename: string
+    dirname: string
+    disk: string
+    extname: string
+    barename: string
+    constructor(wasm_path: string) {
+        const wasm_segs = wasm_path.split("/")
+        this.full = wasm_segs[1] + ":\\" + wasm_segs.slice(2).join("\\")
+        this.filename = wasm_segs.slice(-1)[0]
+        this.extname = this.filename.split(".").slice(-1)[0]
+        this.barename = this.filename.replace("." + this.extname, "")
+        this.dirname = wasm_segs[1] + ":\\" + wasm_segs.slice(2, -1).join("\\")
+        this.disk = wasm_segs[1];
+    }
+}
 
 export class Jsdos {
     dist = jsdos.dist;
@@ -10,47 +29,47 @@ export class Jsdos {
     select_emulators = document.getElementById("emulators") as HTMLSelectElement
     button_start = document.getElementById("start") as HTMLButtonElement
     button_stop = document.getElementById("stop") as HTMLButtonElement
-    p_status=document.getElementById("stats") as HTMLParagraphElement
+    p_status = document.getElementById("stats") as HTMLParagraphElement
 
 
     emulators = getEmulators(undefined)
-    jsdos_editor=new Editor(undefined);
-    jsdos_canvas?:JsdosCanvas;
-    ci?:CommandInterface;
-    buttons_command:HTMLButtonElement[]=[];
+    jsdos_editor = new Editor(undefined);
+    jsdos_canvas?: JsdosCanvas;
+    ci?: CommandInterface;
+    buttons_command: HTMLButtonElement[] = [];
 
     constructor() {
         this.emulators.pathPrefix = this.dist;
 
         this.jsdos_editor.editor.container.addEventListener("focus", (e) => {
-            if(this.jsdos_canvas){
-                this.jsdos_canvas.prevent_canvas_keymouse=true;
+            if (this.jsdos_canvas) {
+                this.jsdos_canvas.prevent_canvas_keymouse = true;
             }
         });
         this.jsdos_editor.editor.container.addEventListener("click", (e) => {
-            if(this.jsdos_canvas){
-                this.jsdos_canvas.prevent_canvas_keymouse=true;
+            if (this.jsdos_canvas) {
+                this.jsdos_canvas.prevent_canvas_keymouse = true;
             }
         });
         this.jsdos_editor.editor.container.addEventListener("blur", (e) => {
-            if(this.jsdos_canvas){
-                this.jsdos_canvas.prevent_canvas_keymouse=false;
+            if (this.jsdos_canvas) {
+                this.jsdos_canvas.prevent_canvas_keymouse = false;
             }
         });
         this.button_start.addEventListener("click", async () => {
             this.button_start.disabled = true;
             this.button_stop.disabled = false;
             const bundle = this.select_bundle.value;
-            const url = this.bundles + bundle+".jsdos";
+            const url = this.bundles + bundle + ".jsdos";
             const ci = await this.download_run_bundle(url);
             if (!ci) return
             this.ci = ci;
-            this.jsdos_editor.ci=ci;
-            this.jsdos_canvas=new JsdosCanvas(ci);
-            this.buttons_command.forEach((btn)=>{
+            this.jsdos_editor.ci = ci;
+            this.jsdos_canvas = new JsdosCanvas(ci);
+            this.buttons_command.forEach((btn) => {
                 btn.remove();
             })
-            
+
 
             this.button_stop.addEventListener("click", async () => {
                 await ci?.exit();
@@ -85,16 +104,16 @@ export class Jsdos {
                 this.p_status.innerHTML = "stopped";
             });
 
-            const commands=await this.get_commands_button(ci)
-            if(commands){
-                this.buttons_command=commands;
-                for(const cmd of commands){
+            const commands = await this.get_commands_button(ci)
+            if (commands) {
+                this.buttons_command = commands;
+                for (const cmd of commands) {
                     (this.button_stop.parentElement as HTMLDivElement).append(cmd)
                 }
             }
 
-            if(Object.keys(bundle_config).includes(bundle)){
-                const p=(bundle_config as any)[bundle].path;
+            if (Object.keys(bundle_config).includes(bundle)) {
+                const p = (bundle_config as any)[bundle].path;
                 this.jsdos_editor.open_file(p)
             }
         })
@@ -116,6 +135,19 @@ export class Jsdos {
         })
     }
 
+    public async get_bundle(url: string): Promise<Uint8Array | undefined> {
+        const existed = await cache.existsBundle(url);
+        if (existed) {
+            const res = await cache.getBundle(url);
+            if (res)
+                return res as Uint8Array;
+        }
+        const bundle = await this.down_bundle(url);
+        await cache.cacheBundle(url, bundle);
+        return bundle;
+    }
+
+
     public async get_commands_button(ci: CommandInterface) {
         const nodes = await ci.fsTree();
         if (!nodes) return
@@ -126,27 +158,66 @@ export class Jsdos {
         const data = await ci?.fsReadFile("./.jsdos/button_commands.bat");
         const decoder = new TextDecoder('utf-8');
         const text = decoder.decode(data);
-        const cmds = text.split("@REM").map((val) => {
-            val = val.replace(/\r\n/g, "\n")
-            const lines = val.split("\n")
-            const name = lines[0].trim();
-            const cmd = lines.slice(1).join("\n").trim()
-            return { name, cmd }
-        }).filter(x => x.name && x.cmd);
+
+        const cmds = [{ name: "ver", cmd: "ver" }];
+        const cmd_info = {
+            default_file: "/D/main.asm",
+            supported_ext: ""
+        }
+
+        for (let line of text.split("\n")) {
+            const l = line.trim();
+            let magic=false;
+            if (l.startsWith("@REM cmd:")) {
+                cmds.push({
+                    name: l.replace("@REM cmd:", "").trim(),
+                    cmd: ""
+                })
+                magic=true;
+            }
+            for (const key of Object.keys(cmd_info)) {
+                let s = "@REM " + key + ":";
+                if (l.startsWith(s)) {
+                    (cmd_info as any)[key] = l.replace(s, "").trim()
+                    magic=true;
+                }
+            }
+            if (magic===false) {
+                cmds[cmds.length - 1].cmd += l + "\n"
+            }
+        }
         const ctrl2 = [];
         for (const { name, cmd } of cmds) {
 
-            const filepath=(document.getElementById("editor-file-path") as HTMLInputElement).value;
-            if (typeof filepath === "string") {
-                
-            }
-
             const button_cmd = document.createElement("button");
             button_cmd.innerText = name
-            const codes = utils.string2jsdosKey(cmd, false, false);
-            codes.unshift([257]); // add a enter key to prevent previous program not exit
-            codes.push([257]);// add a enter key to ensure current program launched
+
+
             button_cmd.addEventListener("click", async () => {
+                let wasm_path = this.jsdos_editor.filelist.value;
+                let _cmd = structuredClone(cmd)
+
+                let supported=false;
+                const supported_ext = cmd_info.supported_ext.split(",").map(v => v.trim()).filter(v => v.length>0)
+                if (supported_ext.length>0) {
+                    supported=supported_ext.some(v => wasm_path.endsWith(v))
+                }
+                if (supported) {
+                    const dospath = new DosPath(wasm_path)
+                    _cmd = _cmd.replace(/main/g, dospath.barename)
+                    const pre_cmd = "cd " + dospath.dirname + "\n" + dospath.disk + ":\n"
+                    _cmd = pre_cmd + _cmd
+                } else {
+                    wasm_path = cmd_info.default_file
+                    const dospath = new DosPath(wasm_path)
+                    const pre_cmd = "cd " + dospath.dirname + "\n" + dospath.disk + ":\n"
+                    _cmd = pre_cmd + _cmd
+                }
+                if(!_cmd.endsWith("\n")) {
+                    _cmd += "\n"
+                }
+
+                const codes = utils.string2jsdosKey(_cmd, false, false);
                 for (const code of codes) {
                     ci?.simulateKeyPress(...code);
                     await new Promise(resolve => setTimeout(resolve, 60));
@@ -160,6 +231,7 @@ export class Jsdos {
 
     public async download_run_bundle(url: string): Promise<CommandInterface | undefined> {
         const bundle = await this.down_bundle(url);
+        if (!bundle) return;
         let ci: CommandInterface | undefined = undefined;
         switch (this.select_emulators.value) {
             case "dosboxDirect":

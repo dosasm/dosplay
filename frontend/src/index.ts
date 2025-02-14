@@ -28,13 +28,14 @@ if(base64content){
 }
 if(content && write){
     jsdos.jsdos_editor.editor.setValue(content);
-    jsdos.jsdos_editor.input_filepath.value=write;
+    jsdos.jsdos_editor.filelist.value=write;
     //!!! automatically start the js-dos for convenience
     jsdos.button_start.click();
     setTimeout(() => {
         if(!jsdos.ci)return;
-        jsdos.jsdos_editor.button_write_file.click();
+        jsdos.jsdos_editor.writefile.click();
     }, 2000);
-    
 }
+
+jsdos.button_start.click();
 

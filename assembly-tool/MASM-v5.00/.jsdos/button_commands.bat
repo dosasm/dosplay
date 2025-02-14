@@ -1,11 +1,13 @@
-@REM run
-masm hello.asm;
-link hello.obj;
-hello.exe
-@REM list
-masm /la hello.asm;
-type hello.lst
-@REM debug
-masm hello.asm;
-link hello.obj;
-debug hello.exe
+@REM default_file:/D/main.asm
+@REM supported_ext:asm,ASM
+@REM cmd:run
+masm main.asm;
+link main.obj;
+main.exe
+@REM cmd:list
+masm /la main.asm;
+type main.lst
+@REM cmd:debug
+masm main.asm;
+link main.obj;
+debug main.exe
