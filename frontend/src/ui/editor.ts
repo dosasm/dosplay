@@ -41,6 +41,7 @@ export class Editor {
             "click",
             list
         )
+        list()
         this.filelist.addEventListener(
             "input",
             async () => {
