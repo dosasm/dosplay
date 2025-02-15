@@ -10,7 +10,7 @@ This project will not work without js-dos's port of dosbox(x) to wasm.
 Thanks to [caiiiycuk/js-dos](https://github.com/caiiiycuk/js-dos/).
 
 - [ ] hide the emscripten FS and only expose the DOSBox FS
-- [ ] use indexdb to store history
+- [x] use indexdb to store history
 
 ## Supported Urlparams
 

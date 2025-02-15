@@ -68,3 +68,25 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+
+/* 隐藏默认的文件输入框 */
+#bundle-upload {
+    display: none;
+}
+
+/* 自定义上传按钮样式 */
+.custom-upload-btn {
+    display: inline-block;
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.custom-upload-btn:hover {
+    background-color: #0056b3;
+}

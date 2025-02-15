@@ -1,5 +1,5 @@
 import { CommandInterface, getEmulators, utils } from "emulators";
-import { jsdos, bundle_config } from "../config"
+import { jsdos } from "../config"
 import { JsdosCanvas } from "./canvas";
 import { Editor } from "./editor";
 import * as cache from "./bundle-cache";
@@ -138,11 +138,6 @@ export class Jsdos {
                     (this.button_stop.parentElement as HTMLDivElement).append(cmd)
                 }
             }
-
-            if (Object.keys(bundle_config).includes(bundle)) {
-                const p = (bundle_config as any)[bundle].path;
-                this.jsdos_editor.open_file(p)
-            }
         })
     }
 
@@ -165,14 +160,15 @@ export class Jsdos {
     public async get_bundle(url: string): Promise<Uint8Array | undefined> {
         const version=document.getElementById("bundle-version") as HTMLSelectElement
         if(version.value=="original"){
-            const existed = await cache.existsBundle(url);
+            const id=this.bundles_info.build_time+"_"+url
+            const existed = await cache.existsBundle(id);
             if (existed) {
-                const res = await cache.getBundle(url);
+                const res = await cache.getBundle(id);
                 if (res)
                     return res as Uint8Array;
             }
             const bundle = await this.down_bundle(url);
-            await cache.cacheBundle(url, bundle);
+            await cache.cacheBundle(id, bundle);
             return bundle;
         }else{
             const bundle=await cache.getBundle(version.value);
@@ -195,7 +191,7 @@ export class Jsdos {
 
         const cmds = [{ name: "ver", cmd: "ver" }];
         const cmd_info = {
-            default_file: "/D/main.asm",
+            default_file: "/.jsdos/dosbox.conf",
             supported_ext: ""
         }
 
@@ -220,6 +216,8 @@ export class Jsdos {
                 cmds[cmds.length - 1].cmd += l + "\n"
             }
         }
+
+        this.jsdos_editor.open_file(cmd_info.default_file);
         const ctrl2 = [];
         for (const { name, cmd } of cmds) {
 

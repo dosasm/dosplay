@@ -26,22 +26,15 @@ export class Editor {
         const list=()=>{
             ci && this.listfiles(ci).then((list) => {
                 if (list) {
-                    let selected=list[0];
                     this.filelist.innerHTML = "";
                     const eles=[];
                     for (const file of list) {
                         const option = document.createElement("option");
                         option.value = file;
                         option.innerText = file;
-                        if (file==="/.jsdos/dosbox.conf"){
-                            selected=file
-                            option.selected=true
-                        }
                         eles.push(option)
                     }
                     this.filelist.append(...eles)
-                    this.filelist.value=selected
-                    this.open_file(selected,true);
                 }
             })
         }
@@ -49,7 +42,7 @@ export class Editor {
             "click",
             list
         )
-        setTimeout(list, 1000);
+        list()
         this.filelist.addEventListener(
             "input",
             async () => {
