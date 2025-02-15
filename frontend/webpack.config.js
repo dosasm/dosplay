@@ -65,12 +65,7 @@ module.exports = {
           },
         },
         {
-          from: "../assembly-tool/*.jsdos", to({ context, absoluteFilename }) {
-            return Promise.resolve("jsdos-bundle/[name][ext]");
-          },
-        },
-        {
-          from: "../assembly-tool/*.json", to({ context, absoluteFilename }) {
+          from: "../assembly-tool/build/*.*", to({ context, absoluteFilename }) {
             return Promise.resolve("jsdos-bundle/[name][ext]");
           },
         }

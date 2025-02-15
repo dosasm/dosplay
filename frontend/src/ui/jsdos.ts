@@ -6,6 +6,7 @@ import { Editor } from "./editor";
 import * as cache from "./bundle-cache";
 import * as ui_bundle from "./bundle"
 import {diskBundle} from "./jsdos-disk";
+import { sleep } from '../utils';
 
 class DosPath {
     full: string
@@ -30,7 +31,10 @@ const default_bundles_info = {
     "homepage": "https://github.com/dosasm/dosplay",
     "build_time": 1739588886709,
     "bundles": [
-        "MASM-v6.11",
+        {
+            name:"MASM-v6.11",
+            hash:"",
+        }
     ]
 }
 
@@ -53,6 +57,20 @@ export class Jsdos {
     buttons_command: HTMLButtonElement[] = [];
 
     ready:Promise<void|undefined>
+    _ready_ci_resolve=(a:any)=>{undefined}
+    ready_ci=new Promise(resolve=>this._ready_ci_resolve=resolve)
+
+    _stdout:string[]=[]
+    public get stdout(){
+        return this._stdout.join("")
+    }
+
+
+    record_stdout(){
+        if(this.ci){
+            this.ci.events().onStdout(data=>this._stdout.push(data))
+        }
+    }
 
     constructor() {
         ui_bundle.ci_provider.get_ci = () => this.ci;
@@ -65,8 +83,8 @@ export class Jsdos {
             this.select_bundle.append(option)
             for (const bundle of this.bundles_info.bundles) {
                 const option = document.createElement("option");
-                option.value = bundle;
-                option.innerText = bundle;
+                option.value = bundle.name;
+                option.innerText = bundle.name;
                 this.select_bundle.append(option)
             }
             const intro=document.getElementById("intro") as HTMLDivElement
@@ -93,13 +111,9 @@ export class Jsdos {
             this.button_start.disabled = true;
             this.button_stop.disabled = false;
             const bundle = this.select_bundle.value;
-            let url = this.bundles + bundle + ".jsdos";
-            if (bundle==="disk") {
-                url="<file>"
-            }
-            const ci = await this.download_run_bundle(url);
+            const ci = await this.download_run_bundle(bundle);
             if (!ci) return
-            
+            this._ready_ci_resolve(ci)
             this.ci = ci;
             this.jsdos_editor.ci = ci;
             this.jsdos_canvas = new JsdosCanvas(ci);
@@ -167,26 +181,28 @@ export class Jsdos {
         })
     }
 
-    public async get_bundle(url: string): Promise<Uint8Array | undefined> {
+    public async get_bundle(bundlename: string): Promise<Uint8Array | undefined> {
         const version=document.getElementById("bundle-version") as HTMLSelectElement
         
         if(version.value=="original"){
-            if(url=="<file>" && diskBundle.valid){
-                if (!diskBundle.uint8Array) {
-                    await diskBundle.openFile();
-                }
+            if(bundlename=="disk" && diskBundle.valid){
+                await diskBundle.openFile();
                 return diskBundle.uint8Array;
             }else{
-                const id=this.bundles_info.build_time+"_"+url
-                const existed = await cache.existsBundle(id);
-                if (existed) {
-                    const res = await cache.getBundle(id);
-                    if (res)
-                        return res as Uint8Array;
+                const finded=this.bundles_info.bundles.find(b=>b.name===bundlename);
+                if(finded){
+                    const id=finded.hash
+                    const existed = await cache.existsBundle(id);
+                    if (existed) {
+                        const res = await cache.getBundle(id);
+                        if (res)
+                            return res as Uint8Array;
+                    }
+                    const url=this.bundles + bundlename + ".jsdos";
+                    const bundle = await this.down_bundle(url);
+                    await cache.cacheBundle(id, bundle);
+                    return bundle;
                 }
-                const bundle = await this.down_bundle(url);
-                await cache.cacheBundle(id, bundle);
-                return bundle;
             }
         }else{
             const bundle=await cache.getBundle(version.value);
@@ -300,8 +316,8 @@ export class Jsdos {
         return ctrl2
     }
 
-    public async download_run_bundle(url: string): Promise<CommandInterface | undefined> {
-        const bundle = await this.get_bundle(url);
+    public async download_run_bundle(bundlename: string): Promise<CommandInterface | undefined> {
+        const bundle = await this.get_bundle(bundlename);
         if (!bundle) return;
         let ci: CommandInterface | undefined = undefined;
         switch (this.select_emulators.value) {

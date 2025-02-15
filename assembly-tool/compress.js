@@ -1,23 +1,43 @@
-const fs = require('fs');
+const fs = require('fs/promises');
+const fs0 = require('fs')
 const JSZip = require('jszip');
 const path = require('path');
+const crypto = require('crypto');
 
-// 递归函数，用于将文件夹添加到zip  
-function addFolderToZip(zip, folderPath, base = '') {
-    // 读取文件夹内容  
-    fs.readdirSync(folderPath).forEach(function (filename) {
+function compute_hash(content){
+    const hash=crypto.createHash("md5")
+    hash.update(content);
+    const md5Hash = hash.digest('hex');
+    return md5Hash
+}
+
+function sort_obj_by_key(originalObj){
+    const sortedKeys = Object.keys(originalObj).sort();
+
+    const sortedObj = {};
+    sortedKeys.forEach(key => {
+        sortedObj[key] = originalObj[key];
+    });
+    return sortedObj
+}
+
+async function addFolderToZip(ctx, folderPath, base = '') {
+    const zip=ctx.zip
+    console.log(await fs.readdir(folderPath,{recursive:true}))
+    process.exit()
+    const folderItem= fs0.readdirSync(folderPath)
+    for (const filename of folderItem){
         const filePath = path.join(folderPath, filename);
-        const stat = fs.statSync(filePath);
+        const stat = await fs.stat(filePath);
 
         if (stat.isDirectory()) {
-            // 如果是目录，则递归添加  
-            addFolderToZip(zip, filePath, path.join(base, filename) + '/');
+            addFolderToZip(ctx, filePath, path.join(base, filename) + '/');
         } else {
-            // 如果是文件，则添加到zip
             const ext=path.extname(filePath).toLocaleLowerCase()
+            const rel=path.relative(ctx.root,filePath)
             const isTextFile=[".conf",".asm",".bat",".c",".h",".map"].some(x=>x==ext)
             if (isTextFile) {
-                let text = fs.readFileSync(filePath, { encoding: 'utf-8' });
+                let text =  await fs.readFile(filePath, { encoding: 'utf-8' });
                 // 检查LF和CRLF的数量  
                 let lfCount = (text.match(/\n/g) || []).length;
                 let crlfCount = (text.match(/\r\n/g) || []).length;
@@ -25,46 +45,69 @@ function addFolderToZip(zip, folderPath, base = '') {
                 // 根据数量判断主要换行符  
                 if (lfCount > crlfCount + 1) {
                     text = text.replace(/\n/g, '\r\n')
-                    console.log("lf replaced to crlf",filePath)
+                    if (process.argv.includes("-v")){
+                        console.log("lf replaced to crlf",filePath)
+                    }
                 }
                 zip.file(path.join(base, filename), text);
+                ctx.hash[rel]=compute_hash(text)
 
             } else {
-                let data = fs.readFileSync(filePath);
+                let data = await fs.readFile(filePath);
                 zip.file(path.join(base, filename), data);
+                ctx.hash[rel]=compute_hash(data)
             }
 
         }
-    });
+    }
 }
 
-function zipfoloder(folderPath) {
-    // 创建JSZip实例  
+async function zipfoloder(folderPath) {
     const zip = new JSZip();
+    const base='';
+    const files={}
 
-    // 将文件夹添加到zip  
-    addFolderToZip(zip, folderPath);
+    const items=await fs.readdir(folderPath,{recursive:true})
+    for (const rel of items){
+        const filePath = path.join(folderPath, rel);
+        const stat = await fs.stat(filePath);
 
-    // if(zip.files[".jsdos"] && zip.files[".jsdos/dosbox.conf"]){
+        if (stat.isDirectory()) {
+            //
+        } else {
+            const ext=path.extname(filePath).toLocaleLowerCase()
+            const isTextFile=[".conf",".asm",".bat",".c",".h",".map"].some(x=>x==ext)
+            if (isTextFile) {
+                let text =  await fs.readFile(filePath, { encoding: 'utf-8' });
+                // 检查LF和CRLF的数量  
+                let lfCount = (text.match(/\n/g) || []).length;
+                let crlfCount = (text.match(/\r\n/g) || []).length;
 
-    // }else{
-    //     zip.file(".jsdos/dosbox.conf","")
-    // }
+                // 根据数量判断主要换行符  
+                if (lfCount > crlfCount + 1) {
+                    text = text.replace(/\n/g, '\r\n')
+                    if (process.argv.includes("-v")){
+                        console.log("lf replaced to crlf",filePath)
+                    }
+                }
+                zip.file(path.join(base, rel), text);
+                files[rel]=compute_hash(text)
 
-    // 生成ZIP文件  
-    const outputPath = path.resolve(__dirname, path.basename(folderPath) + '.jsdos');
+            } else {
+                let data = await fs.readFile(filePath);
+                zip.file(path.join(base, rel), data);
+                files[rel]=compute_hash(data)
+            }
 
-    // 使用JSZip的generateAsync方法（返回Promise）来生成ZIP文件  
-    zip.generateAsync({ type: 'nodebuffer' })
-        .then(function (content) {
-            // 将生成的ZIP内容写入文件  
-            fs.writeFileSync(outputPath, content);
-            console.log('ZIP文件已生成:', outputPath);
-        })
-        .catch(function (err) {
-            console.error('生成ZIP文件时出错:', err);
-        });
-    return outputPath;
+        }
+    }
+
+    const bin=await zip.generateAsync({ type: 'nodebuffer' })
+
+    const jsonhashs = JSON.stringify(sort_obj_by_key(files));
+    const hash=compute_hash(jsonhashs)
+
+    return {bin,hash,files}
 }
 
 
@@ -75,17 +118,34 @@ const bundles_list=[
     "TurboC",
     "digger"
 ]
-const COPY_TO_DIST=path.resolve(__dirname,"../frontend/dist/jsdos-bundle")
-for (const bundle of bundles_list) {
-    const bundle_path=zipfoloder(path.resolve(__dirname, bundle));
-    fs.copyFileSync(bundle_path, path.resolve(COPY_TO_DIST,path.basename(bundle_path)))
+const OUTPUT_DIR=path.resolve(__dirname, "./build");
+
+async function main(){
+    const info={
+        version:"1.0",
+        homepage:"https://github.com/dosasm/dosplay",
+        build_time:Date.now(),
+        bundles:[]
+    }
+    const info_old_text=await fs.readFile(path.resolve(OUTPUT_DIR,"info.json"),"utf-8")
+    const info_old=JSON.parse(info_old_text)
+    for (const bundle_name of bundles_list){
+        const folderPath=path.resolve(__dirname,bundle_name)
+        const {bin,hash,files}=await zipfoloder(folderPath)
+        info.bundles.push({
+            name:bundle_name,
+            hash,files
+        })
+        const outpath=path.resolve(OUTPUT_DIR,path.basename(folderPath) + '.jsdos')
+        const finded=info_old.bundles.find(b=>b.name==bundle_name)
+        if(finded && finded.hash===hash){
+            console.log("keeped",bundle_name,hash)
+        }else{
+            await fs.writeFile(outpath,bin)
+            console.log("bundled",bundle_name,"to",outpath)
+        }
+    }
+    await fs.writeFile(path.resolve(OUTPUT_DIR,"info.json"),JSON.stringify(info,null,4))
 }
 
-const info={
-    version:"1.0",
-    homepage:"https://github.com/dosasm/dosplay",
-    build_time:Date.now(),
-    bundles:bundles_list
-}
-fs.writeFileSync(path.resolve(__dirname,"../frontend/dist/jsdos-bundle/info.json"),JSON.stringify(info,null,4))
-fs.writeFileSync(path.resolve(__dirname,"info.json"),JSON.stringify(info,null,4))
+main()

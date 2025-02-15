@@ -1,6 +1,7 @@
 import { Jsdos } from "./ui/jsdos";
 import "./index.css"
 import { setup_version } from "./ui/bundle";
+import { sleep } from "./utils";
 
 var jsdos = new Jsdos();
 (window as any).jsdos = jsdos;
@@ -34,10 +35,6 @@ function select_setup(select: HTMLSelectElement, id: string, urlParams: URLSearc
     })
 }
 
-async function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 async function setup() {
     const urlParams = new URLSearchParams(window.location.search);
     let start = true;
@@ -59,7 +56,8 @@ async function setup() {
     const openfile = urlParams.get('open');
     if (openfile) {
         jsdos.button_start.click();
-        await sleep(1000);
+        await jsdos.ready_ci
+        await sleep(100);
         await jsdos.jsdos_editor.open_file(openfile);
 
         let content = urlParams.get('content');
@@ -87,19 +85,7 @@ async function setup() {
         }
     }
 
-    if(jsdos.ci ) {
-        jsdos.ci.events().onStdout((data) => {
-            console.log(data);
-        });
-    }
-    // await sleep(100000);
-    // if(jsdos.ci){
-    //     jsdos.ci.sendKeyEvent(341,true); jsdos.ci.sendKeyEvent(341,true)
-    //     await sleep(1000);
-
-    //     jsdos.ci.sendKeyEvent(345,false)
-    //     jsdos.ci.sendKeyEvent(345,false)
-    // }
+    jsdos.record_stdout()
 }
 
 jsdos.ready.then(setup)

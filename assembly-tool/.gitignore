@@ -1,6 +1,6 @@
-/*.jsdos
+build
 node_modules/
-info.json
+
 dosbox2*.conf
 **/assembly/**/*.EXE
 **/assembly/**/*.OBJ
