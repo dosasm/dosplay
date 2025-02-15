@@ -99,8 +99,7 @@ export class Jsdos {
                 return `${year}/${month}/${day}`;
             }
             intro.innerHTML+=`  <span class="introtag">${formatDateFromObject(build_time)}</span>`
-            console.log(build_time.getDay()) //? why zero?
-            debugger
+            console.log("wierd this zero?",build_time.getDay()) //? why zero?
         })
         this.emulators.pathPrefix = this.dist;
 
