@@ -1,3 +1,4 @@
+import { FsNode } from 'emulators/dist/out/protocol/protocol';
 import { CommandInterface, getEmulators, utils } from "emulators";
 import { jsdos } from "../config"
 import { JsdosCanvas } from "./canvas";
@@ -98,6 +99,7 @@ export class Jsdos {
             }
             const ci = await this.download_run_bundle(url);
             if (!ci) return
+            
             this.ci = ci;
             this.jsdos_editor.ci = ci;
             this.jsdos_canvas = new JsdosCanvas(ci);
@@ -262,6 +264,9 @@ export class Jsdos {
                     _cmd =[...pre_cmd,... _cmd]
                 }
 
+                let stdout = "";
+                ci.events().onStdout((data) => {stdout += data.toLowerCase()});
+
                 for (const c of _cmd) {
                     const codes = utils.string2jsdosKey(c, false, false);
                     for (const code of codes) {
@@ -269,7 +274,24 @@ export class Jsdos {
                         await new Promise(resolve => setTimeout(resolve, 60));
                     }
                     ci?.simulateKeyPress(257);
-                    await new Promise(resolve => setTimeout(resolve, 600));
+                    let now_stdout="";
+                    const no_stdout_command=["cd"];
+                    const is_disk_switch=c.match(/[A-Za-z]:/);
+                    const no_stdout=no_stdout_command.some(v=>c.startsWith(v)) || is_disk_switch;
+                    if (!no_stdout) {
+                        await new Promise(resolve => {
+                            const interval = setInterval(() => {
+                                if (now_stdout==="" && stdout.includes(c.toLowerCase())) {
+                                    now_stdout = stdout;
+                                }
+                                if (now_stdout!=="" && now_stdout !== stdout) {
+                                    clearInterval(interval);
+                                    resolve(undefined);
+                                }
+                            }, 100);
+                        });
+                    }
+                    await new Promise(resolve => setTimeout(resolve, 100));
                 }
             })
             ctrl2.push(button_cmd)

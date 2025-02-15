@@ -92,15 +92,14 @@ async function setup() {
             console.log(data);
         });
     }
-    await sleep(100000);
-    if(jsdos.ci){
-        jsdos.ci.sendKeyEvent(341,true)
-        jsdos.ci.sendKeyEvent(341,true)
-        await sleep(1000);
+    // await sleep(100000);
+    // if(jsdos.ci){
+    //     jsdos.ci.sendKeyEvent(341,true); jsdos.ci.sendKeyEvent(341,true)
+    //     await sleep(1000);
 
-        jsdos.ci.sendKeyEvent(345,false)
-        jsdos.ci.sendKeyEvent(345,false)
-    }
+    //     jsdos.ci.sendKeyEvent(345,false)
+    //     jsdos.ci.sendKeyEvent(345,false)
+    // }
 }
 
 jsdos.ready.then(setup)

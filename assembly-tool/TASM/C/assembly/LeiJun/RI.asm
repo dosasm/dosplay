@@ -1,4 +1,5 @@
 ; copied from https://github.com/doyou/RAMinit/
+; video introduction: https://www.bilibili.com/video/BV1uF411k7RH
 ; Step1: tasm leijun
 ; Step2: tlink/t leijun
 ; Step3: leijun.com generated, Enjoy!

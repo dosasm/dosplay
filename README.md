@@ -15,7 +15,9 @@ Thanks to [caiiiycuk/js-dos](https://github.com/caiiiycuk/js-dos/).
 ## Supported Urlparams
 
 TO run assembly quickly we have parameter as follows.
-A intuitive example is run famous Lei Jun's Code with <http://dosasm.github.io/dosplay/?emu=dosboxWorker&bundle=TASM&open=%2FC%2Fassembly%2Fleijun.asm&run_cmd=run>
+A intuitive example is run famous Lei Jun's Code with
+ <http://dosasm.github.io/dosplay/?emu=xWorker&bundle=TASM&open=%2FC%2Fassembly%2FLeiJun%2FRI.asm&run_cmd=run-com>.
+(Note must use dosboxX. Dosbox may cause problem)
 
 - `emu`: the emulation type, can be
     - `dosboxDirect` or `dosboxWorker`

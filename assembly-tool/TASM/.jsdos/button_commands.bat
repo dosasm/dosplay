@@ -4,6 +4,10 @@
 tasm main.asm
 tlink main.obj
 main.exe
+@REM cmd:run-com
+tasm main.asm
+tlink /t main.obj
+main.com
 @REM cmd:list
 tasm /la main.asm
 type main.lst  
