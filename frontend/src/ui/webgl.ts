@@ -75,12 +75,12 @@ export function webGl(canvas: HTMLCanvasElement, ci: CommandInterface, stats: St
             width = containerHeight * aspect;
         }
         canvas.style.position = "relative";
-        canvas.style.top = (containerHeight - height) / 2 + "px";
-        canvas.style.left = (containerWidth - width) / 2 + "px";
+        canvas.style.top = 0 + "px";
+        canvas.style.left = 0 + "px";
         canvas.style.width = width + "px";
         canvas.style.height = height + "px";
     };
-    const onResizeLayer = (event:UIEvent) => {
+    const onResizeLayer = () => {
         const w = layers.clientWidth;
         const h = layers.clientHeight;
         containerWidth = w;

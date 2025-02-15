@@ -1,0 +1,54 @@
+
+#keyboard {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+#keyboard button {
+    /* width: 30px; */
+    min-width: 35px;
+    height: 30px;
+    margin: 0 3px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: white;
+    cursor: pointer;
+}
+button[data-key="caps-lock"]{
+    width: 100px;
+}
+
+button[data-key="tab"],
+button[data-key="shift-left"],
+button[data-key="shift-right"],
+button[data-key="enter"],
+button[data-key="ctrl-left"],
+button[data-key="ctrl-right"],
+button[data-key="alt-left"],
+button[data-key="alt-right"],
+button[data-key="win"],
+button[data-key="menu"] {
+    width: 60px;
+}
+
+button[data-key="space"] {
+    width: 100px;
+}
+
+button[data-key="backspace"] {
+    width: 80px;
+}

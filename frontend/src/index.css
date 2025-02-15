@@ -1,92 +1,65 @@
-@import url("~@xterm/xterm/css/xterm.css");
-
-
-
-.container {
-    overflow: auto;
-    /* 防止浮动造成的父容器高度塌陷 */
-}
-
-.left-column,
-.right-column {
-    float: left;
-    /* 左栏浮动 */
-    height: 100%;
-    /* 示例高度 */
-}
-
-.left-column {
-    /* width: 640px; */
-    /* 左栏宽度 */
-    background-color: lightblue;
-}
-
-.right-column {
-    width: 500px;
-    /* 右栏宽度 */
-    background-color: lightgreen;
-    margin-left: 1%;
-    /* 可选，为右栏添加一些左边距，使其与左栏有一定间隔 */
-}
-
-#editor {
-    width: 600px;
-    height: 600px;
-}
-
-#terminal {
-    width: 600px;
-    height: 400px;
-}
-
-#canvas {
-    width: 640px;
-    height: 400px;
-    position: relative;
-}
-
-@media screen and (max-width: 768px) {
-    .jsdos-canvas-layout {
-        width: 100vw;
-        height: 60vh;
-        background-color: gray;
+/* 整体布局采用 flexbox */
+body {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* 使 body 占满整个视口高度 */
+  }
+  
+  /* 左栏样式 */
+  .left-column {
+    flex: 1; /* 左栏占剩余空间的一部分 */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* 让 jsdos-canvas-layout 尽可能大 */
+  .jsdos-canvas-layout {
+    flex: 1; /* 占满左栏剩余空间 */
+  }
+  
+  /* 右栏样式 */
+  .right-column {
+    flex: 1; /* 右栏占剩余空间的一部分 */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* 让 editor 元素尽可能大 */
+  #editor {
+    flex: 1; /* 占满右栏剩余空间 */
+  }
+  
+  /* 当设备屏幕较小时隐藏 stats */
+@media (max-width: 768px) {
+    #stats {
+      display: none;
     }
-}
-
-@media screen and (min-width: 768px) {
-    .jsdos-canvas-layout {
-        width: 50vw;
-        height: 60vh;
-        background-color: gray;
+    
+    /* 左右两栏改为上下排列 */
+    body {
+      flex-direction: column;
     }
-}
+    
+    /* 确保屏幕较小时 editor 较大 */
+    .left-column,
+    .right-column {
+      width: 100%;
+    }
+  }
 
-.introtag{
-    font-size: 10px;
+
+  #intro a {
     font-weight: bold;
-    color: #422f2f;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
+    color: black;
+    text-decoration: none;
+    font-size: larger;
+    background-color: burlywood;
+  }
 
-
-/* 隐藏默认的文件输入框 */
-#bundle-upload {
-    display: none;
-}
-
-/* 自定义上传按钮样式 */
-.custom-upload-btn {
-    display: inline-block;
-    background-color: #007BFF;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s ease;
-}
-
-.custom-upload-btn:hover {
-    background-color: #0056b3;
-}
+  #intro{
+    background-color: aquamarine;
+    font-family: monospace;
+    color: gray;
+  }
+  

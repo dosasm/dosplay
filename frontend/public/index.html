@@ -9,45 +9,46 @@
 
 <body>
 
-    <div class="left-column">
-        <div id="controls">
-          <div id="intro"><a href="https://github.com/dosasm/dosplay">Dosplay</a> Run Dos code online</div> 
-          bundle:
-          <select id="jsdosbundle">
-            <option value="MASM-v6.11" selected>MASM-v6.11</option>
-          </select>
-          <select id="bundle-version">
-            <option value="original">original</option>
-          </select>
-          <button id="bundle-download">download</button>
-          <label for="bundle-upload" hidden><button>upload</button></label>
-          <input id="bundle-upload" type="file" class="custom-upload-btn">
-          <button id="bundle-save">save</button>
-          <button id="bundle-remove">remove</button>
-          <button id="bundle-clear">clear</button>
-          <br>
-          emulator:
-          <select id="emulators">
-            <option value="dosboxWorker">dosboxWorker</option>
-            <option value="dosboxDirect">dosboxDirect</option>
-            <option value="xWorker">xWorker</option>
-            <option value="xDirect">xDirect</option>
-            <option value="remoteDosboxDirect">remoteDosboxDirect</option>
-          </select>
-          <button id="start">start</button>
-          <button id="stop">stop</button>
-          
-        </div>
-
+  <div class="left-column">
+    <div id="controls">
+      <div id="intro"><a href="https://github.com/dosasm/dosplay">Dosplay</a> Run Dos code online</div>
       <div>
-        <div class="jsdos-canvas-layout">
-          <canvas id="jsdos-canvas"></canvas>
-        </div>
+        bundle:
+        <select id="jsdosbundle">
+          <option value="MASM-v6.11" selected>MASM-v6.11</option>
+        </select>
+        <select id="bundle-version">
+          <option value="original">original</option>
+        </select>
+        <button id="bundle-download">download</button>
+        <button id="bundle-save">save</button>
+        <button id="bundle-remove">remove</button>
+        <button id="bundle-clear">clear</button>
+        <label for="keyboard-enable">keyboard:</label>
+        <input id="keyboard-enable" type="checkbox">
       </div>
-      <p id="stats">Stats</p>
+      <div>
+        emulator:
+        <select id="emulators">
+          <option value="dosboxWorker">dosboxWorker</option>
+          <option value="dosboxDirect">dosboxDirect</option>
+          <option value="xWorker">xWorker</option>
+          <option value="xDirect">xDirect</option>
+          <option value="remoteDosboxDirect">remoteDosboxDirect</option>
+        </select>
+        <button id="start">start</button>
+        <button id="stop">stop</button>
+      </div>
     </div>
 
-    <div class="right-column">
+    <div class="jsdos-canvas-layout">
+      <canvas id="jsdos-canvas"></canvas>
+    </div>
+    <p id="stats">Stats</p>
+  </div>
+
+  <div class="right-column">
+    <div>
       <label for="editor-filelist">path:</label>
       <select id="editor-filelist">
         <option value="dosasm.asm">dosasm.asm</option>
@@ -58,12 +59,109 @@
       <input id="editor-newfile-path" type="text" hidden>
 
       <button id="editor-download-file">download file</button>
-      
-      <br>
-      <div id="editor">editor to edit file</div>
-      <div id="terminal" hidden></div>
-    </div> 
+    </div>
 
+    <div id="editor">editor to edit file</div>
+    <div id="terminal" hidden></div>
+  </div>
+
+  <div id="keyboard" hidden>
+    <div class="fn">
+      <button data-key="esc">esc</button>
+      <button data-key="f1">F1</button>
+      <button data-key="f2">F2</button>
+      <button data-key="f3">F3</button>
+      <button data-key="f4">F4</button>
+      <button data-key="f5">F5</button>
+      <button data-key="f6">F6</button>
+      <button data-key="f7">F7</button>
+      <button data-key="f8">F8</button>
+      <button data-key="f9">F9</button>
+      <button data-key="f10">F10</button>
+      <button data-key="f11">F11</button>
+      <button data-key="f12">F12</button>
+      <button id="keyboard-press">PressMode</button>
+    </div>
+    <!-- 第一行按键 -->
+    <div class="row">
+        <button data-key="grave">`</button>
+        <button data-key="1">1</button>
+        <button data-key="2">2</button>
+        <button data-key="3">3</button>
+        <button data-key="4">4</button>
+        <button data-key="5">5</button>
+        <button data-key="6">6</button>
+        <button data-key="7">7</button>
+        <button data-key="8">8</button>
+        <button data-key="9">9</button>
+        <button data-key="0">0</button>
+        <button data-key="-">-</button>
+        <button data-key="=">=</button>
+        <button data-key="backspace">⌫</button>
+    </div>
+    <!-- 第二行按键 -->
+    <div class="row">
+        <button data-key="tab">Tab</button>
+        <button data-key="q">Q</button>
+        <button data-key="w">W</button>
+        <button data-key="e">E</button>
+        <button data-key="r">R</button>
+        <button data-key="t">T</button>
+        <button data-key="y">Y</button>
+        <button data-key="u">U</button>
+        <button data-key="i">I</button>
+        <button data-key="o">O</button>
+        <button data-key="p">P</button>
+        <button data-key="leftbracket">[</button>
+        <button data-key="rightbracket">]</button>
+        <button data-key="backslash">\</button>
+    </div>
+    <!-- 第三行按键 -->
+    <div class="row">
+        <button data-key="capslock">Caps Lock</button>
+        <button data-key="a">A</button>
+        <button data-key="s">S</button>
+        <button data-key="d">D</button>
+        <button data-key="f">F</button>
+        <button data-key="g">G</button>
+        <button data-key="h">H</button>
+        <button data-key="j">J</button>
+        <button data-key="k">K</button>
+        <button data-key="l">L</button>
+        <button data-key="semicolon">;</button>
+        <button data-key="quote">'"</button>
+        <button data-key="enter">Enter</button>
+    </div>
+    <!-- 第四行按键 -->
+    <div class="row">
+        <button data-key="leftshift">Shift</button>
+        <button data-key="z">Z</button>
+        <button data-key="x">X</button>
+        <button data-key="c">C</button>
+        <button data-key="v">V</button>
+        <button data-key="b">B</button>
+        <button data-key="n">N</button>
+        <button data-key="m">M</button>
+        <button data-key="comma">,</button>
+        <button data-key="period">.</button>
+        <button data-key="slash">/</button>
+        <button data-key="rightshift">Shift</button>
+        <button data-key="rightctrl">↑</button>
+    </div>
+    <!-- 第五行按键 -->
+    <div class="row">
+        <button data-key="leftctrl">Ctrl</button>
+        <button data-key="win">Win</button>
+        <button data-key="leftalt">Alt</button>
+        <button data-key="space">Space</button>
+        <button data-key="alt-right">Alt</button>
+        <button data-key="menu">Menu</button>
+        <button data-key="rightalt">Alt</button>
+        <button data-key="rightctrl">Ctrl</button>
+        <button data-key="left">←</button>
+        <button data-key="down">↓</button>
+        <button data-key="right">→</button>
+    </div>
+  </div>
 </body>
-
 </html>

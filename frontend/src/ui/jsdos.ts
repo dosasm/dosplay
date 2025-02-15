@@ -4,9 +4,10 @@ import { jsdos } from "../config"
 import { JsdosCanvas } from "./canvas";
 import { Editor } from "./editor";
 import * as cache from "./bundle-cache";
-import * as ui_bundle from "./bundle"
+import {ui_bundle} from "./bundle"
 import {diskBundle} from "./jsdos-disk";
 import { sleep } from '../utils';
+import { ui_keyboard } from './keyboard';
 
 class DosPath {
     full: string
@@ -73,7 +74,9 @@ export class Jsdos {
     }
 
     constructor() {
-        ui_bundle.ci_provider.get_ci = () => this.ci;
+        let _ci=()=>this.ci;
+        ui_bundle(_ci)
+        ui_keyboard(_ci)
         this.ready=fetch(this.bundles + "info.json").then(async (res) => {
             this.bundles_info = await res.json()
             this.select_bundle.innerHTML = "";
@@ -88,7 +91,8 @@ export class Jsdos {
                 this.select_bundle.append(option)
             }
             const intro=document.getElementById("intro") as HTMLDivElement
-            intro.innerHTML+="  <span class=\"introtag\">"+new Date(this.bundles_info.build_time)+"</span>"
+            const build_time=new Date(this.bundles_info.build_time)
+            intro.innerHTML+=`  <span class="introtag">${build_time.getFullYear()}-${build_time.getMonth()}-${build_time.getDay()}</span>`
         })
         this.emulators.pathPrefix = this.dist;
 

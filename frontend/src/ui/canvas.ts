@@ -21,7 +21,6 @@ export class JsdosCanvas {
 
 
         ci.events().onMessage(console.log.bind(console));
-        ci
 
         window.addEventListener("keydown", (e) => {
             if(this.prevent_canvas_keymouse)return;
@@ -44,8 +43,8 @@ export class JsdosCanvas {
         canvas.addEventListener("mousemove", (e) => {
             if (!this.prevent_canvas_keymouse) {
                 ci.sendMouseMotion(
-                    (e.clientX - canvas.offsetLeft) / canvas.width,
-                    (e.clientY - canvas.offsetTop) / canvas.height);
+                    (e.clientX - canvas.offsetLeft) / canvas.clientWidth,
+                    (e.clientY - canvas.offsetTop) / canvas.clientHeight);
                 e.stopPropagation();
                 e.preventDefault();
             }

@@ -1,9 +1,10 @@
 import { Jsdos } from "./ui/jsdos";
 import "./index.css"
+import "./keyboard.css"
 import { setup_version } from "./ui/bundle";
 import { sleep } from "./utils";
 
-var jsdos = new Jsdos();
+let jsdos = new Jsdos();
 (window as any).jsdos = jsdos;
 
 function searchIndex(want: string, options: HTMLOptionsCollection) {
@@ -36,6 +37,7 @@ function select_setup(select: HTMLSelectElement, id: string, urlParams: URLSearc
 }
 
 async function setup() {
+    await jsdos.ready;
     const urlParams = new URLSearchParams(window.location.search);
     let start = true;
     if (urlParams.has('start') && urlParams.get('start') === "false") {
@@ -88,7 +90,7 @@ async function setup() {
     jsdos.record_stdout()
 }
 
-jsdos.ready.then(setup)
+setup()
 
 
 
