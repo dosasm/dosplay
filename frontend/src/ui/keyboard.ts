@@ -83,6 +83,12 @@ export function ui_keyboard(_ci:()=>CommandInterface|undefined){
                 if(ci && pressMode==true){
                     pressed=!pressed;
                     ci.sendKeyEvent(dosCode,pressed)
+                    if (pressed){
+                        button.style.backgroundColor = 'yellow';
+                    }else{
+                        button.style.backgroundColor = 'white';
+                    }
+                    
                 }
             }
         });
