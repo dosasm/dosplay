@@ -1,12 +1,27 @@
 {
     "version": "1.0",
     "homepage": "https://github.com/dosasm/dosplay",
-    "build_time": 1739615132169,
+    "build_time": 1739627813607,
     "bundles": [
-        "TASM",
-        "MASM-v5.00",
-        "MASM-v6.11",
-        "TurboC",
-        "digger"
+        {
+            "name": "TASM",
+            "hash": "57f27c6d42c494ed66b87ecb232653bf"
+        },
+        {
+            "name": "MASM-v5.00",
+            "hash": "88bc4d116ba99f5a86f64374c0f121ef"
+        },
+        {
+            "name": "MASM-v6.11",
+            "hash": "b5112998a3c7766dc1620a4c727064da"
+        },
+        {
+            "name": "TurboC",
+            "hash": "86d4b2da573f36e9a9fdeab87e82dd81"
+        },
+        {
+            "name": "digger",
+            "hash": "dcd73d37042d5dab9f8117bdd41f3d3b"
+        }
     ]
 }
