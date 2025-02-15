@@ -50,8 +50,8 @@ eles.save.addEventListener(
         const version =new Date().toUTCString();
         cache.cacheBundle(eles.jsdosbundle.value+"_"+ version, bundle);
 
-        eles.version.add(new Option(version, version));
-        eles.version.value = version;
+        eles.version.add(new Option(version, eles.jsdosbundle.value+"_"+version));
+        eles.version.value = eles.jsdosbundle.value+"_"+version;
 
         // save version to localstorage
         const versions = JSON.parse(localStorage.getItem(eles.jsdosbundle.value+"-versions") || "[]");
