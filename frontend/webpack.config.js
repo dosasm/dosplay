@@ -18,7 +18,7 @@ module.exports = {
     extensions: ['.js', '.ts', '.tsx', '.css']
   },
   // 便于调试的sourcemap
-  devtool: 'eval-cheap-module-source-map',
+  devtool: 'inline-source-map',
   module: {
     rules: [
       // 配置一个ts-load的规则，使用ts-loader将ts文件编译

@@ -69,7 +69,7 @@ async function setup() {
             content = decoded;
         }
 
-        sleep(2000);
+        await sleep(1000);
 
         if (content) {
             jsdos.jsdos_editor.editor.setValue(content);
@@ -91,6 +91,15 @@ async function setup() {
         jsdos.ci.events().onStdout((data) => {
             console.log(data);
         });
+    }
+    await sleep(100000);
+    if(jsdos.ci){
+        jsdos.ci.sendKeyEvent(341,true)
+        jsdos.ci.sendKeyEvent(341,true)
+        await sleep(1000);
+
+        jsdos.ci.sendKeyEvent(345,false)
+        jsdos.ci.sendKeyEvent(345,false)
     }
 }
 

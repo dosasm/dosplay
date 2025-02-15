@@ -14,6 +14,9 @@ Thanks to [caiiiycuk/js-dos](https://github.com/caiiiycuk/js-dos/).
 
 ## Supported Urlparams
 
+TO run assembly quickly we have parameter as follows.
+A intuitive example is run famous Lei Jun's Code with <http://dosasm.github.io/dosplay/?emu=dosboxWorker&bundle=TASM&open=%2FC%2Fassembly%2Fleijun.asm&run_cmd=run>
+
 - `emu`: the emulation type, can be
     - `dosboxDirect` or `dosboxWorker`
     - `xDirect` or `xWorkder`
@@ -22,14 +25,39 @@ Thanks to [caiiiycuk/js-dos](https://github.com/caiiiycuk/js-dos/).
     - `MASM-v5.00`: 
     - `TASM`:   Turbo Assembly compiler
     - `TurboC`: A Turbo C compiler
-- `start`: start the js-dos emulator
+- `start`: start the js-dos emulator, specify `false` to disable auto start
 
-If you specified the following parameter collection, 
-the js-dos emulator will be started automatically.
-Following two parameters will write the content to the path.
-Parameter `content` can be replace to `bc` for a base64 string.
+Also, we have paramenters about editor.
 
+- `open`: the path to open in the editor
 - `content`: the content to write to the editor
-- `write`: the path for the content
+-  `bc`: the base64 content to write to the editor
+- `run_cmd`: the command to run
+
+## supported commands
+
+We use `/.jsdos/button_commands.bat` to define the commands to run.
+If the current editor's file is ends with `supported_ext`.
+we will run the editor's editing code, otherwise `default_file` is used.
+The webapp first change directory to the file's parent folder and run the code
+with `main` replaced to the basename.
+
+```
+@REM default_file:/D/main.asm
+@REM supported_ext:asm,ASM
+@REM cmd:run
+masm main.asm;
+link main.obj;
+main.exe
+@REM cmd:list
+masm /la main.asm;
+type main.lst
+@REM cmd:debug
+masm main.asm;
+link main.obj;
+debug main.exe
+```
+
+
 
 

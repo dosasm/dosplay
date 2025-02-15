@@ -205,7 +205,7 @@ export class Jsdos {
         const decoder = new TextDecoder('utf-8');
         const text = decoder.decode(data);
 
-        const cmds = [{ name: "ver", cmd: "ver" }];
+        const cmds = [{ name: "ver", cmd: ["ver"] }];
         const cmd_info = {
             default_file: "/.jsdos/dosbox.conf",
             supported_ext: ""
@@ -217,7 +217,7 @@ export class Jsdos {
             if (l.startsWith("@REM cmd:")) {
                 cmds.push({
                     name: l.replace("@REM cmd:", "").trim(),
-                    cmd: ""
+                    cmd: []
                 })
                 magic=true;
             }
@@ -229,7 +229,7 @@ export class Jsdos {
                 }
             }
             if (magic===false) {
-                cmds[cmds.length - 1].cmd += l + "\n"
+                cmds[cmds.length - 1].cmd.push(l)
             }
         }
 
@@ -252,23 +252,24 @@ export class Jsdos {
                 }
                 if (supported) {
                     const dospath = new DosPath(wasm_path)
-                    _cmd = _cmd.replace(/main/g, dospath.barename)
-                    const pre_cmd = "cd " + dospath.dirname + "\n" + dospath.disk + ":\n"
-                    _cmd = pre_cmd + _cmd
+                    _cmd = _cmd.map(a=>a.replace(/main/g, dospath.barename))
+                    const pre_cmd = ["cd " + dospath.dirname, dospath.disk + ":"]
+                    _cmd =[...pre_cmd,... _cmd]
                 } else {
                     wasm_path = cmd_info.default_file
                     const dospath = new DosPath(wasm_path)
-                    const pre_cmd = "cd " + dospath.dirname + "\n" + dospath.disk + ":\n"
-                    _cmd = pre_cmd + _cmd
-                }
-                if(!_cmd.endsWith("\n")) {
-                    _cmd += "\n"
+                    const pre_cmd = ["cd " + dospath.dirname, dospath.disk + ":"]
+                    _cmd =[...pre_cmd,... _cmd]
                 }
 
-                const codes = utils.string2jsdosKey(_cmd, false, false);
-                for (const code of codes) {
-                    ci?.simulateKeyPress(...code);
-                    await new Promise(resolve => setTimeout(resolve, 60));
+                for (const c of _cmd) {
+                    const codes = utils.string2jsdosKey(c, false, false);
+                    for (const code of codes) {
+                        ci?.simulateKeyPress(...code);
+                        await new Promise(resolve => setTimeout(resolve, 60));
+                    }
+                    ci?.simulateKeyPress(257);
+                    await new Promise(resolve => setTimeout(resolve, 600));
                 }
             })
             ctrl2.push(button_cmd)
