@@ -12,11 +12,12 @@ function searchIndex(want:string,options:HTMLOptionsCollection){
         }
     }}
 
-function select_setup(select:HTMLSelectElement,id:string,urlParams:URLSearchParams){
+function select_setup(select:HTMLSelectElement,id:string,urlParams:URLSearchParams,default_value?:string){
     let idx=0;
     let values=[
         urlParams.get(id),
-        localStorage.getItem(id)
+        localStorage.getItem(id),
+        default_value
     ]
     for (const value of values){
         if (!value)continue;
@@ -39,12 +40,13 @@ async function setup(){
         start=false
     }
 
-    select_setup(jsdos.select_bundle,"bundle",urlParams);
-    select_setup(jsdos.select_emulators,"emu",urlParams);
+    select_setup(jsdos.select_bundle,"bundle",urlParams,"MASM-v6.11");
+    select_setup(jsdos.select_emulators,"emu",urlParams,"dosboxWorker");
     await setup_version();
     
     if(start){
         setTimeout(() => {
+            if (jsdos.select_bundle.value=="disk") return
             jsdos.button_start.click();
         }, 1000);
     }

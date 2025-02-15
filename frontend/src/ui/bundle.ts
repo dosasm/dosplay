@@ -1,7 +1,8 @@
 import { CommandInterface } from "emulators"
 import * as cache from "./bundle-cache"
+import { diskBundle } from "./jsdos-disk";
 
-const eles = {
+export const eles = {
     "upload": document.getElementById("bundle-upload") as HTMLInputElement,
     "save": document.getElementById("bundle-save") as HTMLButtonElement,
     "remove": document.getElementById("bundle-remove") as HTMLButtonElement,
@@ -57,6 +58,10 @@ eles.save.addEventListener(
         const versions = JSON.parse(localStorage.getItem(eles.jsdosbundle.value+"-versions") || "[]");
         localStorage.setItem(eles.jsdosbundle.value+"-versions", JSON.stringify([...versions, version]));
         localStorage.setItem(eles.jsdosbundle.value+"-version-selected", version);
+
+        if(diskBundle.filehandle){
+            diskBundle.saveFile(bundle);
+        }
     }
 )
 

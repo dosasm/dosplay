@@ -4,6 +4,7 @@ import { JsdosCanvas } from "./canvas";
 import { Editor } from "./editor";
 import * as cache from "./bundle-cache";
 import * as ui_bundle from "./bundle"
+import {diskBundle} from "./jsdos-disk";
 
 class DosPath {
     full: string
@@ -19,7 +20,7 @@ class DosPath {
         this.extname = this.filename.split(".").slice(-1)[0]
         this.barename = this.filename.replace("." + this.extname, "")
         this.dirname = wasm_segs[1] + ":\\" + wasm_segs.slice(2, -1).join("\\")
-        this.disk = wasm_segs[1];
+        this.disk= wasm_segs[1];
     }
 }
 
@@ -57,6 +58,10 @@ export class Jsdos {
         this.ready=fetch(this.bundles + "info.json").then(async (res) => {
             this.bundles_info = await res.json()
             this.select_bundle.innerHTML = "";
+            const option = document.createElement("option");
+            option.value = "disk";
+            option.innerText = "disk";
+            this.select_bundle.append(option)
             for (const bundle of this.bundles_info.bundles) {
                 const option = document.createElement("option");
                 option.value = bundle;
@@ -87,7 +92,10 @@ export class Jsdos {
             this.button_start.disabled = true;
             this.button_stop.disabled = false;
             const bundle = this.select_bundle.value;
-            const url = this.bundles + bundle + ".jsdos";
+            let url = this.bundles + bundle + ".jsdos";
+            if (bundle==="disk") {
+                url="<file>"
+            }
             const ci = await this.download_run_bundle(url);
             if (!ci) return
             this.ci = ci;
@@ -159,17 +167,25 @@ export class Jsdos {
 
     public async get_bundle(url: string): Promise<Uint8Array | undefined> {
         const version=document.getElementById("bundle-version") as HTMLSelectElement
+        
         if(version.value=="original"){
-            const id=this.bundles_info.build_time+"_"+url
-            const existed = await cache.existsBundle(id);
-            if (existed) {
-                const res = await cache.getBundle(id);
-                if (res)
-                    return res as Uint8Array;
+            if(url=="<file>" && diskBundle.valid){
+                if (!diskBundle.uint8Array) {
+                    await diskBundle.openFile();
+                }
+                return diskBundle.uint8Array;
+            }else{
+                const id=this.bundles_info.build_time+"_"+url
+                const existed = await cache.existsBundle(id);
+                if (existed) {
+                    const res = await cache.getBundle(id);
+                    if (res)
+                        return res as Uint8Array;
+                }
+                const bundle = await this.down_bundle(url);
+                await cache.cacheBundle(id, bundle);
+                return bundle;
             }
-            const bundle = await this.down_bundle(url);
-            await cache.cacheBundle(id, bundle);
-            return bundle;
         }else{
             const bundle=await cache.getBundle(version.value);
             if (bundle)
