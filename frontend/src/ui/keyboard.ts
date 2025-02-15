@@ -5,16 +5,11 @@ const keyboard = document.getElementById('keyboard') as HTMLDivElement;
 const keyboard_enable=document.getElementById('keyboard-enable') as HTMLInputElement;
 const keyboard_press=document.getElementById("keyboard-press") as HTMLButtonElement;
 
-let pressMode=false;
+let pressHold=0;
 keyboard_press.addEventListener(
     "click",()=>{
-        pressMode=!pressMode;
-        if(pressMode){
-            keyboard_press.style.backgroundColor="gray"
-        }else{
-            keyboard_press.style.backgroundColor="white"
-
-        }
+        pressHold+=1;
+        keyboard_press.innerText=pressHold+" keys to hold"
     }
 )
 keyboard_enable.addEventListener(
@@ -62,33 +57,40 @@ document.addEventListener('touchend', function () {
 export function ui_keyboard(_ci:()=>CommandInterface|undefined){
 
     const buttons=keyboard.getElementsByTagName("button")
+    let pressed:{keyCode:number,buttonIdx:number}[]=[];
     for (let i=0;i<buttons.length;i++){
         const button=buttons[i] as HTMLButtonElement;
 
-        let pressed=false;
         button.addEventListener('click', function () {
             const key = "KBD_"+button.dataset.key;
             const ci=_ci()
             if (key in Keys) {
                 const dosCode=(Keys as any)[key];
-                console.log(key,dosCode,"left")
-                if(ci && pressMode==false){
+                console.log(key,dosCode)
+                if(ci){
                     button.style.backgroundColor = 'yellow';
                     ci.sendKeyEvent(dosCode,true)
-                    setTimeout(() => {
-                        button.style.backgroundColor = 'white';
-                        ci.sendKeyEvent(dosCode,false)
-                    }, 100); 
-                }
-                if(ci && pressMode==true){
-                    pressed=!pressed;
-                    ci.sendKeyEvent(dosCode,pressed)
-                    if (pressed){
-                        button.style.backgroundColor = 'yellow';
-                    }else{
-                        button.style.backgroundColor = 'white';
+                    button.style.backgroundColor = 'yellow';
+                    if (pressHold>-1){
+                        pressHold--
+                        keyboard_press.innerText=pressHold+" keys to hold"
+                        pressed.push({
+                            keyCode:dosCode,
+                            buttonIdx:i
+                        })
                     }
-                    
+                    if (pressHold==-1){
+                        setTimeout(() => {
+                            for(const p of pressed){
+                                button.style.backgroundColor = 'white';
+
+                                ci.sendKeyEvent(p.keyCode,false)
+                                buttons[p.buttonIdx].style.backgroundColor = 'white';
+                            }
+                            pressed=[]
+                            keyboard_press.innerText="0 keys to hold"
+                        }, 100); 
+                    }
                 }
             }
         });
