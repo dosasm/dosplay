@@ -1,14 +1,14 @@
 {
     "version": "1.0",
     "homepage": "https://github.com/dosasm/dosplay",
-    "build_time": 1739648258503,
+    "build_time": 1739660227849,
     "bundles": [
         {
             "name": "TASM",
-            "hash": "d18f2376edeb6100718af9683be7df49",
+            "hash": "4bfeb8f4a131a53842b449330a080dc0",
             "files": {
                 "README.md": "f6f8815f5f9e8946f110c63869b500d9",
-                "D/main.asm": "3ca35464be509ec6a648d18f67a55d1d",
+                "D/main.asm": "67c2eccc1317ff33cd9d4cd726aa4400",
                 "C/tasm41/DPMI16BI.OVL": "dcc4b6e738221d1ffb19aca9bb694d39",
                 "C/tasm41/RTM.EXE": "c28cc1f9f45bf8ccb9182da2333878bd",
                 "C/tasm41/TASM.EXE": "ff229c6cf0c77d7a112857ad6755e086",
@@ -17,8 +17,11 @@
                 "C/tasm41/TDHELP.TDH": "38a7e531ed1ddf22411844ccbdc805d0",
                 "C/tasm41/TLINK.EXE": "aefb39ac4239620607af013591ceae58",
                 "C/assembly/password.asm": "4db0c535ad8f4daae16d9e20c88bb17d",
+                "C/assembly/speaker.asm": "b86b3250c08dd08aea66dfbfb2d932ed",
+                "C/assembly/wait.asm": "fc45917b51789784a527cd23050cebaa",
                 "C/assembly/LeiJun/README.md": "58b021bcb535a87364bacaf1eb5b90c2",
                 "C/assembly/LeiJun/RI.asm": "e38a61362e931c52a99004ac8c56197f",
+                "C/assembly/LeiJun/test.asm": "eaa24b3f1bd7e608a296eb2d690a58e1",
                 ".jsdos/button_commands.bat": "73d8c5e0520f35d85d2b7ea55ae4354b",
                 ".jsdos/dosbox.conf": "1335bf28320560a920aa20d95967b0f5",
                 ".jsdos/dosbox2copy.conf": "30497feb196e73ec5a85d10d81a6878b"
