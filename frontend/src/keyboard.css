@@ -1,15 +1,16 @@
 
 #keyboard {
+    cursor: move;
     position: fixed;
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     background-color: #f0f0f0;
     border: 1px solid #ccc;
-    padding: 10px;
+    padding: 2px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+    z-index: 10000;
 }
 
 .row {
@@ -19,8 +20,8 @@
 }
 
 #keyboard button {
-    /* width: 30px; */
-    min-width: 35px;
+    min-width: 30px;
+    color: blue;
     height: 30px;
     margin: 0 3px;
     border: 1px solid #ccc;
@@ -28,6 +29,7 @@
     background-color: white;
     cursor: pointer;
 }
+
 button[data-key="caps-lock"]{
     width: 100px;
 }
@@ -50,5 +52,10 @@ button[data-key="space"] {
 }
 
 button[data-key="backspace"] {
-    width: 80px;
+    width: 50px;
 }
+
+#keyboard-press{
+    width: 100px;
+}
+
