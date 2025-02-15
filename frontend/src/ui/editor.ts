@@ -23,15 +23,19 @@ export class Editor {
     private _ci: CommandInterface | undefined
     public set ci(ci: CommandInterface | undefined) {
         this._ci = ci;
-        const list=()=>{
+        const list = () => {
             ci && this.listfiles(ci).then((list) => {
                 if (list) {
+                    const old=this.filelist.value
                     this.filelist.innerHTML = "";
-                    const eles=[];
+                    const eles = [];
                     for (const file of list) {
                         const option = document.createElement("option");
                         option.value = file;
                         option.innerText = file;
+                        if(file===old){
+                            option.selected=true
+                        }
                         eles.push(option)
                     }
                     this.filelist.append(...eles)
@@ -57,17 +61,6 @@ export class Editor {
                 }
             }
         )
-
-    }
-
-    constructor(ci: CommandInterface | undefined) {
-        this.filelist.innerHTML = "";
-        if (ci) {
-            this.ci = ci;
-        }
-        this.editor.on("change", () => {
-            this.writefile.hidden = false;
-        });
 
         this.writefile.addEventListener(
             "click",
@@ -129,13 +122,21 @@ export class Editor {
                 }
                 download(bundle, "bundle.jsdos");
             })
+
+    }
+
+    constructor() {
+        this.filelist.innerHTML = "";
+        this.editor.on("change", () => {
+            this.writefile.hidden = false;
+        });
     }
 
     public async open_file(filename: string, force = false) {
         if (!this._ci) {
             return;
         }
-        if (force == false && this.writefile.hidden===false) {
+        if (force == false && this.writefile.hidden === false) {
             return
         }
         this.filelist.value = filename;
@@ -144,7 +145,7 @@ export class Editor {
         const decoder = new TextDecoder("utf-8");
         const text = decoder.decode(data);
         this.editor.setValue(text);
-        this.writefile.hidden=true;
+        this.writefile.hidden = true;
 
         if (filename.endsWith(".c")) {
             this.editor.getSession().setMode("ace/mode/c_cpp");

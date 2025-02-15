@@ -52,7 +52,7 @@ export class Jsdos {
 
 
     emulators = getEmulators(undefined)
-    jsdos_editor = new Editor(undefined);
+    jsdos_editor = new Editor();
     jsdos_canvas?: JsdosCanvas;
     ci?: CommandInterface;
     buttons_command: HTMLButtonElement[] = [];
@@ -96,7 +96,9 @@ export class Jsdos {
                 const year = date.getFullYear();
                 const month = date.getMonth() + 1;
                 const day = date.getDate();
-                return `${year}/${month}/${day}`;
+                const hour = date.getHours();
+                const minute = date.getMinutes();
+                return `${year}/${month}/${day} ${hour}:${minute}`;
             }
             intro.innerHTML+=`  <span class="introtag">${formatDateFromObject(build_time)}</span>`
             console.log("wierd this zero?",build_time.getDay()) //? why zero?
