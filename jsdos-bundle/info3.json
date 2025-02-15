@@ -1,7 +1,7 @@
 {
     "version": "1.0",
     "homepage": "https://github.com/dosasm/dosplay",
-    "build_time": 1739648258503,
+    "build_time": 1739634491728,
     "bundles": [
         {
             "name": "TASM",
@@ -64,13 +64,12 @@
         },
         {
             "name": "TurboC",
-            "hash": "3406291d4cce7dd60785cb916aa21f83",
+            "hash": "7727491334f67b147479c235cebfcda2",
             "files": {
                 "README.md": "7c1b8ec595e4ee9455b47a099e06a56b",
                 "D/Graphic.c": "dd928af3f6a8fac8bee246cc8322a9a0",
                 "D/Text.c": "2c88169d38488bc43f369a2f9e9f8a99",
                 "D/build.bat": "96b84b21a2d7cdfd357465301570549f",
-                "D/main.c": "108f219b60c93709bd6911e63e69f5a1",
                 "C/README": "18627bd063dbcd7fb68427f6f24a6acf",
                 "C/TC/ALLOC.H": "ae3c797d65bd84495bec32b80316799f",
                 "C/TC/ASSERT.H": "6e0da079298825ed8551719bf9baeb47",
@@ -161,7 +160,7 @@
                 "C/TC/SYS/STAT.H": "fb3438120741ce9cb6e4296935a84cd2",
                 "C/TC/SYS/TIMEB.H": "5c072a71cefb71f7c9fce2e4f475bdc9",
                 "C/TC/SYS/TYPES.H": "a800d6e365d848ce2ae98d64dc57e260",
-                ".jsdos/button_commands.bat": "9b9967ee4b78f44c939cd47f74f65d90",
+                ".jsdos/button_commands.bat": "455afb5c460f1f9191e4031b020dc47d",
                 ".jsdos/dosbox.conf": "2071a0d4cbf35a258ad60d75dab9390a",
                 ".jsdos/readme.txt": "18f507c26ac9cf464ff2fdbfdb005db1"
             }
