@@ -11,18 +11,21 @@
 
     <div class="left-column">
         <div id="controls">
-          <a href="https://github.com/dosasm/dosplay">Dosplay</a> Run Dos code online
-          <br>
+          <div id="intro"><a href="https://github.com/dosasm/dosplay">Dosplay</a> Run Dos code online</div> 
+          bundle:
           <select id="jsdosbundle">
-            <option value="TASM">TASM</option>
-            <option value="MASM-v5.00">MASM-v5.00</option>
             <option value="MASM-v6.11" selected>MASM-v6.11</option>
-            <option value="TurboC">TurboC</option>
-            <option value="digger">digger</option>
           </select>
-          <select id="jsdosbundle-version">
+          <select id="bundle-version">
             <option value="original">original</option>
           </select>
+          <button id="bundle-download">download</button>
+          <button id="bundle-upload">upload</button>
+          <button id="bundle-save">save</button>
+          <button id="bundle-remove">remove</button>
+          <button id="bundle-clear">clear</button>
+          <br>
+          emulator:
           <select id="emulators">
             <option value="dosboxWorker">dosboxWorker</option>
             <option value="dosboxDirect">dosboxDirect</option>
@@ -36,8 +39,6 @@
         </div>
 
       <div>
-        Frame:
-        <br>
         <div class="jsdos-canvas-layout">
           <canvas id="jsdos-canvas"></canvas>
         </div>
@@ -56,7 +57,6 @@
       <input id="editor-newfile-path" type="text" hidden>
 
       <button id="editor-download-file">download file</button>
-      <button id="editor-download-bundle">download bundle</button>
       
       <br>
       <div id="editor">editor to edit file</div>

@@ -6,7 +6,7 @@ const copy = require('copy');
 const path = require('path');
 const { fork } = require('child_process');
 
-fork("../assembly-tool/compress.js")
+// fork("../assembly-tool/compress.js")
 
 module.exports = {
   entry: './src/index.ts',
@@ -66,6 +66,11 @@ module.exports = {
         },
         {
           from: "../assembly-tool/*.jsdos", to({ context, absoluteFilename }) {
+            return Promise.resolve("jsdos-bundle/[name][ext]");
+          },
+        },
+        {
+          from: "../assembly-tool/*.json", to({ context, absoluteFilename }) {
             return Promise.resolve("jsdos-bundle/[name][ext]");
           },
         }

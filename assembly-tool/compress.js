@@ -64,13 +64,28 @@ function zipfoloder(folderPath) {
         .catch(function (err) {
             console.error('生成ZIP文件时出错:', err);
         });
-
-    fs.copyFileSync(outputPath, path.resolve(__dirname,"../frontend/dist/jsdos-bundle",path.basename(folderPath) + '.jsdos'))
-
+    return outputPath;
 }
 
-zipfoloder(path.resolve(__dirname, "TASM"))
-zipfoloder(path.resolve(__dirname, "MASM-v5.00"))
-zipfoloder(path.resolve(__dirname, "MASM-v6.11"))
-zipfoloder(path.resolve(__dirname, "TurboC"))
-zipfoloder(path.resolve(__dirname, "digger"))
+
+const bundles_list=[
+    "TASM",
+    "MASM-v5.00",
+    "MASM-v6.11",
+    "TurboC",
+    "digger"
+]
+const COPY_TO_DIST=path.resolve(__dirname,"../frontend/dist/jsdos-bundle")
+for (const bundle of bundles_list) {
+    const bundle_path=zipfoloder(path.resolve(__dirname, bundle));
+    fs.copyFileSync(bundle_path, path.resolve(COPY_TO_DIST,path.basename(bundle_path)))
+}
+
+const info={
+    version:"1.0",
+    homepage:"https://github.com/dosasm/dosplay",
+    build_time:Date.now(),
+    bundles:bundles_list
+}
+fs.writeFileSync(path.resolve(__dirname,"../frontend/dist/jsdos-bundle/info.json"),JSON.stringify(info,null,4))
+fs.writeFileSync(path.resolve(__dirname,"info.json"),JSON.stringify(info,null,4))

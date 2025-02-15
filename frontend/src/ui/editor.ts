@@ -14,7 +14,7 @@ export class Editor {
     writefile = document.getElementById("editor-write-file") as HTMLButtonElement;
 
     button_download_file = document.getElementById("editor-download-file") as HTMLButtonElement;
-    button_download_bundle = document.getElementById("editor-download-bundle") as HTMLButtonElement
+    button_download_bundle = document.getElementById("bundle-download") as HTMLButtonElement
 
     public current_file() {
         return this.filelist.value as string;
@@ -26,14 +26,22 @@ export class Editor {
         const list=()=>{
             ci && this.listfiles(ci).then((list) => {
                 if (list) {
+                    let selected=list[0];
                     this.filelist.innerHTML = "";
+                    const eles=[];
                     for (const file of list) {
                         const option = document.createElement("option");
                         option.value = file;
                         option.innerText = file;
-                        this.filelist.appendChild(option);
+                        if (file==="/.jsdos/dosbox.conf"){
+                            selected=file
+                            option.selected=true
+                        }
+                        eles.push(option)
                     }
-                    this.open_file(list[0],true);
+                    this.filelist.append(...eles)
+                    this.filelist.value=selected
+                    this.open_file(selected,true);
                 }
             })
         }
@@ -41,7 +49,7 @@ export class Editor {
             "click",
             list
         )
-        list()
+        setTimeout(list, 1000);
         this.filelist.addEventListener(
             "input",
             async () => {

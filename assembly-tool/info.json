@@ -1,0 +1,12 @@
+{
+    "version": "1.0",
+    "homepage": "https://github.com/dosasm/dosplay",
+    "build_time": 1739588886709,
+    "bundles": [
+        "TASM",
+        "MASM-v5.00",
+        "MASM-v6.11",
+        "TurboC",
+        "digger"
+    ]
+}

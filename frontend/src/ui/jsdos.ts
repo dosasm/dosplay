@@ -2,7 +2,8 @@ import { CommandInterface, getEmulators, utils } from "emulators";
 import { jsdos, bundle_config } from "../config"
 import { JsdosCanvas } from "./canvas";
 import { Editor } from "./editor";
-import * as cache from "./cacheBundle";
+import * as cache from "./bundle-cache";
+import * as ui_bundle from "./bundle"
 
 class DosPath {
     full: string
@@ -22,9 +23,20 @@ class DosPath {
     }
 }
 
+const default_bundles_info = {
+    "version": "1.0",
+    "homepage": "https://github.com/dosasm/dosplay",
+    "build_time": 1739588886709,
+    "bundles": [
+        "MASM-v6.11",
+    ]
+}
+
+
 export class Jsdos {
     dist = jsdos.dist;
     bundles = jsdos.bundles;
+    bundles_info=default_bundles_info;
     select_bundle = document.getElementById("jsdosbundle") as HTMLSelectElement
     select_emulators = document.getElementById("emulators") as HTMLSelectElement
     button_start = document.getElementById("start") as HTMLButtonElement
@@ -38,7 +50,22 @@ export class Jsdos {
     ci?: CommandInterface;
     buttons_command: HTMLButtonElement[] = [];
 
+    ready:Promise<void|undefined>
+
     constructor() {
+        ui_bundle.ci_provider.get_ci = () => this.ci;
+        this.ready=fetch(this.bundles + "info.json").then(async (res) => {
+            this.bundles_info = await res.json()
+            this.select_bundle.innerHTML = "";
+            for (const bundle of this.bundles_info.bundles) {
+                const option = document.createElement("option");
+                option.value = bundle;
+                option.innerText = bundle;
+                this.select_bundle.append(option)
+            }
+            const intro=document.getElementById("intro") as HTMLDivElement
+            intro.innerHTML+="  <span class=\"introtag\">"+new Date(this.bundles_info.build_time)+"</span>"
+        })
         this.emulators.pathPrefix = this.dist;
 
         this.jsdos_editor.editor.container.addEventListener("focus", (e) => {
@@ -136,15 +163,22 @@ export class Jsdos {
     }
 
     public async get_bundle(url: string): Promise<Uint8Array | undefined> {
-        const existed = await cache.existsBundle(url);
-        if (existed) {
-            const res = await cache.getBundle(url);
-            if (res)
-                return res as Uint8Array;
+        const version=document.getElementById("bundle-version") as HTMLSelectElement
+        if(version.value=="original"){
+            const existed = await cache.existsBundle(url);
+            if (existed) {
+                const res = await cache.getBundle(url);
+                if (res)
+                    return res as Uint8Array;
+            }
+            const bundle = await this.down_bundle(url);
+            await cache.cacheBundle(url, bundle);
+            return bundle;
+        }else{
+            const bundle=await cache.getBundle(version.value);
+            if (bundle)
+                return bundle;
         }
-        const bundle = await this.down_bundle(url);
-        await cache.cacheBundle(url, bundle);
-        return bundle;
     }
 
 
@@ -230,7 +264,7 @@ export class Jsdos {
     }
 
     public async download_run_bundle(url: string): Promise<CommandInterface | undefined> {
-        const bundle = await this.down_bundle(url);
+        const bundle = await this.get_bundle(url);
         if (!bundle) return;
         let ci: CommandInterface | undefined = undefined;
         switch (this.select_emulators.value) {

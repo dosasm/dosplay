@@ -90,3 +90,37 @@ export async function existsBundle(key: string): Promise<boolean> {
         };
     });
 }
+
+export async function clearBundles(): Promise<void> {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.clear();
+
+        request.onsuccess = () => {
+            resolve();
+        };
+
+        request.onerror = (event) => {
+            reject((event.target as IDBRequest).error);
+        };
+    });
+}
+
+export async function listBundles(): Promise<string[]> {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(STORE_NAME, 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const request = store.getAllKeys();
+
+        request.onsuccess = (event) => {
+            resolve((event.target as IDBRequest).result as string[]);
+        };
+
+        request.onerror = (event) => {
+            reject((event.target as IDBRequest).error);
+        };
+    });
+}
