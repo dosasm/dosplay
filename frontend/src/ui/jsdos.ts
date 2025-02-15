@@ -92,7 +92,15 @@ export class Jsdos {
             }
             const intro=document.getElementById("intro") as HTMLDivElement
             const build_time=new Date(this.bundles_info.build_time)
-            intro.innerHTML+=`  <span class="introtag">${build_time.getFullYear()}-${build_time.getMonth()}-${build_time.getDay()}</span>`
+            function formatDateFromObject(date:Date) {
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1;
+                const day = date.getDate();
+                return `${year}/${month}/${day}`;
+            }
+            intro.innerHTML+=`  <span class="introtag">${formatDateFromObject(build_time)}</span>`
+            console.log(build_time.getDay()) //? why zero?
+            debugger
         })
         this.emulators.pathPrefix = this.dist;
 
