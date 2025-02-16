@@ -3,6 +3,27 @@ import ace from "ace-builds"
 import { FsNode } from "emulators/dist/out/protocol/protocol";
 import { download } from "./download";
 
+function sortStrings(strings: string[]): string[] {
+    return strings.sort((a, b) => {
+        const isAPrefixedWithD = a.startsWith('/D/');
+        const isBPrefixedWithD = b.startsWith('/D/');
+        const isAPrefixedWithCExample = a.startsWith('/C/example');
+        const isBPrefixedWithCExample = b.startsWith('/C/example');
+
+        if (isAPrefixedWithD &&!isBPrefixedWithD) {
+            return -1;
+        } else if (!isAPrefixedWithD && isBPrefixedWithD) {
+            return 1;
+        } else if (isAPrefixedWithCExample &&!isBPrefixedWithCExample) {
+            return -1;
+        } else if (!isAPrefixedWithCExample && isBPrefixedWithCExample) {
+            return 1;
+        } else {
+            return a.localeCompare(b);
+        }
+    });
+}
+
 export class Editor {
     editor = ace.edit("editor");
 
@@ -184,6 +205,6 @@ export class Editor {
             return;
         }
         traverse(root.nodes);
-        return fileList;
+        return sortStrings(fileList);
     }
 }
