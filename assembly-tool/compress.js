@@ -27,8 +27,9 @@ async function zipfoloder(folderPath) {
     const files={}
 
     const items=await fs.readdir(folderPath,{recursive:true})
-    for (const rel of items){
-        const filePath = path.join(folderPath, rel);
+    for (const _rel of items){
+        const rel=_rel.replace(/\\/g,"/")
+        const filePath = path.join(folderPath, _rel);
         const stat = await fs.stat(filePath);
 
         if (stat.isDirectory()) {
@@ -49,12 +50,12 @@ async function zipfoloder(folderPath) {
                         console.log("lf replaced to crlf",filePath)
                     }
                 }
-                zip.file(path.join(base, rel), text);
+                zip.file(path.posix.join(base, rel), text);
                 files[rel]=compute_hash(text)
 
             } else {
                 let data = await fs.readFile(filePath);
-                zip.file(path.join(base, rel), data);
+                zip.file(path.posix.join(base, rel), data);
                 files[rel]=compute_hash(data)
             }
 
@@ -88,7 +89,7 @@ async function main(){
     }
     const info_path=path.resolve(OUTPUT_DIR,"info.json");
     let info_old=undefined
-    if(fs0.existsSync(info_path)){
+    if(fs0.existsSync(info_path)&&!process.argv.includes("--force")){
         const info_old_text=await fs.readFile(info_path,"utf-8")
         info_old=JSON.parse(info_old_text)
     }
