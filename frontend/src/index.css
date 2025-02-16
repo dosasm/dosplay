@@ -32,9 +32,6 @@ body {
   
   /* 当设备屏幕较小时隐藏 stats */
 @media (max-width: 768px) {
-    #stats {
-      display: none;
-    }
     
     /* 左右两栏改为上下排列 */
     body {
