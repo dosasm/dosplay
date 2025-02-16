@@ -16,6 +16,9 @@ function redirect_html(url, description) {
 <body>
     If you are not redirected automatically, 
     follow <a href="${url}">this link</a>.
+    <footer>
+    ${new Date()}
+    </footer>
 </body>
 
 </html>`
