@@ -1,11 +1,11 @@
 {
     "version": "1.0",
     "homepage": "https://github.com/dosasm/dosplay",
-    "build_time": 1739662733051,
+    "build_time": 1739671498239,
     "bundles": [
         {
             "name": "TASM",
-            "hash": "253633a2cf6210e62e859654a4f85c77",
+            "hash": "23a229102f23b197c21f448ef0a2f7e3",
             "files": {
                 "README.md": "f6f8815f5f9e8946f110c63869b500d9",
                 "D/main.asm": "67c2eccc1317ff33cd9d4cd726aa4400",
@@ -21,16 +21,17 @@
                 "C/assembly/wait.asm": "fc45917b51789784a527cd23050cebaa",
                 "C/assembly/LeiJun/README.md": "58b021bcb535a87364bacaf1eb5b90c2",
                 "C/assembly/LeiJun/RI.asm": "e38a61362e931c52a99004ac8c56197f",
-                "C/assembly/LeiJun/run.bat": "5486bec717675c17c50063ffa6af420e",
-                "C/assembly/LeiJun/test.asm": "eaa24b3f1bd7e608a296eb2d690a58e1",
-                ".jsdos/button_commands.bat": "73d8c5e0520f35d85d2b7ea55ae4354b",
+                "C/assembly/LeiJun/run.bat": "7d49e29b773fdaa483813078952052a8",
+                "C/assembly/LeiJun/test.asm": "42bacce2be8a1f4c5ad556244516b5af",
+                "C/assembly/LeiJun/tsr.asm": "7005da015561c06a5d786a064ae36268",
+                ".jsdos/button_commands.bat": "15fafefc686da18164d1504226fa09fd",
                 ".jsdos/dosbox.conf": "1335bf28320560a920aa20d95967b0f5",
                 ".jsdos/dosbox2copy.conf": "30497feb196e73ec5a85d10d81a6878b"
             }
         },
         {
             "name": "MASM-v5.00",
-            "hash": "afb53fc57be995e0f3f1aecf2476595e",
+            "hash": "e4943e311940be0be64cfa1fd66746d9",
             "files": {
                 "README.md": "edc01a6baa9d5a51cbdc606a806f3ed0",
                 "D/main.asm": "920afa825a0027475a2c9c86bfa93f3a",
@@ -42,13 +43,13 @@
                 "C/masm500/edit.com": "f6e368e10b600836dd349ff937b183a2",
                 "C/masm500/edit.hlp": "47b39e1df5ac3fdcb5aec2735b93fd29",
                 "C/assembly/01hello.asm": "920afa825a0027475a2c9c86bfa93f3a",
-                ".jsdos/button_commands.bat": "375ee5408f2f2f0ce3f7b0549c3bd2f8",
+                ".jsdos/button_commands.bat": "2d293a424c2afb107546b601b71d649f",
                 ".jsdos/dosbox.conf": "d52481200052f1e59b6261dd7df2db04"
             }
         },
         {
             "name": "MASM-v6.11",
-            "hash": "c9e726b54ea5467da14263725d8dab42",
+            "hash": "fffa5f421638cbc63490319178103325",
             "files": {
                 "README.md": "17949e83cf6e4e509a8c5db8efa89830",
                 "D/main.asm": "d8b54e22b3940ca844e774b2f9505b27",
@@ -62,13 +63,13 @@
                 "C/assembly/02add.asm": "6e8fbe0f8b08457671303d760e67cc1f",
                 "C/assembly/03key.asm": "d8b7728393930b942dab09ac44c212d4",
                 "C/assembly/a1shift.asm": "eaa93104446a69eaad338e1b52bdf722",
-                ".jsdos/button_commands.bat": "375ee5408f2f2f0ce3f7b0549c3bd2f8",
+                ".jsdos/button_commands.bat": "2d293a424c2afb107546b601b71d649f",
                 ".jsdos/dosbox.conf": "bb13dab671b9b4ae74f0b0faf57a2b71"
             }
         },
         {
             "name": "TurboC",
-            "hash": "3406291d4cce7dd60785cb916aa21f83",
+            "hash": "b170a97af4f42661e48081cf4c970e42",
             "files": {
                 "README.md": "7c1b8ec595e4ee9455b47a099e06a56b",
                 "D/Graphic.c": "dd928af3f6a8fac8bee246cc8322a9a0",
@@ -165,7 +166,7 @@
                 "C/TC/SYS/STAT.H": "fb3438120741ce9cb6e4296935a84cd2",
                 "C/TC/SYS/TIMEB.H": "5c072a71cefb71f7c9fce2e4f475bdc9",
                 "C/TC/SYS/TYPES.H": "a800d6e365d848ce2ae98d64dc57e260",
-                ".jsdos/button_commands.bat": "9b9967ee4b78f44c939cd47f74f65d90",
+                ".jsdos/button_commands.bat": "a320a5e268c0b571d7da471804339d4c",
                 ".jsdos/dosbox.conf": "2071a0d4cbf35a258ad60d75dab9390a",
                 ".jsdos/readme.txt": "18f507c26ac9cf464ff2fdbfdb005db1"
             }
