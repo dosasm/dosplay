@@ -6,7 +6,7 @@ const utils = require("./utils")
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
-  utils.shims(!isProduction,"dist")
+  utils.shims(isProduction,"dist")
   return {
     entry: './src/index.ts',
     output: {

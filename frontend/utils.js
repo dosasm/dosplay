@@ -1,8 +1,8 @@
-const fs=require("fs")
+const fs = require("fs")
 const path = require("path")
 
-function redirect_html(url,description){
-  return `
+function redirect_html(url, description) {
+    return `
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,27 +22,32 @@ function redirect_html(url,description){
 }
 
 
-function shims(debug,outdir="shims") {
-    const outputdir=path.resolve(__dirname,outdir)
-    if(!fs.existsSync(outputdir)){
+function shims(isProduction, outdir = "shims") {
+    const outputdir = path.resolve(__dirname, outdir)
+    if (!fs.existsSync(outputdir)) {
         fs.mkdirSync(outputdir)
     }
-  const url = debug ? "http://localhost:8080/" : "http://dosasm.github.io/dosplay/"
-  const result = []
-  const urlObj = new URL(url)
-  const params = urlObj.searchParams;
-  params.set("emu", "xWorker")
-  params.set("bundle", "TASM")
-  params.set("open", "/C/assembly/LeiJun/run.bat")
-  params.set("run_cmd", "batch")
+    const url = isProduction ? "http://dosasm.github.io/dosplay/":"http://localhost:8080/";
 
-  const u=urlObj.toString()
-  result.push(u)
-  const html=redirect_html(u,"LeiJun's RAMinit")
-  fs.writeFileSync(path.resolve(outputdir,"RAMinit.html"),html)
+    const result = []
+    const urlObj = new URL(url)
+    const params = urlObj.searchParams;
+    params.set("emu", "xWorker")
+    params.set("bundle", "TASM")
+    params.set("open", "/C/assembly/LeiJun/run.bat")
+    params.set("run_cmd", "batch")
+
+    const u = urlObj.toString()
+    result.push(u)
+    const html = redirect_html(u, "LeiJun's RAMinit")
+    if(isProduction){
+        fs.writeFileSync(path.resolve(outputdir, "RAMinit.html"), html)
+    }else{
+        console.log(u)
+    }
 }
 
-module.exports={
+module.exports = {
     shims
 }
 
