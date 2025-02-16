@@ -39,9 +39,9 @@ Also, we have paramenters about editor.
 ## supported commands
 
 We use `/.jsdos/button_commands.bat` to define the commands to run.
-If the current editor's file is ends with `supported_ext`.
-we will run the editor's editing code, otherwise `default_file` is used.
-The webapp first change directory to the file's parent folder and run the code
+See <./assembly-tool/TASM/.jsdos/button_commands.bat> for example.
+If the current editor's file is ends with `ext`,
+the webapp first change directory to the file's parent folder and run the code
 with `main` replaced to the basename.
 
 

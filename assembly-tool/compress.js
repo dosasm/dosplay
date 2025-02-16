@@ -21,47 +21,6 @@ function sort_obj_by_key(originalObj){
     return sortedObj
 }
 
-async function addFolderToZip(ctx, folderPath, base = '') {
-    const zip=ctx.zip
-    console.log(await fs.readdir(folderPath,{recursive:true}))
-    process.exit()
-    const folderItem= fs0.readdirSync(folderPath)
-    for (const filename of folderItem){
-        const filePath = path.join(folderPath, filename);
-        const stat = await fs.stat(filePath);
-
-        if (stat.isDirectory()) {
-            addFolderToZip(ctx, filePath, path.join(base, filename) + '/');
-        } else {
-            const ext=path.extname(filePath).toLocaleLowerCase()
-            const rel=path.relative(ctx.root,filePath)
-            const isTextFile=[".conf",".asm",".bat",".c",".h",".map"].some(x=>x==ext)
-            if (isTextFile) {
-                let text =  await fs.readFile(filePath, { encoding: 'utf-8' });
-                // 检查LF和CRLF的数量  
-                let lfCount = (text.match(/\n/g) || []).length;
-                let crlfCount = (text.match(/\r\n/g) || []).length;
-
-                // 根据数量判断主要换行符  
-                if (lfCount > crlfCount + 1) {
-                    text = text.replace(/\n/g, '\r\n')
-                    if (process.argv.includes("-v")){
-                        console.log("lf replaced to crlf",filePath)
-                    }
-                }
-                zip.file(path.join(base, filename), text);
-                ctx.hash[rel]=compute_hash(text)
-
-            } else {
-                let data = await fs.readFile(filePath);
-                zip.file(path.join(base, filename), data);
-                ctx.hash[rel]=compute_hash(data)
-            }
-
-        }
-    }
-}
-
 async function zipfoloder(folderPath) {
     const zip = new JSZip();
     const base='';
@@ -127,8 +86,12 @@ async function main(){
         build_time:Date.now(),
         bundles:[]
     }
-    const info_old_text=await fs.readFile(path.resolve(OUTPUT_DIR,"info.json"),"utf-8")
-    const info_old=JSON.parse(info_old_text)
+    const info_path=path.resolve(OUTPUT_DIR,"info.json");
+    let info_old=undefined
+    if(fs0.existsSync(info_path)){
+        const info_old_text=await fs.readFile(info_path,"utf-8")
+        info_old=JSON.parse(info_old_text)
+    }
     for (const bundle_name of bundles_list){
         const folderPath=path.resolve(__dirname,bundle_name)
         const {bin,hash,files}=await zipfoloder(folderPath)
@@ -137,7 +100,7 @@ async function main(){
             hash,files
         })
         const outpath=path.resolve(OUTPUT_DIR,path.basename(folderPath) + '.jsdos')
-        const finded=info_old.bundles.find(b=>b.name==bundle_name)
+        const finded=info_old?info_old.bundles.find(b=>b.name==bundle_name):undefined
         if(finded && finded.hash===hash){
             console.log("keeped",bundle_name,hash)
         }else{
@@ -145,7 +108,7 @@ async function main(){
             console.log("bundled",bundle_name,"to",outpath)
         }
     }
-    await fs.writeFile(path.resolve(OUTPUT_DIR,"info.json"),JSON.stringify(info,null,4))
+    await fs.writeFile(info_path,JSON.stringify(info,null,4))
 }
 
 main()
