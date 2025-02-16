@@ -11,8 +11,9 @@ echo install RI
 RI.com
 
 tsr.exe 
-echo now you can press right ctrl + left ctrl to stop the tsr
-echo Also, you can also run ri/cls
+echo a TSR is runned to display *time* on the top right corner
+echo now you can press right ctrl + left ctrl to stop the tsr via RAMIinit
+echo Also, you can type ri/cls to stop it
 
 
 
