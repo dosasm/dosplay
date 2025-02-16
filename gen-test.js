@@ -8,8 +8,8 @@ for (const url of urls){
 const params=urlObj.searchParams;
 params.set("emu","xWorker")
 params.set("bundle","TASM")
-params.set("open","/C/assembly/LeiJun/RI.asm")
-params.set("run_cmd","run-com")
+params.set("open","/C/assembly/LeiJun/run.bat")
+params.set("run_cmd","batch")
 
 
 console.log(urlObj.toString())

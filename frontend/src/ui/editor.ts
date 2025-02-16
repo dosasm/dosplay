@@ -23,34 +23,51 @@ export class Editor {
     private _ci: CommandInterface | undefined
     public set ci(ci: CommandInterface | undefined) {
         this._ci = ci;
-        const list = () => {
-            ci && this.listfiles(ci).then((list) => {
-                if (list) {
-                    const old=this.filelist.value
-                    this.filelist.innerHTML = "";
-                    const eles = [];
-                    for (const file of list) {
-                        const option = document.createElement("option");
-                        option.value = file;
-                        option.innerText = file;
-                        if(file===old){
-                            option.selected=true
-                        }
-                        eles.push(option)
-                    }
-                    this.filelist.append(...eles)
-                }
-            })
+    }
+    public get ci(){
+        return this._ci
+    }
+
+    public async list(){
+        if(!this.ci){
+            return
         }
+        const files=await this.listfiles(this.ci);
+        if (!files){
+            return
+        }
+
+        const old=this.filelist.value
+        this.filelist.innerHTML = "";
+        const eles = [];
+        for (const file of files) {
+                    const option = document.createElement("option");
+                    option.value = file;
+                    option.innerText = file;
+                    if(file===old){
+                        option.selected=true
+                    }
+                    eles.push(option)
+                }
+                this.filelist.append(...eles)
+    }
+
+    constructor() {
+
+        this.filelist.innerHTML = "";
+        this.editor.on("change", () => {
+            this.writefile.hidden = false;
+        });
+
         this.filelist.addEventListener(
             "click",
-            list
+            ()=>{this.list}
         )
-        list()
+        this.list()
         this.filelist.addEventListener(
             "input",
             async () => {
-                if (!this._ci) {
+                if (!this.ci) {
                     return;
                 }
                 if (this.writefile.hidden == false) {
@@ -65,21 +82,21 @@ export class Editor {
         this.writefile.addEventListener(
             "click",
             async () => {
-                if (!this._ci) {
+                if (!this.ci) {
                     return;
                 }
                 const filename = this.filelist.value;
                 const text = this.editor.getValue();
                 const encoder = new TextEncoder();
                 const data = encoder.encode(text);
-                await this._ci.fsWriteFile(filename, data);
+                await this.ci.fsWriteFile(filename, data);
                 this.writefile.hidden = true;
             })
 
         this.newfile.addEventListener(
             "click",
             async () => {
-                if (!this._ci) {
+                if (!this.ci) {
                     return;
                 }
                 if (this.newfile.innerText === "new") {
@@ -91,7 +108,7 @@ export class Editor {
                 const filename = this.newfile_input.value;
                 const encoder = new TextEncoder();
                 const data = encoder.encode("");
-                await this._ci.fsWriteFile(filename, data);
+                await this.ci.fsWriteFile(filename, data);
                 const option = document.createElement("option");
                 option.value = filename;
                 option.innerText = filename;
@@ -102,45 +119,38 @@ export class Editor {
         this.button_download_file.addEventListener(
             "click",
             async () => {
-                if (!this._ci) {
+                if (!this.ci) {
                     return;
                 }
                 const filename = this.filelist.value;
-                const data = await this._ci.fsReadFile(filename);
+                const data = await this.ci.fsReadFile(filename);
                 download(data, filename);
             })
 
         this.button_download_bundle.addEventListener(
             "click",
             async () => {
-                if (!this._ci) {
+                if (!this.ci) {
                     return;
                 }
-                const bundle = await this._ci.persist(false);
+                const bundle = await this.ci.persist(false);
                 if (!bundle) {
                     return;
                 }
                 download(bundle, "bundle.jsdos");
             })
-
-    }
-
-    constructor() {
-        this.filelist.innerHTML = "";
-        this.editor.on("change", () => {
-            this.writefile.hidden = false;
-        });
     }
 
     public async open_file(filename: string, force = false) {
-        if (!this._ci) {
+        if (!this.ci) {
             return;
         }
         if (force == false && this.writefile.hidden === false) {
             return
         }
+        await this.list()
         this.filelist.value = filename;
-        const data = await this._ci.fsReadFile(filename);
+        const data = await this.ci.fsReadFile(filename);
 
         const decoder = new TextDecoder("utf-8");
         const text = decoder.decode(data);

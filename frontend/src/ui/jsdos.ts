@@ -236,61 +236,65 @@ export class Jsdos {
         const decoder = new TextDecoder('utf-8');
         const text = decoder.decode(data);
 
-        const cmds = [{ name: "ver", cmd: ["ver"] }];
-        const cmd_info = {
-            default_file: "/.jsdos/dosbox.conf",
-            supported_ext: ""
-        }
+        const cmds = [{ 
+            name: "batch",
+            cmd: ["main.bat"],
+            autocd:true, 
+            supported_ext: ["bat"],
+            fallback:""
+        }];
 
         for (let line of text.split("\n")) {
             const l = line.trim();
             let magic=false;
             if (l.startsWith("@REM cmd:")) {
+                const segs=l.split(";").map(seg=>seg.split(":").map(a=>a.trim()))
+                const cd=segs.find(s=>s[0]==="cd")
+                const ext=segs.find(s=>s[0]==="ext")
+                const fallback=segs.find(s=>s[0]==="ext")
                 cmds.push({
-                    name: l.replace("@REM cmd:", "").trim(),
-                    cmd: []
+                    name: segs[0][1],
+                    cmd: [],
+                    autocd:cd ? cd[1]!=="false":true,
+                    supported_ext:ext?ext[1].split(","):[],
+                    fallback:fallback?fallback[1]:""
                 })
                 magic=true;
             }
-            for (const key of Object.keys(cmd_info)) {
-                let s = "@REM " + key + ":";
-                if (l.startsWith(s)) {
-                    (cmd_info as any)[key] = l.replace(s, "").trim()
-                    magic=true;
-                }
-            }
-            if (magic===false) {
+            if (!l.startsWith("@REM") && magic===false) {
                 cmds[cmds.length - 1].cmd.push(l)
             }
         }
 
-        this.jsdos_editor.open_file(cmd_info.default_file);
         const ctrl2 = [];
-        for (const { name, cmd } of cmds) {
+        for (const c of cmds) {
 
             const button_cmd = document.createElement("button");
-            button_cmd.innerText = name
+            button_cmd.innerText = c.name
 
 
             button_cmd.addEventListener("click", async () => {
                 let wasm_path = this.jsdos_editor.filelist.value;
-                let _cmd = structuredClone(cmd)
+                let _cmd = structuredClone(c.cmd)
 
                 let supported=false;
-                const supported_ext = cmd_info.supported_ext.split(",").map(v => v.trim()).filter(v => v.length>0)
+                const supported_ext = c.supported_ext
                 if (supported_ext.length>0) {
                     supported=supported_ext.some(v => wasm_path.endsWith(v))
                 }
+
+                let dospath = new DosPath(wasm_path)
                 if (supported) {
-                    const dospath = new DosPath(wasm_path)
                     _cmd = _cmd.map(a=>a.replace(/main/g, dospath.barename))
-                    const pre_cmd = ["cd " + dospath.dirname, dospath.disk + ":"]
-                    _cmd =[...pre_cmd,... _cmd]
-                } else {
-                    wasm_path = cmd_info.default_file
-                    const dospath = new DosPath(wasm_path)
-                    const pre_cmd = ["cd " + dospath.dirname, dospath.disk + ":"]
-                    _cmd =[...pre_cmd,... _cmd]
+                } else if(c.fallback) {
+                    wasm_path = c.fallback
+                    dospath = new DosPath(wasm_path)
+                }else{
+                    return
+                }
+
+                if(c.autocd){
+                    _cmd.unshift("cd " + dospath.dirname, dospath.disk + ":")
                 }
 
                 let stdout = "";
