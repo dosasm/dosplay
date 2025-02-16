@@ -1,11 +1,11 @@
 {
     "version": "1.0",
     "homepage": "https://github.com/dosasm/dosplay",
-    "build_time": 1739672666390,
+    "build_time": 1739674678827,
     "bundles": [
         {
             "name": "TASM",
-            "hash": "e84ed867afddc9eeec7dd2a09b07264c",
+            "hash": "9b8bfac85ecd26ac399e5c78f1167f01",
             "files": {
                 "README.md": "f6f8815f5f9e8946f110c63869b500d9",
                 "D/main.asm": "67c2eccc1317ff33cd9d4cd726aa4400",
@@ -22,7 +22,7 @@
                 "C/assembly/LeiJun/README.md": "58b021bcb535a87364bacaf1eb5b90c2",
                 "C/assembly/LeiJun/RI.asm": "e38a61362e931c52a99004ac8c56197f",
                 "C/assembly/LeiJun/run.bat": "b64e59514474269a146c67fa3ffcd2ec",
-                "C/assembly/LeiJun/run0.bat": "34fbd506623901abfa585fd4df1e323f",
+                "C/assembly/LeiJun/run0.bat": "cda180a0247f123b6a828db806b6059e",
                 "C/assembly/LeiJun/test.asm": "2ba314a5ae822b1782691a780f8bb6d2",
                 "C/assembly/LeiJun/tsr.asm": "7005da015561c06a5d786a064ae36268",
                 ".jsdos/button_commands.bat": "15fafefc686da18164d1504226fa09fd",
