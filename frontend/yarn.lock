@@ -1027,7 +1027,7 @@ email-addresses@^5.0.0:
 
 "emulators@file:../../emulators/emulators-v8.3.3-dosasm6.tgz":
   version "8.3.3-dosasm6"
-  resolved "file:../../emulators/emulators-v8.3.3-dosasm6.tgz#0fee90e026355d055408c1e260cd30c0eedb1898"
+  resolved "file:../../emulators/emulators-v8.3.3-dosasm6.tgz#5024e55d60cf0786b88661300fc75acdd7a10db6"
 
 encodeurl@~1.0.2:
   version "1.0.2"

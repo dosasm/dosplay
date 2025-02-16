@@ -3,13 +3,15 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const devMode = process.env.NODE_ENV !== "production";
 const CopyPlugin = require('copy-webpack-plugin');
 const utils = require("./utils")
+const path = require("path")
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
-  utils.shims(isProduction,"dist")
+  utils.shims(isProduction,"dosplay")
   return {
     entry: './src/index.ts',
     output: {
+      path: path.join(__dirname,'./dosplay'),
       filename: 'app.js',
     },
     resolve: {
