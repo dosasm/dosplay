@@ -10,11 +10,11 @@ function sortStrings(strings: string[]): string[] {
         const isAPrefixedWithCExample = a.startsWith('/C/example');
         const isBPrefixedWithCExample = b.startsWith('/C/example');
 
-        if (isAPrefixedWithD &&!isBPrefixedWithD) {
+        if (isAPrefixedWithD && !isBPrefixedWithD) {
             return -1;
         } else if (!isAPrefixedWithD && isBPrefixedWithD) {
             return 1;
-        } else if (isAPrefixedWithCExample &&!isBPrefixedWithCExample) {
+        } else if (isAPrefixedWithCExample && !isBPrefixedWithCExample) {
             return -1;
         } else if (!isAPrefixedWithCExample && isBPrefixedWithCExample) {
             return 1;
@@ -45,32 +45,35 @@ export class Editor {
     public set ci(ci: CommandInterface | undefined) {
         this._ci = ci;
     }
-    public get ci(){
+    public get ci() {
         return this._ci
     }
 
-    public async list(){
-        if(!this.ci){
+    public async list() {
+        if (!this.ci) {
             return
         }
-        const files=await this.listfiles(this.ci);
-        if (!files){
+        const files = await this.listfiles(this.ci);
+        if (!files) {
             return
         }
 
-        const old=this.filelist.value
+        const old = this.filelist.value
         this.filelist.innerHTML = "";
         const eles = [];
         for (const file of files) {
-                    const option = document.createElement("option");
-                    option.value = file;
-                    option.innerText = file;
-                    if(file===old){
-                        option.selected=true
-                    }
-                    eles.push(option)
-                }
-                this.filelist.append(...eles)
+            const option = document.createElement("option");
+            option.value = file;
+            option.innerText = file;
+            if (file === old) {
+                option.selected = true
+            }
+            eles.push(option)
+        }
+        if(!old){
+            eles[0].selected=true
+        }
+        this.filelist.append(...eles)
     }
 
     constructor() {
@@ -82,7 +85,7 @@ export class Editor {
 
         this.filelist.addEventListener(
             "click",
-            ()=>{this.list()}
+            () => { this.list() }
         )
         this.list()
         this.filelist.addEventListener(

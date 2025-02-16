@@ -1,4 +1,4 @@
-import { FsNode } from 'emulators/dist/out/protocol/protocol';
+
 import { CommandInterface, getEmulators, utils } from "emulators";
 import { jsdos } from "../config"
 import { JsdosCanvas } from "./canvas";
@@ -6,7 +6,6 @@ import { Editor } from "./editor";
 import * as cache from "./bundle-cache";
 import {ui_bundle} from "./bundle"
 import {diskBundle} from "./jsdos-disk";
-import { sleep } from '../utils';
 import { ui_keyboard } from './keyboard';
 
 class DosPath {
@@ -25,6 +24,12 @@ class DosPath {
         this.dirname = wasm_segs[1] + ":\\" + wasm_segs.slice(2, -1).join("\\")
         this.disk= wasm_segs[1];
     }
+}
+
+
+export function ui_log(msg:string){
+    const p_status = document.getElementById("stats") as HTMLParagraphElement
+    p_status.innerText=msg;
 }
 
 const default_bundles_info = {
@@ -48,7 +53,7 @@ export class Jsdos {
     select_emulators = document.getElementById("emulators") as HTMLSelectElement
     button_start = document.getElementById("start") as HTMLButtonElement
     button_stop = document.getElementById("stop") as HTMLButtonElement
-    p_status = document.getElementById("stats") as HTMLParagraphElement
+    
 
 
     emulators = getEmulators(undefined)
@@ -91,7 +96,7 @@ export class Jsdos {
                 option.innerText = bundle.name;
                 this.select_bundle.append(option)
             }
-            const intro=document.getElementById("intro") as HTMLDivElement
+
             const build_time=new Date(this.bundles_info.build_time)
             function formatDateFromObject(date:Date) {
                 const year = date.getFullYear();
@@ -101,7 +106,7 @@ export class Jsdos {
                 const minute = date.getMinutes();
                 return `${year}/${month}/${day} ${hour}:${minute}`;
             }
-            intro.innerHTML+=`  <span class="introtag">${formatDateFromObject(build_time)}</span>`
+            ui_log("loaded bundles from "+formatDateFromObject(build_time))
             console.log("wierd this zero?",build_time.getDay()) //? why zero?
         })
         this.emulators.pathPrefix = this.dist;
@@ -121,6 +126,18 @@ export class Jsdos {
                 this.jsdos_canvas.prevent_canvas_keymouse = false;
             }
         });
+
+        this.jsdos_editor.filelist.addEventListener("input",()=>{
+            const file=this.jsdos_editor.filelist.value;
+            this.buttons_command.forEach((btn) => {
+                const exts=btn.dataset.exts?.split(",") as string[];
+                if(exts.some(ext=>file.includes(ext))){
+                    btn.hidden=false
+                }else{
+                    btn.hidden=true
+                }
+            })
+        })
         this.button_start.addEventListener("click", async () => {
             this.button_start.disabled = true;
             this.button_stop.disabled = false;
@@ -158,16 +175,17 @@ export class Jsdos {
                     prevNonSkippableSleepCount = stats.nonSkippableSleepCount;
                     prevSleepCount = stats.sleepCount;
                     prevCycles = stats.cycles;
-                    this.p_status.innerHTML = "Avg sleep p/sec: " + Math.round(avgSleep) +
+                    const msg = "Avg sleep p/sec: " + Math.round(avgSleep) +
                         ", avg non skippable sleep p/sec: " + Math.round(avgNonSkippableSleep) +
                         ", cycles p/ms: " + Math.round(avgCycles);
+                    ui_log(msg)
                 });
             }, 3000);
 
             ci.events().onExit(() => {
                 this.button_start.disabled = false;
                 this.button_stop.disabled = true;
-                this.p_status.innerHTML = "stopped";
+                ui_log("stopped: click start to run")
             });
 
             const commands = await this.get_commands_button(ci)
@@ -209,11 +227,13 @@ export class Jsdos {
                     const id=finded.hash
                     const existed = await cache.existsBundle(id);
                     if (existed) {
+                        ui_log("get bundle from cache "+id)
                         const res = await cache.getBundle(id);
                         if (res)
                             return res as Uint8Array;
                     }
                     const url=this.bundles + bundlename + ".jsdos";
+                    ui_log("download "+url)
                     const bundle = await this.down_bundle(url);
                     await cache.cacheBundle(id, bundle);
                     return bundle;
@@ -273,7 +293,7 @@ export class Jsdos {
 
             const button_cmd = document.createElement("button");
             button_cmd.innerText = c.name
-
+            button_cmd.dataset.exts=c.supported_ext.join(",")
 
             button_cmd.addEventListener("click", async () => {
                 let wasm_path = this.jsdos_editor.filelist.value;
@@ -339,6 +359,7 @@ export class Jsdos {
         const bundle = await this.get_bundle(bundlename);
         if (!bundle) return;
         let ci: CommandInterface | undefined = undefined;
+        ui_log("starting emulator")
         switch (this.select_emulators.value) {
             case "dosboxDirect":
                 ci = await this.emulators.dosboxDirect(bundle);
@@ -353,7 +374,7 @@ export class Jsdos {
                 ci = await this.emulators.dosboxXWorker(bundle);
                 break;
             default:
-                console.error("unknown emulator" + this.select_emulators.value)
+                ui_log("unknown emulator" + this.select_emulators.value)
                 break;
         }
         return ci;
