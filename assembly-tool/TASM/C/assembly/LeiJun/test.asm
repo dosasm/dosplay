@@ -2,7 +2,7 @@
 ; can be solved by RI
  .386
 DATA SEGMENT USE16
-	MESG DB 'hello tasm',0DH,0AH,'$'
+	MESG DB 'I forget to exit my code 5555; press right ctrl + left ctrl to stop me by ri.com plz',0DH,0AH,'$'
 DATA ENDS
 CODE SEGMENT USE16
 	     ASSUME CS:CODE,DS:DATA

@@ -61,7 +61,7 @@ export class Editor {
 
         this.filelist.addEventListener(
             "click",
-            ()=>{this.list}
+            ()=>{this.list()}
         )
         this.list()
         this.filelist.addEventListener(

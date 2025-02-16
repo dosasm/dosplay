@@ -86,8 +86,6 @@ async function setup() {
             }
         }
     }
-
-    jsdos.record_stdout()
 }
 
 setup()

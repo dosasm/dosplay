@@ -66,12 +66,13 @@ export class Jsdos {
         return this._stdout.join("")
     }
 
+    on_ci=[
+        (ci:CommandInterface)=>{ci.events().onStdout(data=>this._stdout.push(data))},
+        (ci:CommandInterface)=>{this.jsdos_editor.ci = ci;}
+    ]
 
-    record_stdout(){
-        if(this.ci){
-            this.ci.events().onStdout(data=>this._stdout.push(data))
-        }
-    }
+
+    record_stdout=true
 
     constructor() {
         let _ci=()=>this.ci;
@@ -128,7 +129,8 @@ export class Jsdos {
             if (!ci) return
             this._ready_ci_resolve(ci)
             this.ci = ci;
-            this.jsdos_editor.ci = ci;
+            this.on_ci.forEach(call=>call(ci))
+
             this.jsdos_canvas = new JsdosCanvas(ci);
             this.buttons_command.forEach((btn) => {
                 btn.remove();
