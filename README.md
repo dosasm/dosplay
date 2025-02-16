@@ -15,8 +15,8 @@ Thanks to [caiiiycuk/js-dos](https://github.com/caiiiycuk/js-dos/).
 ## Supported Urlparams
 
 TO run assembly quickly we have parameter as follows.
-A intuitive example is run famous Lei Jun's Code with
- <http://dosasm.github.io/dosplay/?emu=xWorker&bundle=TASM&open=%2FC%2Fassembly%2FLeiJun%2FRI.asm&run_cmd=run-com>.
+A intuitive example is run famous Lei Jun's RAMinit(RI) with
+ <http://dosasm.github.io/dosplay/RAMinit>.
 (Note must use dosboxX. Dosbox may cause problem)
 
 - `emu`: the emulation type, can be
@@ -43,22 +43,6 @@ If the current editor's file is ends with `supported_ext`.
 we will run the editor's editing code, otherwise `default_file` is used.
 The webapp first change directory to the file's parent folder and run the code
 with `main` replaced to the basename.
-
-```
-@REM default_file:/D/main.asm
-@REM supported_ext:asm,ASM
-@REM cmd:run
-masm main.asm;
-link main.obj;
-main.exe
-@REM cmd:list
-masm /la main.asm;
-type main.lst
-@REM cmd:debug
-masm main.asm;
-link main.obj;
-debug main.exe
-```
 
 
 
