@@ -39,14 +39,14 @@ keyboard.addEventListener('touchstart', function (event) {
 document.addEventListener('touchmove', function (event) {
     if (isDragging) {
         // 阻止默认的滚动行为
-        event.stopPropagation();
+        event.preventDefault()
         // 获取触摸点的位置
         const touch = event.touches[0];
         // 根据触摸点的位置和偏移量更新 div 的位置
         keyboard.style.left = (touch.clientX - offsetX) + 'px';
         keyboard.style.top = (touch.clientY - offsetY) + 'px';
     }
-});
+},{ passive: false });
 
 // 监听触摸结束事件
 document.addEventListener('touchend', function () {

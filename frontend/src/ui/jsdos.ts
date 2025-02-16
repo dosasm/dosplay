@@ -273,7 +273,7 @@ export class Jsdos {
                 const segs=l.split(";").map(seg=>seg.split(":").map(a=>a.trim()))
                 const cd=segs.find(s=>s[0]==="cd")
                 const ext=segs.find(s=>s[0]==="ext")
-                const fallback=segs.find(s=>s[0]==="ext")
+                const fallback=segs.find(s=>s[0]==="fallback")
                 cmds.push({
                     name: segs[0][1],
                     cmd: [],
