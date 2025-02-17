@@ -1,11 +1,11 @@
 {
     "version": "1.0",
     "homepage": "https://github.com/dosasm/dosplay",
-    "build_time": 1739714870215,
+    "build_time": 1739806044665,
     "bundles": [
         {
             "name": "TASM",
-            "hash": "c44baf9380ffa10f3ef41d4be027319d",
+            "hash": "51eeefc8aac5bfcac6f2751b85cab4b7",
             "files": {
                 "README.md": "9553dea546049570607785495b484c62",
                 "D/main.asm": "67c2eccc1317ff33cd9d4cd726aa4400",
@@ -21,10 +21,16 @@
                 "C/assembly/wait.asm": "fc45917b51789784a527cd23050cebaa",
                 "C/assembly/LeiJun/README.md": "c01f01bb60e6d64785640fc9903976f6",
                 "C/assembly/LeiJun/RI.asm": "e38a61362e931c52a99004ac8c56197f",
-                "C/assembly/LeiJun/run.bat": "2a999f1ba22c924af5ca682402dd3dee",
-                "C/assembly/LeiJun/run0.bat": "cda180a0247f123b6a828db806b6059e",
+                "C/assembly/LeiJun/run.bat": "7b87cdef859021357e0ea63809dd9803",
                 "C/assembly/LeiJun/test.asm": "2ba314a5ae822b1782691a780f8bb6d2",
                 "C/assembly/LeiJun/tsr.asm": "7005da015561c06a5d786a064ae36268",
+                "C/assembly/interesting/ASCrllble.asm": "902cba9f0b21f95c44110b78c5cc00b2",
+                "C/assembly/interesting/brainfuck.asm": "80069d00b55e778df00d96a7a00b00ca",
+                "C/assembly/interesting/MasterMind.asm": "020a4f6f22929588d19e61a38b65ed1e",
+                "C/assembly/interesting/piano.asm": "6a4e605395cc85c9dc4d3b80a6a600f7",
+                "C/assembly/interesting/readme.md": "37ac6b069007f6678e9b114016bf852f",
+                "C/assembly/interesting/russiacube.asm": "3166415a8fa3eac360e8652ec1594972",
+                "C/assembly/interesting/Tic-Tac-Toe.asm": "397428ee11b027c4bda5e961ca94b45e",
                 ".jsdos/button_commands.bat": "15fafefc686da18164d1504226fa09fd",
                 ".jsdos/dosbox.conf": "1335bf28320560a920aa20d95967b0f5"
             }
@@ -69,7 +75,7 @@
         },
         {
             "name": "TurboC",
-            "hash": "2d177add1f4829ee1848880c786c6dfc",
+            "hash": "cb45128af24cc0694dc405cac8ed37c9",
             "files": {
                 "README.md": "d86098bb3ac070bb27a5afb3ed8a0f0a",
                 "D/build.bat": "0640fe0fca464355eb248897d1ac8ae7",
@@ -167,7 +173,7 @@
                 "C/TC/SYS/TIMEB.H": "5c072a71cefb71f7c9fce2e4f475bdc9",
                 "C/TC/SYS/TYPES.H": "a800d6e365d848ce2ae98d64dc57e260",
                 "C/example/keychar.c": "f1a1d0b02bd512caa94c9d5c6e9225b8",
-                ".jsdos/button_commands.bat": "6d0d03b2091bb149d8108ff1aa7f6c71",
+                ".jsdos/button_commands.bat": "d9f33d02e7a41fadb9c0cf2832125e3f",
                 ".jsdos/dosbox.conf": "2071a0d4cbf35a258ad60d75dab9390a",
                 ".jsdos/readme.txt": "7c0aed415fac41efce1e5ba563e4b3fc"
             }
