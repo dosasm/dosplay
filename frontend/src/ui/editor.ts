@@ -42,8 +42,13 @@ export class Editor {
     }
 
     private _ci: CommandInterface | undefined
-    public set ci(ci: CommandInterface | undefined) {
-        this._ci = ci;
+    public on_ci(ci: CommandInterface){
+        this._ci=ci;
+        this.list().then(
+            ()=>{
+                this.filelist.dispatchEvent(new Event("input"))
+            }
+        )
     }
     public get ci() {
         return this._ci
@@ -77,8 +82,6 @@ export class Editor {
     }
 
     constructor() {
-
-        this.filelist.innerHTML = "";
         this.editor.on("change", () => {
             this.writefile.hidden = false;
         });
@@ -87,7 +90,6 @@ export class Editor {
             "click",
             () => { this.list() }
         )
-        this.list()
         this.filelist.addEventListener(
             "input",
             async () => {

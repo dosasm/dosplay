@@ -3,10 +3,39 @@ import { webGl } from "./webgl";
 import Stats from "stats.js"
 import { audioNode } from "./audionode";
 
+class KeyMouseListener{
+    keydown=(e:KeyboardEvent) => {
+        let ke = utils.htmlKey2jsdos(e.code)
+        if (ke && this.ci) {
+            this.ci.sendKeyEvent(ke, true);
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    }
+    keyup = (e:KeyboardEvent) => {
+        let ke = utils.htmlKey2jsdos(e.code)
+        if (ke && this.ci) {
+            this.ci.sendKeyEvent(ke, false);
+            e.stopPropagation();
+            e.preventDefault();
+        }
+    }
+    constructor(private ci?:CommandInterface){
+            
+    }
+    dispatch(){
+        window.addEventListener("keydown",this.keydown)
+        window.addEventListener("keyup",this.keyup)
+    }
+    remove(){
+        window.removeEventListener("keydown",this.keydown)
+        window.removeEventListener("keyup",this.keyup)
+    }
+}
+
 export class JsdosCanvas {
     canvas_jsdos = document.getElementById("jsdos-canvas") as HTMLCanvasElement
     statsEl = document.getElementById("stats") as HTMLParagraphElement;
-    public prevent_canvas_keymouse=false;
     constructor(ci: CommandInterface) {
         const stats = new Stats();
         stats.showPanel(0);
@@ -22,26 +51,11 @@ export class JsdosCanvas {
 
         ci.events().onMessage(console.log.bind(console));
 
-        window.addEventListener("keydown", (e) => {
-            if(this.prevent_canvas_keymouse)return;
-            let ke = utils.htmlKey2jsdos(e.code)
-            if (ke) {
-                ci.sendKeyEvent(ke, true);
-                e.stopPropagation();
-                e.preventDefault();
-            }
-        });
-        window.addEventListener("keyup", (e) => {
-            if(this.prevent_canvas_keymouse)return;
-            let ke = utils.htmlKey2jsdos(e.code)
-            if (ke) {
-                ci.sendKeyEvent(ke, false);
-                e.stopPropagation();
-                e.preventDefault();
-            }
-        });
+        const keyListener=new KeyMouseListener(ci)
+            
         canvas.addEventListener("mousemove", (e) => {
-            if (!this.prevent_canvas_keymouse) {
+            //TODO: if the click patch key event maybe we need to ignore this mouse
+            if (true) {
                 ci.sendMouseMotion(
                     (e.clientX - canvas.offsetLeft) / canvas.clientWidth,
                     (e.clientY - canvas.offsetTop) / canvas.clientHeight);
@@ -50,21 +64,31 @@ export class JsdosCanvas {
             }
         });
         canvas.addEventListener("mousedown", (e) => {
-            if (!this.prevent_canvas_keymouse) {
+            if (true) {
                 ci.sendMouseButton(0, true);
                 e.stopPropagation();
                 e.preventDefault();
             }
         });
         canvas.addEventListener("mouseup", (e) => {
-            if (!this.prevent_canvas_keymouse) {
+            if (true) {
                 ci.sendMouseButton(0, false);
                 e.stopPropagation();
                 e.preventDefault();
             }
         });
-        canvas.addEventListener("click", (e) => {
-            this.prevent_canvas_keymouse = false
+        window.addEventListener("click", (e:MouseEvent) => {
+            if(e.target===canvas){
+                keyListener.dispatch()
+            }else{
+                keyListener.remove()
+            }
+        });
+        canvas.addEventListener("focus", (e) => {
+            keyListener.dispatch()
+        });
+        canvas.addEventListener("blur",()=>{
+            keyListener.remove()
         });
     }
 }

@@ -73,7 +73,7 @@ export class Jsdos {
 
     on_ci=[
         (ci:CommandInterface)=>{ci.events().onStdout(data=>this._stdout.push(data))},
-        (ci:CommandInterface)=>{this.jsdos_editor.ci = ci;},
+        (ci:CommandInterface)=>{this.jsdos_editor.on_ci(ci)},
         this._ready_ci_resolve
     ]
 
@@ -111,22 +111,6 @@ export class Jsdos {
             console.log("wierd this zero?",build_time.getDay()) //? why zero?
         })
         this.emulators.pathPrefix = this.dist;
-
-        this.jsdos_editor.editor.container.addEventListener("focus", (e) => {
-            if (this.jsdos_canvas) {
-                this.jsdos_canvas.prevent_canvas_keymouse = true;
-            }
-        });
-        this.jsdos_editor.editor.container.addEventListener("click", (e) => {
-            if (this.jsdos_canvas) {
-                this.jsdos_canvas.prevent_canvas_keymouse = true;
-            }
-        });
-        this.jsdos_editor.editor.container.addEventListener("blur", (e) => {
-            if (this.jsdos_canvas) {
-                this.jsdos_canvas.prevent_canvas_keymouse = false;
-            }
-        });
 
         this.jsdos_editor.filelist.addEventListener("input",()=>{
             const file=this.jsdos_editor.filelist.value;
