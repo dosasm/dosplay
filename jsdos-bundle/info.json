@@ -1,11 +1,11 @@
 {
     "version": "1.0",
     "homepage": "https://github.com/dosasm/dosplay",
-    "build_time": 1739806044665,
+    "build_time": 1739808091993,
     "bundles": [
         {
             "name": "TASM",
-            "hash": "51eeefc8aac5bfcac6f2751b85cab4b7",
+            "hash": "8b3f345ed20682ba33ea57fc0409d584",
             "files": {
                 "README.md": "9553dea546049570607785495b484c62",
                 "D/main.asm": "67c2eccc1317ff33cd9d4cd726aa4400",
@@ -24,13 +24,13 @@
                 "C/assembly/LeiJun/run.bat": "7b87cdef859021357e0ea63809dd9803",
                 "C/assembly/LeiJun/test.asm": "2ba314a5ae822b1782691a780f8bb6d2",
                 "C/assembly/LeiJun/tsr.asm": "7005da015561c06a5d786a064ae36268",
-                "C/assembly/interesting/ASCrllble.asm": "902cba9f0b21f95c44110b78c5cc00b2",
-                "C/assembly/interesting/brainfuck.asm": "80069d00b55e778df00d96a7a00b00ca",
-                "C/assembly/interesting/MasterMind.asm": "020a4f6f22929588d19e61a38b65ed1e",
-                "C/assembly/interesting/piano.asm": "6a4e605395cc85c9dc4d3b80a6a600f7",
-                "C/assembly/interesting/readme.md": "37ac6b069007f6678e9b114016bf852f",
-                "C/assembly/interesting/russiacube.asm": "3166415a8fa3eac360e8652ec1594972",
-                "C/assembly/interesting/Tic-Tac-Toe.asm": "397428ee11b027c4bda5e961ca94b45e",
+                "C/assembly/fun/ASC.asm": "902cba9f0b21f95c44110b78c5cc00b2",
+                "C/assembly/fun/bf.asm": "80069d00b55e778df00d96a7a00b00ca",
+                "C/assembly/fun/Cube.asm": "3166415a8fa3eac360e8652ec1594972",
+                "C/assembly/fun/Mind.asm": "020a4f6f22929588d19e61a38b65ed1e",
+                "C/assembly/fun/piano.asm": "6a4e605395cc85c9dc4d3b80a6a600f7",
+                "C/assembly/fun/readme.md": "fc85a67de5f1217ef9235f2836955812",
+                "C/assembly/fun/Tic.asm": "397428ee11b027c4bda5e961ca94b45e",
                 ".jsdos/button_commands.bat": "15fafefc686da18164d1504226fa09fd",
                 ".jsdos/dosbox.conf": "1335bf28320560a920aa20d95967b0f5"
             }
