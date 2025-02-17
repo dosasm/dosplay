@@ -1,10 +1,10 @@
 # 几个有趣的汇编代码
 
 - 弹钢琴小游戏,[piano](piano.asm)
-- 俄罗斯方块,[russiacube](russiacube.asm)
-- 使用ASCII码来画图,[ASCrllble](ASCrllble.asm)
-- 猜字符小游戏, [MasterMind](MasterMind.asm)
-- 井字棋小游戏，[Tic-Tac-Toe](Tic-Tac-Toe.asm)
+- 俄罗斯方块,[russiacube](Cube.asm)
+- 使用ASCII码来画图,[ASCrllble](ASC.asm)
+- 猜字符小游戏, [MasterMind](Mind.asm)
+- 井字棋小游戏，[Tic-Tac-Toe](Tic.asm)
 
 ## 以下为代码来源，如果侵权请联系删除
 
