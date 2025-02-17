@@ -61,6 +61,7 @@ async function setup() {
         await jsdos.ready_ci
         await sleep(100);
         await jsdos.jsdos_editor.open_file(openfile);
+        jsdos.jsdos_editor.filelist.dispatchEvent(new Event("input"))
 
         let content = urlParams.get('content');
         const base64content = urlParams.get('bc');
