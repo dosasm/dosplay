@@ -4,8 +4,10 @@ const devMode = process.env.NODE_ENV !== "production";
 const CopyPlugin = require('copy-webpack-plugin');
 const utils = require("./utils")
 const path = require("path")
+const detect = require("detect-port")
 
-module.exports = (env, argv) => {
+module.exports = async (env, argv) => {
+  const port=await detect.detect(8080);
   const isProduction = argv.mode === 'production';
   utils.shims(isProduction,"dosplay")
   return {
@@ -79,9 +81,10 @@ module.exports = (env, argv) => {
       })
     ].concat(devMode ? [] : [new MiniCssExtractPlugin()]),
     devServer: {
+      port,
       proxy: [{
         context: ['/dosplay'],
-        target: 'http://localhost:8081',
+        target: 'http://localhost:'+port,
         pathRewrite: { '^/dosplay': '' },
       }],
     },

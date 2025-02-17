@@ -73,7 +73,8 @@ export class Jsdos {
 
     on_ci=[
         (ci:CommandInterface)=>{ci.events().onStdout(data=>this._stdout.push(data))},
-        (ci:CommandInterface)=>{this.jsdos_editor.ci = ci;}
+        (ci:CommandInterface)=>{this.jsdos_editor.ci = ci;},
+        this._ready_ci_resolve
     ]
 
 
@@ -139,12 +140,11 @@ export class Jsdos {
             })
         })
         this.button_start.addEventListener("click", async () => {
-            this.button_start.disabled = true;
-            this.button_stop.disabled = false;
             const bundle = this.select_bundle.value;
             const ci = await this.download_run_bundle(bundle);
             if (!ci) return
-            this._ready_ci_resolve(ci)
+            this.button_start.disabled = true;
+            this.button_stop.disabled = false;
             this.ci = ci;
             this.on_ci.forEach(call=>call(ci))
 

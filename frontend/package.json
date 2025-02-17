@@ -13,23 +13,24 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "jszip": "^3.10.1",
     "@types/stats.js": "^0.17.3",
     "@xterm/xterm": "^5.5.0",
     "ace-builds": "^1.36.2",
     "copy": "^0.3.2",
     "copy-webpack-plugin": "^12.0.2",
     "css-loader": "^7.1.2",
-    "mini-css-extract-plugin": "^2.9.1",
-    "stats.js": "^0.17.0",
-    "style-loader": "^4.0.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0",
+    "detect-port": "^2.1.0",
     "emulators": "file:../../emulators/emulators-v8.3.3-dosasm6.tgz",
     "gh-pages": "^6.1.1",
     "html-webpack-plugin": "^5.6.0",
+    "jszip": "^3.10.1",
+    "mini-css-extract-plugin": "^2.9.1",
+    "stats.js": "^0.17.0",
+    "style-loader": "^4.0.0",
     "ts-loader": "^ 9.5.1",
     "typescript": "^5.5.4",
-    "webpack": "^5.94.0"
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0"
   }
 }
