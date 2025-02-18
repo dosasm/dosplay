@@ -34,8 +34,8 @@ class KeyMouseListener{
 }
 
 let ci:CommandInterface|undefined=undefined
+let keyListener:KeyMouseListener=new KeyMouseListener(undefined)
 const canvas = document.getElementById("jsdos-canvas") as HTMLCanvasElement
-const statsEl = document.getElementById("stats") as HTMLParagraphElement;
 
 
 const stats = new Stats();
@@ -44,9 +44,6 @@ stats.dom.style.left = "initial";
 stats.dom.style.right = "0px";
 document.body.appendChild(stats.dom);
 
-
-canvas.parentElement?.clientWidth
-
 export function set_canvas_ci(_ci:CommandInterface){
     ci=_ci;
 
@@ -54,10 +51,11 @@ export function set_canvas_ci(_ci:CommandInterface){
     audioNode(ci)
 
     ci.events().onMessage(console.log.bind(console));
+
+    if(keyListener) keyListener.remove()
+    keyListener=new KeyMouseListener(ci)
 }
 
-
-const keyListener=new KeyMouseListener(ci)
     
 canvas.addEventListener("mousemove", (e) => {
     //TODO: if the click patch key event maybe we need to ignore this mouse
