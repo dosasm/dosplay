@@ -1,14 +1,14 @@
 {
     "version": "1.0",
     "homepage": "https://github.com/dosasm/dosplay",
-    "build_time": 1739856067178,
+    "build_time": 1739634491728,
     "bundles": [
         {
             "name": "TASM",
-            "hash": "a59753e326624f42fd2ace6fd22f7ff4",
+            "hash": "d18f2376edeb6100718af9683be7df49",
             "files": {
                 "README.md": "f6f8815f5f9e8946f110c63869b500d9",
-                "D/main.asm": "67c2eccc1317ff33cd9d4cd726aa4400",
+                "D/main.asm": "3ca35464be509ec6a648d18f67a55d1d",
                 "C/tasm41/DPMI16BI.OVL": "dcc4b6e738221d1ffb19aca9bb694d39",
                 "C/tasm41/RTM.EXE": "c28cc1f9f45bf8ccb9182da2333878bd",
                 "C/tasm41/TASM.EXE": "ff229c6cf0c77d7a112857ad6755e086",
@@ -17,28 +17,16 @@
                 "C/tasm41/TDHELP.TDH": "38a7e531ed1ddf22411844ccbdc805d0",
                 "C/tasm41/TLINK.EXE": "aefb39ac4239620607af013591ceae58",
                 "C/assembly/password.asm": "4db0c535ad8f4daae16d9e20c88bb17d",
-                "C/assembly/speaker.asm": "b86b3250c08dd08aea66dfbfb2d932ed",
-                "C/assembly/wait.asm": "fc45917b51789784a527cd23050cebaa",
-                "C/assembly/fun/ASC.asm": "902cba9f0b21f95c44110b78c5cc00b2",
-                "C/assembly/fun/Cube.asm": "3166415a8fa3eac360e8652ec1594972",
-                "C/assembly/fun/Mind.asm": "020a4f6f22929588d19e61a38b65ed1e",
-                "C/assembly/fun/Tic.asm": "397428ee11b027c4bda5e961ca94b45e",
-                "C/assembly/fun/bf.asm": "80069d00b55e778df00d96a7a00b00ca",
-                "C/assembly/fun/piano.asm": "6a4e605395cc85c9dc4d3b80a6a600f7",
-                "C/assembly/fun/readme.md": "fc85a67de5f1217ef9235f2836955812",
                 "C/assembly/LeiJun/README.md": "58b021bcb535a87364bacaf1eb5b90c2",
                 "C/assembly/LeiJun/RI.asm": "e38a61362e931c52a99004ac8c56197f",
-                "C/assembly/LeiJun/run.bat": "7b87cdef859021357e0ea63809dd9803",
-                "C/assembly/LeiJun/test.asm": "2ba314a5ae822b1782691a780f8bb6d2",
-                "C/assembly/LeiJun/tsr.asm": "7005da015561c06a5d786a064ae36268",
-                ".jsdos/button_commands.bat": "15fafefc686da18164d1504226fa09fd",
+                ".jsdos/button_commands.bat": "73d8c5e0520f35d85d2b7ea55ae4354b",
                 ".jsdos/dosbox.conf": "1335bf28320560a920aa20d95967b0f5",
                 ".jsdos/dosbox2copy.conf": "30497feb196e73ec5a85d10d81a6878b"
             }
         },
         {
             "name": "MASM-v5.00",
-            "hash": "68378ced0d6311a7137870593d123b76",
+            "hash": "afb53fc57be995e0f3f1aecf2476595e",
             "files": {
                 "README.md": "edc01a6baa9d5a51cbdc606a806f3ed0",
                 "D/main.asm": "920afa825a0027475a2c9c86bfa93f3a",
@@ -50,27 +38,13 @@
                 "C/masm500/edit.com": "f6e368e10b600836dd349ff937b183a2",
                 "C/masm500/edit.hlp": "47b39e1df5ac3fdcb5aec2735b93fd29",
                 "C/assembly/01hello.asm": "920afa825a0027475a2c9c86bfa93f3a",
-                "C/assembly/bilibili/511hello.asm": "a38191e1975ccfc05fe1635ebe74ac70",
-                "C/assembly/bilibili/512Upper.asm": "858b7703f0a3f648d929b10f309a80b8",
-                "C/assembly/bilibili/513Lower.asm": "9b1cd628b8e1ec33c38d87be9303f770",
-                "C/assembly/bilibili/514min.asm": "aa37480bf30692dea0c182f4480d5f0c",
-                "C/assembly/bilibili/515max.asm": "fb18fedf72566a8bc018c2417ecbc4f1",
-                "C/assembly/bilibili/522copy.asm": "950447ceb992e3ac33bb0b8bfc5d00eb",
-                "C/assembly/bilibili/523flip.asm": "d4abb0576bae5e83ee6655b7900cbc15",
-                "C/assembly/bilibili/531flip2.asm": "3cb6f24e860d246dc3ab829d0f9c49fc",
-                "C/assembly/bilibili/532Fibo.asm": "870778294c75a0206fc81e3e5d240766",
-                "C/assembly/bilibili/542.asm": "b89f31064178041e37e25441af2fc979",
-                "C/assembly/bilibili/551sort.asm": "307fdb922f298427da2cc1edbdfd16e6",
-                "C/assembly/bilibili/561hex.asm": "89fba36d4d55b1bd32599481a163fc8d",
-                "C/assembly/bilibili/561hex2.asm": "d2593c5a6cdfbd444f7417d90b5125ec",
-                "C/assembly/bilibili/README.md": "24f3612383ad302a52e444113e6d19f1",
-                ".jsdos/button_commands.bat": "2d293a424c2afb107546b601b71d649f",
+                ".jsdos/button_commands.bat": "375ee5408f2f2f0ce3f7b0549c3bd2f8",
                 ".jsdos/dosbox.conf": "d52481200052f1e59b6261dd7df2db04"
             }
         },
         {
             "name": "MASM-v6.11",
-            "hash": "fffa5f421638cbc63490319178103325",
+            "hash": "c9e726b54ea5467da14263725d8dab42",
             "files": {
                 "README.md": "17949e83cf6e4e509a8c5db8efa89830",
                 "D/main.asm": "d8b54e22b3940ca844e774b2f9505b27",
@@ -84,21 +58,19 @@
                 "C/assembly/02add.asm": "6e8fbe0f8b08457671303d760e67cc1f",
                 "C/assembly/03key.asm": "d8b7728393930b942dab09ac44c212d4",
                 "C/assembly/a1shift.asm": "eaa93104446a69eaad338e1b52bdf722",
-                ".jsdos/button_commands.bat": "2d293a424c2afb107546b601b71d649f",
+                ".jsdos/button_commands.bat": "375ee5408f2f2f0ce3f7b0549c3bd2f8",
                 ".jsdos/dosbox.conf": "bb13dab671b9b4ae74f0b0faf57a2b71"
             }
         },
         {
             "name": "TurboC",
-            "hash": "34c57d00febeec79150ba05be6288460",
+            "hash": "7727491334f67b147479c235cebfcda2",
             "files": {
                 "README.md": "7c1b8ec595e4ee9455b47a099e06a56b",
                 "D/Graphic.c": "dd928af3f6a8fac8bee246cc8322a9a0",
                 "D/Text.c": "2c88169d38488bc43f369a2f9e9f8a99",
                 "D/build.bat": "96b84b21a2d7cdfd357465301570549f",
-                "D/main.c": "108f219b60c93709bd6911e63e69f5a1",
                 "C/README": "18627bd063dbcd7fb68427f6f24a6acf",
-                "C/example/keychar.c": "f1a1d0b02bd512caa94c9d5c6e9225b8",
                 "C/TC/ALLOC.H": "ae3c797d65bd84495bec32b80316799f",
                 "C/TC/ASSERT.H": "6e0da079298825ed8551719bf9baeb47",
                 "C/TC/ATT.BGI": "2f2c288c802d3e6d4663464a5b1f6684",
@@ -188,7 +160,7 @@
                 "C/TC/SYS/STAT.H": "fb3438120741ce9cb6e4296935a84cd2",
                 "C/TC/SYS/TIMEB.H": "5c072a71cefb71f7c9fce2e4f475bdc9",
                 "C/TC/SYS/TYPES.H": "a800d6e365d848ce2ae98d64dc57e260",
-                ".jsdos/button_commands.bat": "d9f33d02e7a41fadb9c0cf2832125e3f",
+                ".jsdos/button_commands.bat": "455afb5c460f1f9191e4031b020dc47d",
                 ".jsdos/dosbox.conf": "2071a0d4cbf35a258ad60d75dab9390a",
                 ".jsdos/readme.txt": "18f507c26ac9cf464ff2fdbfdb005db1"
             }
