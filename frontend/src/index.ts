@@ -46,6 +46,7 @@ async function setup() {
 
     select_setup(jsdos.select_bundle, "bundle", urlParams, "MASM-v6.11");
     select_setup(jsdos.select_emulators, "emu", urlParams, "dosboxWorker");
+
     await setup_version();
 
     if (start) {
@@ -81,7 +82,7 @@ async function setup() {
         const run= urlParams.get('run_cmd');
         if (jsdos.ci && run) {
             await sleep(1000);
-            const cmd=jsdos.buttons_command.find(b => b.textContent === run)
+            const cmd=jsdos.jsdos_editor.buttons_command.find(b => b.textContent === run)
             if (cmd) {
                 cmd.click();
             }

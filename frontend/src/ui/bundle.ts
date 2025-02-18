@@ -45,9 +45,6 @@ export function ui_bundle(_ci:()=>CommandInterface|undefined){
             eles.version.add(new Option(version, eles.jsdosbundle.value+"_"+version));
             eles.version.value = eles.jsdosbundle.value+"_"+version;
     
-            // save version to localstorage
-            const versions = JSON.parse(localStorage.getItem(eles.jsdosbundle.value+"-versions") || "[]");
-            localStorage.setItem(eles.jsdosbundle.value+"-versions", JSON.stringify([...versions, version]));
             localStorage.setItem(eles.jsdosbundle.value+"-version-selected", version);
     
             if(diskBundle.filehandle){
@@ -62,6 +59,18 @@ eles.clear.addEventListener(
     async () => {
         eles.version.innerHTML = "<option value='original'>original</option>";
         cache.clearBundles();
+    }
+)
+
+eles.remove.addEventListener(
+    "click",
+    async ()=>{
+        const key=eles.jsdosbundle.value
+        if(key==="original"){
+
+        }else{
+            await cache.deleteBundle(key)
+        }
     }
 )
 

@@ -2,6 +2,7 @@ import { CommandInterface } from "emulators";
 import ace from "ace-builds"
 import { FsNode } from "emulators/dist/out/protocol/protocol";
 import { download } from "./download";
+import { get_commands_button } from "./editor-command";
 
 function sortStrings(strings: string[]): string[] {
     return strings.sort((a, b) => {
@@ -37,15 +38,26 @@ export class Editor {
     button_download_file = document.getElementById("editor-download-file") as HTMLButtonElement;
     button_download_bundle = document.getElementById("bundle-download") as HTMLButtonElement
 
+    div_exec=document.getElementById("editor-exec-commands") as HTMLDivElement;
+
     public current_file() {
         return this.filelist.value as string;
     }
 
     private _ci: CommandInterface | undefined
+    buttons_command: HTMLButtonElement[] = [];
     public on_ci(ci: CommandInterface){
         this._ci=ci;
         this.list().then(
-            ()=>{
+            async ()=>{
+                const commands=await get_commands_button(ci,this.filelist)
+                if (commands) {
+                    this.div_exec.childNodes.forEach(a=>a.remove())
+                    this.buttons_command = commands;
+                    for (const cmd of commands) {
+                        this.div_exec.append(cmd)
+                    }
+                }
                 this.filelist.dispatchEvent(new Event("input"))
             }
         )
@@ -93,12 +105,21 @@ export class Editor {
         this.filelist.addEventListener(
             "input",
             async () => {
+                const file=this.filelist.value;
+                this.buttons_command.forEach((btn) => {
+                    const exts=btn.dataset.exts?.split(",") as string[];
+                    if(exts.some(ext=>file.includes(ext))){
+                        btn.hidden=false
+                    }else{
+                        btn.hidden=true
+                    }
+                })
+                
                 if (!this.ci) {
                     return;
                 }
                 if (this.writefile.hidden == false) {
-                    const filename = this.filelist.value;
-                    this.open_file(filename, true);
+                    this.open_file(file, true);
                 } else {
                     this.open_file(this.filelist.value);
                 }
@@ -165,6 +186,8 @@ export class Editor {
                 }
                 download(bundle, "bundle.jsdos");
             })
+
+        
     }
 
     public async open_file(filename: string, force = false) {
