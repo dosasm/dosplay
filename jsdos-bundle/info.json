@@ -1,7 +1,7 @@
 {
     "version": "1.0",
     "homepage": "https://github.com/dosasm/dosplay",
-    "build_time": 1739808091993,
+    "build_time": 1739843714718,
     "bundles": [
         {
             "name": "TASM",
@@ -37,7 +37,7 @@
         },
         {
             "name": "MASM-v5.00",
-            "hash": "f0c2bb8b5854c744bf3dbf0382ca4c71",
+            "hash": "cc9c25a23e82b480ed253c0ad1c6138d",
             "files": {
                 "README.md": "e3a33d8b35c5b5af80a351d0c99a4f3e",
                 "D/main.asm": "920afa825a0027475a2c9c86bfa93f3a",
@@ -49,6 +49,20 @@
                 "C/masm500/MASM.EXE": "c122902b9eba5db4e6fe4b6bb0f5063a",
                 "C/masm500/TLINK.EXE": "cf212532158da04652fcc3af8b65dcdc",
                 "C/assembly/01hello.asm": "920afa825a0027475a2c9c86bfa93f3a",
+                "C/assembly/bilibili/511hello.asm": "a38191e1975ccfc05fe1635ebe74ac70",
+                "C/assembly/bilibili/512Upper.asm": "858b7703f0a3f648d929b10f309a80b8",
+                "C/assembly/bilibili/513Lower.asm": "9b1cd628b8e1ec33c38d87be9303f770",
+                "C/assembly/bilibili/514min.asm": "aa37480bf30692dea0c182f4480d5f0c",
+                "C/assembly/bilibili/515max.asm": "fb18fedf72566a8bc018c2417ecbc4f1",
+                "C/assembly/bilibili/522copy.asm": "950447ceb992e3ac33bb0b8bfc5d00eb",
+                "C/assembly/bilibili/523flip.asm": "d4abb0576bae5e83ee6655b7900cbc15",
+                "C/assembly/bilibili/531flip2.asm": "3cb6f24e860d246dc3ab829d0f9c49fc",
+                "C/assembly/bilibili/532Fibo.asm": "870778294c75a0206fc81e3e5d240766",
+                "C/assembly/bilibili/542.asm": "b89f31064178041e37e25441af2fc979",
+                "C/assembly/bilibili/551sort.asm": "307fdb922f298427da2cc1edbdfd16e6",
+                "C/assembly/bilibili/561hex.asm": "89fba36d4d55b1bd32599481a163fc8d",
+                "C/assembly/bilibili/561hex2.asm": "d2593c5a6cdfbd444f7417d90b5125ec",
+                "C/assembly/bilibili/README.md": "b2992d06e3a2bfd58e4b6a56fda8325b",
                 ".jsdos/button_commands.bat": "2d293a424c2afb107546b601b71d649f",
                 ".jsdos/dosbox.conf": "d52481200052f1e59b6261dd7df2db04"
             }
