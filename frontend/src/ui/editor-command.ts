@@ -1,14 +1,15 @@
 import { CommandInterface, utils } from "emulators";
+import { sleep } from "../utils";
 
 
-class DosPath {
+export class DosPath {
     full: string
     filename: string
     dirname: string
     disk: string
     extname: string
     barename: string
-    constructor(wasm_path: string) {
+    constructor(public wasm_path: string) {
         const wasm_segs = wasm_path.split("/")
         this.full = wasm_segs[1] + ":\\" + wasm_segs.slice(2).join("\\")
         this.filename = wasm_segs.slice(-1)[0]
@@ -54,31 +55,10 @@ async function button_cmd_onclick(filelist: HTMLSelectElement,ci:CommandInterfac
     let stdout = "";
     ci.events().onStdout((data) => { stdout += data.toLowerCase() });
 
+    const shell=new utils.Shell(ci)
+
     for (const c of _cmd) {
-        const codes = utils.string2jsdosKey(c, false, false);
-        for (const code of codes) {
-            ci?.simulateKeyPress(...code);
-            await new Promise(resolve => setTimeout(resolve, 60));
-        }
-        ci?.simulateKeyPress(257);
-        let now_stdout = "";
-        const no_stdout_command = ["cd"];
-        const is_disk_switch = c.match(/[A-Za-z]:/);
-        const no_stdout = no_stdout_command.some(v => c.startsWith(v)) || is_disk_switch;
-        if (!no_stdout) {
-            await new Promise(resolve => {
-                const interval = setInterval(() => {
-                    if (now_stdout === "" && stdout.includes(c.toLowerCase())) {
-                        now_stdout = stdout;
-                    }
-                    if (now_stdout !== "" && now_stdout !== stdout) {
-                        clearInterval(interval);
-                        resolve(undefined);
-                    }
-                }, 100);
-            });
-        }
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await shell.exec(c,200,100).catch(console.log);
     }
 }
 

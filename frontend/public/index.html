@@ -48,19 +48,17 @@
   </div>
 
   <div class="right-column">
-    <div>
+    <div id="editor-exec-commands">
       <label for="editor-filelist">path:</label>
       <select id="editor-filelist">
         <option value="placehold" selected>start emulator first</option>
       </select>
       <button id="editor-write-file" hidden>write</button>
       <button id="editor-newfile">new</button>
-      <label for="editor-newfile-path" hidden>new file path:</label>
       <input id="editor-newfile-path" type="text" hidden>
 
       <button id="editor-download-file">download</button>
     </div>
-    <div id="editor-exec-commands"></div>
 
     <div id="editor">editor to edit file</div>
     <div id="terminal" hidden></div>

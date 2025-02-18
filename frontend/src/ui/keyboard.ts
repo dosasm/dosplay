@@ -1,5 +1,5 @@
 import { CommandInterface } from "emulators";
-import { Keys } from "./keys-map"
+import { utils } from "emulators"
 
 const keyboard = document.getElementById('keyboard') as HTMLDivElement;
 const keyboard_enable = document.getElementById('keyboard-enable') as HTMLInputElement;
@@ -75,8 +75,8 @@ export function ui_keyboard(_ci: () => CommandInterface | undefined) {
 
         button.addEventListener('click', function () {
             const key = "KBD_" + button.dataset.key;
-            if (key in Keys) {
-                const dosCode = (Keys as any)[key];
+            if (key in utils.Keys) {
+                const dosCode = (utils.Keys as any)[key];
                 console.log(key, dosCode)
  
                     if (pressHold === 0 && pressed.length > 0) {

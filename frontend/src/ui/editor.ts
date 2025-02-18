@@ -1,8 +1,9 @@
-import { CommandInterface } from "emulators";
+import { CommandInterface, utils } from "emulators";
 import ace from "ace-builds"
 import { FsNode } from "emulators/dist/out/protocol/protocol";
 import { download } from "./download";
-import { get_commands_button } from "./editor-command";
+import { get_commands_button,DosPath } from "./editor-command";
+import { sleep } from "../utils";
 
 function sortStrings(strings: string[]): string[] {
     return strings.sort((a, b) => {
@@ -31,7 +32,6 @@ export class Editor {
     filelist = document.getElementById("editor-filelist") as HTMLSelectElement;
 
     newfile = document.getElementById("editor-newfile") as HTMLButtonElement;
-    newfile_input = document.getElementById("editor-newfile-path") as HTMLInputElement;
 
     writefile = document.getElementById("editor-write-file") as HTMLButtonElement;
 
@@ -146,21 +146,28 @@ export class Editor {
                 if (!this.ci) {
                     return;
                 }
-                if (this.newfile.innerText === "new") {
-                    this.newfile_input.hidden = false;
-                    this.newfile.innerText = "create";
-                    return;
-                }
 
-                const filename = this.newfile_input.value;
-                const encoder = new TextEncoder();
-                const data = encoder.encode("");
-                await this.ci.fsWriteFile(filename, data);
-                const option = document.createElement("option");
-                option.value = filename;
-                option.innerText = filename;
-                this.filelist.appendChild(option);
-                this.open_file(filename);
+                // const filename = prompt("input the file name you what to create");
+                // if(!filename) return
+                // const cmd="echo new file > "+new DosPath(filename).full;
+                const cmd="><:/?"
+                const codes=utils.string2jsdosKey(cmd)
+                console.log(codes)
+                for (const code of codes) {
+                    for (const c of code){
+                        this.ci.sendKeyEvent(c,true)
+                        this.ci.sendKeyEvent(c,true)
+                    }
+                    await sleep(100)
+                    for (const c of code){
+                        this.ci.sendKeyEvent(c,false)
+                        this.ci.sendKeyEvent(c,false)
+                    }
+                    await sleep(100)
+                }
+                this.ci?.simulateKeyPress(257);
+                await sleep(1000)
+                // this.open_file(filename);
             })
 
         this.button_download_file.addEventListener(
