@@ -45,7 +45,7 @@ async function setup() {
     }
 
     select_setup(jsdos.select_bundle, "bundle", urlParams, "MASM-v6.11");
-    select_setup(jsdos.select_emulators, "emu", urlParams, "dosboxWorker");
+    select_setup(jsdos.select_emulators, "emu", urlParams, "dosboxDirect");
 
     await setup_version();
 
