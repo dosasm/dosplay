@@ -33,62 +33,66 @@ class KeyMouseListener{
     }
 }
 
-export class JsdosCanvas {
-    canvas_jsdos = document.getElementById("jsdos-canvas") as HTMLCanvasElement
-    statsEl = document.getElementById("stats") as HTMLParagraphElement;
-    constructor(ci: CommandInterface) {
-        const stats = new Stats();
-        stats.showPanel(0);
-        stats.dom.style.left = "initial";
-        stats.dom.style.right = "0px";
-        document.body.appendChild(stats.dom);
-
-        const canvas = this.canvas_jsdos;
-        canvas.parentElement?.clientWidth
-        webGl(canvas, ci, stats)
-        audioNode(ci)
+let ci:CommandInterface|undefined=undefined
+const canvas = document.getElementById("jsdos-canvas") as HTMLCanvasElement
+const statsEl = document.getElementById("stats") as HTMLParagraphElement;
 
 
-        ci.events().onMessage(console.log.bind(console));
+const stats = new Stats();
+stats.showPanel(0);
+stats.dom.style.left = "initial";
+stats.dom.style.right = "0px";
+document.body.appendChild(stats.dom);
 
-        const keyListener=new KeyMouseListener(ci)
-            
-        canvas.addEventListener("mousemove", (e) => {
-            //TODO: if the click patch key event maybe we need to ignore this mouse
-            if (true) {
-                ci.sendMouseMotion(
-                    (e.clientX - canvas.offsetLeft) / canvas.clientWidth,
-                    (e.clientY - canvas.offsetTop) / canvas.clientHeight);
-                e.stopPropagation();
-                e.preventDefault();
-            }
-        });
-        canvas.addEventListener("mousedown", (e) => {
-            if (true) {
-                ci.sendMouseButton(0, true);
-                e.stopPropagation();
-                e.preventDefault();
-            }
-        });
-        canvas.addEventListener("mouseup", (e) => {
-            if (true) {
-                ci.sendMouseButton(0, false);
-                e.stopPropagation();
-                e.preventDefault();
-            }
-        });
-        window.addEventListener("click", (e:MouseEvent) => {
-            if(e.target===canvas){
-                keyListener.dispatch()
-            }else{
-                keyListener.remove()
-            }
-        });
-        canvas.addEventListener("focus", (e) => {
-            keyListener.dispatch()
-        });
-        canvas.addEventListener("blur",()=>{
-            keyListener.remove()
-        });
-    }
+
+canvas.parentElement?.clientWidth
+
+export function set_canvas_ci(_ci:CommandInterface){
+    ci=_ci;
+
+    webGl(canvas, ci, stats)
+    audioNode(ci)
+
+    ci.events().onMessage(console.log.bind(console));
 }
+
+
+const keyListener=new KeyMouseListener(ci)
+    
+canvas.addEventListener("mousemove", (e) => {
+    //TODO: if the click patch key event maybe we need to ignore this mouse
+    if (ci && true) {
+        ci.sendMouseMotion(
+            (e.clientX - canvas.offsetLeft) / canvas.clientWidth,
+            (e.clientY - canvas.offsetTop) / canvas.clientHeight);
+        e.stopPropagation();
+        e.preventDefault();
+    }
+});
+canvas.addEventListener("mousedown", (e) => {
+    if (ci && true) {
+        ci.sendMouseButton(0, true);
+        e.stopPropagation();
+        e.preventDefault();
+    }
+});
+canvas.addEventListener("mouseup", (e) => {
+    if (ci && true) {
+        ci.sendMouseButton(0, false);
+        e.stopPropagation();
+        e.preventDefault();
+    }
+});
+window.addEventListener("click", (e:MouseEvent) => {
+    if(e.target===canvas){
+        keyListener.dispatch()
+    }else{
+        keyListener.remove()
+    }
+});
+canvas.addEventListener("focus", (e) => {
+    keyListener.dispatch()
+});
+canvas.addEventListener("blur",()=>{
+    keyListener.remove()
+});

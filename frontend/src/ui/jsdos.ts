@@ -1,7 +1,7 @@
 
 import { CommandInterface, getEmulators, utils } from "emulators";
 import { jsdos } from "../config"
-import { JsdosCanvas } from "./canvas";
+import {set_canvas_ci } from "./canvas";
 import { Editor } from "./editor";
 import * as cache from "./bundle-cache";
 import {ui_bundle} from "./bundle"
@@ -39,7 +39,6 @@ export class Jsdos {
 
     emulators = getEmulators(undefined)
     jsdos_editor = new Editor();
-    jsdos_canvas?: JsdosCanvas;
     ci?: CommandInterface;
 
     ready:Promise<void|undefined>
@@ -54,7 +53,8 @@ export class Jsdos {
     on_ci=[
         (ci:CommandInterface)=>{ci.events().onStdout(data=>this._stdout.push(data))},
         (ci:CommandInterface)=>{this.jsdos_editor.on_ci(ci)},
-        this._ready_ci_resolve
+        this._ready_ci_resolve,
+        set_canvas_ci
     ]
 
 
@@ -100,9 +100,6 @@ export class Jsdos {
             this.button_stop.disabled = false;
             this.ci = ci;
             this.on_ci.forEach(call=>call(ci))
-
-            this.jsdos_canvas = new JsdosCanvas(ci);
-
 
             this.button_stop.addEventListener("click", async () => {
                 await ci?.exit();
