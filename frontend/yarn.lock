@@ -1037,9 +1037,9 @@ email-addresses@^5.0.0:
   resolved "https://registry.npmmirror.com/email-addresses/-/email-addresses-5.0.0.tgz#7ae9e7f58eef7d5e3e2c2c2d3ea49b78dc854fa6"
   integrity sha512-4OIPYlA6JXqtVn8zpHpGiI7vE6EQOAg16aGnDMIAlZVinnoZ8208tW1hAbjWydgN/4PLTT9q+O1K6AH/vALJGw==
 
-"emulators@file:../../emulators/emulators-v8.3.3-dosasm8.tgz":
-  version "8.3.3-dosasm8"
-  resolved "file:../../emulators/emulators-v8.3.3-dosasm8.tgz#85b5c09259878658c2c2cfd6630473296adfbde9"
+"emulators@file:../../emulators/emulators-v8.3.3-dosasm9.tgz":
+  version "8.3.3-dosasm9"
+  resolved "file:../../emulators/emulators-v8.3.3-dosasm9.tgz#009e1a9771b6ab89c04d38f7678db527a54fdbe0"
 
 encodeurl@~1.0.2:
   version "1.0.2"

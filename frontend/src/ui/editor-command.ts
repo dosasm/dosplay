@@ -28,7 +28,7 @@ const DEFAULT_CMD={
     fallback: ""
 }
 
-async function button_cmd_onclick(filelist: HTMLSelectElement,ci:CommandInterface,c:typeof DEFAULT_CMD) {
+async function button_cmd_onclick(filelist: HTMLSelectElement,shell:utils.Shell,c:typeof DEFAULT_CMD) {
     let wasm_path = filelist.value;
     let _cmd = structuredClone(c.cmd)
 
@@ -52,17 +52,13 @@ async function button_cmd_onclick(filelist: HTMLSelectElement,ci:CommandInterfac
         _cmd.unshift("cd " + dospath.dirname, dospath.disk + ":")
     }
 
-    let stdout = "";
-    ci.events().onStdout((data) => { stdout += data.toLowerCase() });
-
-    const shell=new utils.Shell(ci)
-
     for (const c of _cmd) {
         await shell.exec(c,200,100).catch(console.log);
     }
 }
 
 export async function get_commands_button(ci: CommandInterface, filelist: HTMLSelectElement) {
+    const shell=new utils.Shell(ci)
     const nodes = await ci.fsTree();
     if (!nodes) return
     const profile = nodes.nodes?.find(v => v.name == ".jsdos");
@@ -110,9 +106,9 @@ export async function get_commands_button(ci: CommandInterface, filelist: HTMLSe
     for (const idx in ctrl2){
         ctrl2[idx].addEventListener("click", async () => {
             ctrl2.forEach(a=>a.disabled=true)
-            await button_cmd_onclick(filelist,ci,cmds[idx])
+            await button_cmd_onclick(filelist,shell,cmds[idx])
             ctrl2.forEach(a=>a.disabled=false)
         })
     }
-    return ctrl2
+    return {shell,buttons:ctrl2}
 }

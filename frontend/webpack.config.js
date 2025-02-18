@@ -5,6 +5,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const utils = require("./utils")
 const path = require("path")
 const detect = require("detect-port")
+const package = require("./package.json")
 
 module.exports = async (env, argv) => {
   const port=await detect.detect(8080);
@@ -70,6 +71,11 @@ module.exports = async (env, argv) => {
           {
             from: "../assembly-tool/build/*.*", to({ context, absoluteFilename }) {
               return Promise.resolve("jsdos-bundle/[name][ext]");
+            },
+          },
+          {
+            from: package["devDependencies"]["emulators"].replace("file:",""), to({ context, absoluteFilename }) {
+              return Promise.resolve("[name][ext]");
             },
           }
         ],

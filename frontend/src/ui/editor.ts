@@ -30,9 +30,6 @@ export class Editor {
     editor = ace.edit("editor");
 
     filelist = document.getElementById("editor-filelist") as HTMLSelectElement;
-
-    newfile = document.getElementById("editor-newfile") as HTMLButtonElement;
-
     writefile = document.getElementById("editor-write-file") as HTMLButtonElement;
 
     button_download_file = document.getElementById("editor-download-file") as HTMLButtonElement;
@@ -50,11 +47,11 @@ export class Editor {
         this._ci=ci;
         this.list().then(
             async ()=>{
-                const commands=await get_commands_button(ci,this.filelist)
-                if (commands) {
+                const r=await get_commands_button(ci,this.filelist)
+                if (r) {
                     this.buttons_command.forEach(a=>a.remove())
-                    this.buttons_command = commands;
-                    for (const cmd of commands) {
+                    this.buttons_command = r.buttons;
+                    for (const cmd of r.buttons) {
                         this.div_exec.append(cmd)
                     }
                 }
@@ -138,36 +135,6 @@ export class Editor {
                 const data = encoder.encode(text);
                 await this.ci.fsWriteFile(filename, data);
                 this.writefile.hidden = true;
-            })
-
-        this.newfile.addEventListener(
-            "click",
-            async () => {
-                if (!this.ci) {
-                    return;
-                }
-
-                // const filename = prompt("input the file name you what to create");
-                // if(!filename) return
-                // const cmd="echo new file > "+new DosPath(filename).full;
-                const cmd="><:/?"
-                const codes=utils.string2jsdosKey(cmd)
-                console.log(codes)
-                for (const code of codes) {
-                    for (const c of code){
-                        this.ci.sendKeyEvent(c,true)
-                        this.ci.sendKeyEvent(c,true)
-                    }
-                    await sleep(100)
-                    for (const c of code){
-                        this.ci.sendKeyEvent(c,false)
-                        this.ci.sendKeyEvent(c,false)
-                    }
-                    await sleep(100)
-                }
-                this.ci?.simulateKeyPress(257);
-                await sleep(1000)
-                // this.open_file(filename);
             })
 
         this.button_download_file.addEventListener(
