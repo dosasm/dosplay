@@ -35,7 +35,7 @@ function shims(isProduction, outdir = "shims") {
     const result = []
     const urlObj = new URL(url)
     const params = urlObj.searchParams;
-    params.set("emu", "xDirect")
+    params.set("emu", "xWorker")
     params.set("bundle", "TASM")
     params.set("open", "/C/assembly/LeiJun/run.bat")
     params.set("run_cmd", "batch")
