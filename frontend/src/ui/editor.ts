@@ -52,7 +52,7 @@ export class Editor {
             async ()=>{
                 const commands=await get_commands_button(ci,this.filelist)
                 if (commands) {
-                    this.div_exec.childNodes.forEach(a=>a.remove())
+                    this.buttons_command.forEach(a=>a.remove())
                     this.buttons_command = commands;
                     for (const cmd of commands) {
                         this.div_exec.append(cmd)
@@ -203,7 +203,7 @@ export class Editor {
 
         const decoder = new TextDecoder("utf-8");
         const text = decoder.decode(data);
-        this.editor.setValue(text);
+        this.editor.setValue(text,1);
         this.writefile.hidden = true;
 
         if (filename.endsWith(".c")) {

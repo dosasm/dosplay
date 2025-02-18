@@ -51,7 +51,10 @@ export class Jsdos {
     }
 
     on_ci=[
-        (ci:CommandInterface)=>{ci.events().onStdout(data=>this._stdout.push(data))},
+        (ci:CommandInterface)=>{
+            this._stdout=[]
+            ci.events().onMessage((type,...args)=>{console.log(type,args)})
+            ci.events().onStdout(data=>this._stdout.push(data))},
         (ci:CommandInterface)=>{this.jsdos_editor.on_ci(ci)},
         this._ready_ci_resolve,
         set_canvas_ci
@@ -122,9 +125,7 @@ export class Jsdos {
                     prevNonSkippableSleepCount = stats.nonSkippableSleepCount;
                     prevSleepCount = stats.sleepCount;
                     prevCycles = stats.cycles;
-                    const msg = "Avg sleep p/sec: " + Math.round(avgSleep) +
-                        ", avg non skippable sleep p/sec: " + Math.round(avgNonSkippableSleep) +
-                        ", cycles p/ms: " + Math.round(avgCycles);
+                    const msg = "Avg sleep p/sec: " + Math.round(avgSleep);
                     ui_log(msg)
                 });
             }, 3000);
