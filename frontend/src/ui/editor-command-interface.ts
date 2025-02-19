@@ -1,4 +1,4 @@
-type Action={
+export type Action={
     fileext?: Array<string>;
     filematch?:Array<string>
     cmd: Array<string>;

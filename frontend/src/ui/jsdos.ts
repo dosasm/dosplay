@@ -45,7 +45,10 @@ export class Jsdos {
             ci.events().onMessage((type, ...args) => { console.log(type, args) })
             ci.events().onStdout(data => this._stdout.push(data))
         },
-        (ci: CommandInterface) => { this.jsdos_editor.on_ci(ci) },
+        (ci: CommandInterface) => { 
+            const b=this.bundles_info?.bundles.find(a=>a.name===this.select_bundle.value);
+            this.jsdos_editor.on_ci(ci,b?.dosplay) 
+        },
         this._ready_ci_resolve,
         set_canvas_ci
     ]

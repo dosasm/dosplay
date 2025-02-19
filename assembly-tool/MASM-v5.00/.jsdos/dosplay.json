@@ -4,7 +4,7 @@
         "run":{
             "fileext":["asm","ASM"],
             "cmd":[
-                "cd ${folder}",
+                "cd ${dir}",
                 "${disk}:",
                 "masm ${name}.asm;",
                 "link ${name}.obj;",
@@ -14,7 +14,7 @@
         "compile":{
             "fileext":["asm","ASM"],
             "cmd":[
-                "cd ${folder}",
+                "cd ${dir}",
                 "${disk}:",
                 "masm ${name}.asm;",
                 "link ${name}.obj;"
@@ -23,7 +23,7 @@
         "list":{
             "fileext":["asm","ASM"],
             "cmd":[
-                "cd ${folder}",
+                "cd ${dir}",
                 "${disk}:",
                 "masm /la ${name}.asm;",
                 "type ${name}.lst"
@@ -32,7 +32,7 @@
         "debug":{
             "fileext":["asm","ASM"],
             "cmd":[
-                "cd ${folder}",
+                "cd ${dir}",
                 "${disk}:",
                 "masm ${name}.asm;",
                 "link ${name}.obj",
