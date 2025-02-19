@@ -66,7 +66,7 @@ export async function get_commands_button(ci: CommandInterface, filelist: HTMLSe
             }
             if(key=="run"){
                 acts.push({
-                    fileext:["exe","com","bat"],
+                    fileext:["exe","com","bat","EXE","COM","BAT"],
                     cmd:[
                         "cd ${dir}",
                         "${disk}:",

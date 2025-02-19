@@ -1,0 +1,23 @@
+{
+    "open":"D:\\main.c",
+    "actions":{
+        "run":{
+            "fileext":["c","C"],
+            "cmd":[
+                "cd ${dir}",
+                "${disk}:",
+                "tcc -LC:\\tc\\ -IC:\\tc\\ ${name}.c",
+                "${name}.exe"
+            ]
+        },
+        "run-graphics":{
+            "fileext":["c","C"],
+            "cmd":[
+                "cd ${dir}",
+                "${disk}:",
+                "tcc -LC:\\tc\\ -IC:\\tc\\ ${name}.c c:\\tc\\graphics.lib",
+                "${name}.exe"
+            ]
+        }
+    }
+}

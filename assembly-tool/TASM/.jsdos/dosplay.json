@@ -1,0 +1,63 @@
+{
+    "open":"D:\\main.asm",
+    "actions":{
+        "run":{
+            "fileext":["asm","ASM"],
+            "cmd":[
+                "cd ${dir}",
+                "${disk}:",
+                "tasm ${name}.asm;",
+                "tlink ${name}.obj;",
+                "${name}.exe"
+            ]
+        },
+        "compile":{
+            "fileext":["asm","ASM"],
+            "cmd":[
+                "cd ${dir}",
+                "${disk}:",
+                "tasm ${name}.asm;",
+                "tlink ${name}.obj;"
+            ]
+        },
+        "run-com":{
+            "fileext":["asm","ASM"],
+            "cmd":[
+                "cd ${dir}",
+                "${disk}:",
+                "tasm ${name}.asm;",
+                "tlink/t ${name}.obj;",
+                "${name}.com"
+            ]
+        },
+        "compile-com":{
+            "fileext":["asm","ASM"],
+            "cmd":[
+                "cd ${dir}",
+                "${disk}:",
+                "tasm ${name}.asm;",
+                "tlink/t ${name}.obj;"
+            ]
+        },
+        "list":{
+            "fileext":["asm","ASM"],
+            "cmd":[
+                "cd ${dir}",
+                "${disk}:",
+                "tasm /la ${name}.asm;",
+                "type ${name}.lst"
+            ]
+        },
+        
+        "debug":{
+            "fileext":["asm","ASM"],
+            "cmd":[
+                "cd ${dir}",
+                "${disk}:",
+                "tasm /zi ${name}.asm;",
+                "tlink /v/3 ${name}.obj",
+                "td ${name}.exe"
+            ]
+        }
+    }
+}
