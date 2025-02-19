@@ -38,7 +38,7 @@ function shims(isProduction, outdir = "shims") {
     params.set("emu", "xWorker")
     params.set("bundle", "TASM")
     params.set("open", "/C/assembly/LeiJun/run.bat")
-    params.set("run_cmd", "batch")
+    params.set("run_cmd", "run")
 
     const u = urlObj.toString()
     result.push(u)

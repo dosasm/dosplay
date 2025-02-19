@@ -1,5 +1,5 @@
 {
-    "open":"D:\\main.c",
+    "open":"/D/main.c",
     "actions":{
         "run":{
             "fileext":["c","C"],

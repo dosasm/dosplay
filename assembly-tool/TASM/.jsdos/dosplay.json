@@ -1,5 +1,5 @@
 {
-    "open":"D:\\main.asm",
+    "open":"/D/main.asm",
     "actions":{
         "run":{
             "fileext":["asm","ASM"],

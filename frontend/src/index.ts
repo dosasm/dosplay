@@ -77,9 +77,10 @@ async function setup() {
                 jsdos.jsdos_editor.writefile.click();
         }
 
-        const run= urlParams.get('run_cmd');
+        let run= urlParams.get('run_cmd');
         if (jsdos.ci && run) {
             await sleep(1000);
+            if(run==="batch")run="run";
             const cmd=jsdos.jsdos_editor.buttons_command.find(b => b.textContent === run)
             if (cmd) {
                 cmd.click();
