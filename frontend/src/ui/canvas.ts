@@ -20,16 +20,21 @@ class KeyMouseListener{
             e.preventDefault();
         }
     }
-    constructor(private ci?:CommandInterface){
+    constructor(public ci?:CommandInterface){
             
     }
+    dispatched=false
     dispatch(){
+        if(this.dispatched) return
         window.addEventListener("keydown",this.keydown)
         window.addEventListener("keyup",this.keyup)
+        this.dispatched=true
     }
     remove(){
+        if(this.dispatched===false) return
         window.removeEventListener("keydown",this.keydown)
         window.removeEventListener("keyup",this.keyup)
+        this.dispatched=false
     }
 }
 
@@ -53,7 +58,7 @@ export function set_canvas_ci(_ci:CommandInterface){
     ci.events().onMessage(console.log.bind(console));
 
     if(keyListener) keyListener.remove()
-    keyListener=new KeyMouseListener(ci)
+    keyListener.ci=ci;
 }
 
     

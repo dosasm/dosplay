@@ -36,13 +36,11 @@ Also, we have paramenters about editor.
 -  `bc`: the base64 content to write to the editor
 - `run_cmd`: the command to run
 
-## supported commands
+## Examples
 
-We use `/.jsdos/button_commands.bat` to define the commands to run.
-See <./assembly-tool/TASM/.jsdos/button_commands.bat> for example.
-If the current editor's file is ends with `ext`,
-the webapp first change directory to the file's parent folder and run the code
-with `main` replaced to the basename.
+- Tetris: <http://dosasm.github.io/dosplay/?emu=xWorker&bundle=TASM&open=%2FC%2Fassembly%2Ffun%2FCube.asm&run_cmd=run>
+- Piano: <http://dosasm.github.io/dosplay/?emu=xWorker&bundle=TASM&open=%2FC%2Fassembly%2Ffun%2Fpiano.asm&run_cmd=run>
+- Tic - Tac - Toe: <http://dosasm.github.io/dosplay/?emu=xWorker&bundle=TASM&open=%2FC%2Fassembly%2Ffun%2FTic.asm&run_cmd=run>
 
 
 
