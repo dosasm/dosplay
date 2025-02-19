@@ -25,12 +25,19 @@ async function zipfoloder(folderPath) {
     const zip = new JSZip();
     const base='';
     const files={}
+    let extra=undefined;
 
     const items=await fs.readdir(folderPath,{recursive:true})
     for (const _rel of items){
         const rel=_rel.replace(/\\/g,"/")
         const filePath = path.join(folderPath, _rel);
         const stat = await fs.stat(filePath);
+
+        if(rel===".jsdos/dosplay.json"){
+            const text=await fs.readFile(filePath,"utf-8");
+            extra=JSON.parse(text)
+            continue
+        }
 
         if (stat.isDirectory()) {
             //
@@ -67,7 +74,7 @@ async function zipfoloder(folderPath) {
     const jsonhashs = JSON.stringify(sort_obj_by_key(files));
     const hash=compute_hash(jsonhashs)
 
-    return {bin,hash,files}
+    return {bin,hash,files,extra}
 }
 
 
@@ -79,6 +86,10 @@ const bundles_list=[
     "digger"
 ]
 const OUTPUT_DIR=path.resolve(__dirname, "./build");
+
+if(!fs0.existsSync(OUTPUT_DIR)){
+    fs0.mkdirSync(OUTPUT_DIR)
+}
 
 async function main(){
     const info={
@@ -95,17 +106,20 @@ async function main(){
     }
     for (const bundle_name of bundles_list){
         const folderPath=path.resolve(__dirname,bundle_name)
-        const {bin,hash,files}=await zipfoloder(folderPath)
+        const zip=await zipfoloder(folderPath)
+        const filepath=bundle_name+"_"+zip.hash.slice(0,6)+".jsdos.zip";
         info.bundles.push({
             name:bundle_name,
-            hash,files
+            filepath,
+            hash:zip.hash,
+            dosplay:zip.extra
         })
-        const outpath=path.resolve(OUTPUT_DIR,path.basename(folderPath) + '.jsdos')
+        const outpath=path.resolve(OUTPUT_DIR,filepath)
         const finded=info_old?info_old.bundles.find(b=>b.name==bundle_name):undefined
-        if(finded && finded.hash===hash){
-            console.log("keeped",bundle_name,hash)
+        if(finded && finded.hash===zip.hash){
+            console.log("keeped",bundle_name,zip.hash)
         }else{
-            await fs.writeFile(outpath,bin)
+            await fs.writeFile(outpath,zip.bin)
             console.log("bundled",bundle_name,"to",outpath)
         }
     }

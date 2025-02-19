@@ -1,2 +1,0 @@
-@REM run
-digger.com

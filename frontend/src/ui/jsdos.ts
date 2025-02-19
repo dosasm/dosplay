@@ -1,37 +1,26 @@
 
 import { CommandInterface, getEmulators, utils } from "emulators";
 import { jsdos } from "../config"
-import {set_canvas_ci } from "./canvas";
+import { set_canvas_ci } from "./canvas";
 import { Editor } from "./editor";
 import * as cache from "./bundle-cache";
-import {ui_bundle} from "./bundle"
-import {diskBundle} from "./jsdos-disk";
+import { ui_bundle } from "./bundle"
+import { diskBundle } from "./jsdos-disk";
 import { ui_keyboard } from './keyboard';
+import { BundleInfo } from "./editor-command-interface";
 
 
 
-export function ui_log(msg:string){
+export function ui_log(msg: string) {
     const p_status = document.getElementById("stats") as HTMLParagraphElement
-    p_status.innerText=msg;
-}
-
-const default_bundles_info = {
-    "version": "1.0",
-    "homepage": "https://github.com/dosasm/dosplay",
-    "build_time": 1739588886709,
-    "bundles": [
-        {
-            name:"MASM-v6.11",
-            hash:"",
-        }
-    ]
+    p_status.innerText = msg;
 }
 
 
 export class Jsdos {
     dist = jsdos.dist;
     bundles = jsdos.bundles;
-    bundles_info=default_bundles_info;
+    bundles_info: BundleInfo | undefined;
     select_bundle = document.getElementById("jsdosbundle") as HTMLSelectElement
     select_emulators = document.getElementById("emulators") as HTMLSelectElement
     button_start = document.getElementById("start") as HTMLButtonElement
@@ -41,57 +30,61 @@ export class Jsdos {
     jsdos_editor = new Editor();
     ci?: CommandInterface;
 
-    ready:Promise<void|undefined>
-    _ready_ci_resolve=(a:any)=>{undefined}
-    ready_ci=new Promise(resolve=>this._ready_ci_resolve=resolve)
+    ready: Promise<void | undefined>
+    _ready_ci_resolve = (a: any) => { undefined }
+    ready_ci = new Promise(resolve => this._ready_ci_resolve = resolve)
 
-    _stdout:string[]=[]
-    public get stdout(){
+    _stdout: string[] = []
+    public get stdout() {
         return this._stdout.join("")
     }
 
-    on_ci=[
-        (ci:CommandInterface)=>{
-            this._stdout=[]
-            ci.events().onMessage((type,...args)=>{console.log(type,args)})
-            ci.events().onStdout(data=>this._stdout.push(data))},
-        (ci:CommandInterface)=>{this.jsdos_editor.on_ci(ci)},
+    on_ci = [
+        (ci: CommandInterface) => {
+            this._stdout = []
+            ci.events().onMessage((type, ...args) => { console.log(type, args) })
+            ci.events().onStdout(data => this._stdout.push(data))
+        },
+        (ci: CommandInterface) => { this.jsdos_editor.on_ci(ci) },
         this._ready_ci_resolve,
         set_canvas_ci
     ]
 
 
-    record_stdout=true
+    record_stdout = true
 
     constructor() {
-        let _ci=()=>this.ci;
+        let _ci = () => this.ci;
         ui_bundle(_ci)
         ui_keyboard(_ci)
-        this.ready=fetch(this.bundles + "info.json").then(async (res) => {
+        this.ready = fetch(this.bundles + "info.json").then(async (res) => {
             this.bundles_info = await res.json()
             this.select_bundle.innerHTML = "";
             const option = document.createElement("option");
             option.value = "disk";
             option.innerText = "disk";
             this.select_bundle.append(option)
-            for (const bundle of this.bundles_info.bundles) {
-                const option = document.createElement("option");
-                option.value = bundle.name;
-                option.innerText = bundle.name;
-                this.select_bundle.append(option)
+            if (this.bundles_info) {
+                for (const bundle of this.bundles_info.bundles) {
+                    const option = document.createElement("option");
+                    option.value = bundle.name;
+                    option.innerText = bundle.name;
+                    this.select_bundle.append(option)
+                }
+
+                const build_time = new Date(this.bundles_info.build_time)
+                function formatDateFromObject(date: Date) {
+                    const year = date.getFullYear();
+                    const month = date.getMonth() + 1;
+                    const day = date.getDate();
+                    const hour = date.getHours();
+                    const minute = date.getMinutes();
+                    return `${year}/${month}/${day} ${hour}:${minute}`;
+                }
+                ui_log("loaded bundles from " + formatDateFromObject(build_time))
+                console.log("wierd this zero?", build_time.getDay()) //? why zero?
             }
 
-            const build_time=new Date(this.bundles_info.build_time)
-            function formatDateFromObject(date:Date) {
-                const year = date.getFullYear();
-                const month = date.getMonth() + 1;
-                const day = date.getDate();
-                const hour = date.getHours();
-                const minute = date.getMinutes();
-                return `${year}/${month}/${day} ${hour}:${minute}`;
-            }
-            ui_log("loaded bundles from "+formatDateFromObject(build_time))
-            console.log("wierd this zero?",build_time.getDay()) //? why zero?
         })
         this.emulators.pathPrefix = this.dist;
 
@@ -102,7 +95,7 @@ export class Jsdos {
             this.button_start.disabled = true;
             this.button_stop.disabled = false;
             this.ci = ci;
-            this.on_ci.forEach(call=>call(ci))
+            this.on_ci.forEach(call => call(ci))
 
             this.button_stop.addEventListener("click", async () => {
                 await ci?.exit();
@@ -155,32 +148,32 @@ export class Jsdos {
     }
 
     public async get_bundle(bundlename: string): Promise<Uint8Array | undefined> {
-        const version=document.getElementById("bundle-version") as HTMLSelectElement
-        
-        if(version.value=="original"){
-            if(bundlename=="disk" && diskBundle.valid){
+        const version = document.getElementById("bundle-version") as HTMLSelectElement
+
+        if (version.value == "original") {
+            if (bundlename == "disk" && diskBundle.valid) {
                 await diskBundle.openFile();
                 return diskBundle.uint8Array;
-            }else{
-                const finded=this.bundles_info.bundles.find(b=>b.name===bundlename);
-                if(finded){
-                    const id=finded.hash
+            } else if (this.bundles_info) {
+                const finded = this.bundles_info.bundles.find(b => b.name === bundlename);
+                if (finded) {
+                    const id = finded.hash
                     const existed = await cache.existsBundle(id);
                     if (existed) {
-                        ui_log("get bundle from cache "+id)
+                        ui_log("get bundle from cache " + id)
                         const res = await cache.getBundle(id);
                         if (res)
                             return res as Uint8Array;
                     }
-                    const url=this.bundles + bundlename + ".jsdos";
-                    ui_log("download "+url)
+                    const url = this.bundles + finded.filepath;
+                    ui_log("download " + url)
                     const bundle = await this.down_bundle(url);
                     await cache.cacheBundle(id, bundle);
                     return bundle;
                 }
             }
-        }else{
-            const bundle=await cache.getBundle(version.value);
+        } else {
+            const bundle = await cache.getBundle(version.value);
             if (bundle)
                 return bundle;
         }

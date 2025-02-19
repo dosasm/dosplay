@@ -1,0 +1,43 @@
+{
+    "open":"D:\\main.asm",
+    "actions":{
+        "run":{
+            "fileext":["asm","ASM"],
+            "cmd":[
+                "cd ${folder}",
+                "${disk}:",
+                "masm ${name}.asm;",
+                "link ${name}.obj;",
+                "${name}.exe"
+            ]
+        },
+        "compile":{
+            "fileext":["asm","ASM"],
+            "cmd":[
+                "cd ${folder}",
+                "${disk}:",
+                "masm ${name}.asm;",
+                "link ${name}.obj;"
+            ]
+        },
+        "list":{
+            "fileext":["asm","ASM"],
+            "cmd":[
+                "cd ${folder}",
+                "${disk}:",
+                "masm /la ${name}.asm;",
+                "type ${name}.lst"
+            ]
+        },
+        "debug":{
+            "fileext":["asm","ASM"],
+            "cmd":[
+                "cd ${folder}",
+                "${disk}:",
+                "masm ${name}.asm;",
+                "link ${name}.obj",
+                "debug ${name}.exe"
+            ]
+        }
+    }
+}
