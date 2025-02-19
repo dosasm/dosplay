@@ -49,16 +49,14 @@ async function setup() {
 
     await setup_version();
 
+    const openfile = urlParams.get('open');
     if (start) {
-        setTimeout(() => {
-            if (jsdos.select_bundle.value == "disk") return
+        await sleep(200)
+        if (jsdos.select_bundle.value == "disk") return
             jsdos.button_start.click();
-        }, 1000);
     }
 
-    const openfile = urlParams.get('open');
     if (openfile) {
-        jsdos.button_start.click();
         await jsdos.ready_ci
         await sleep(100);
         await jsdos.jsdos_editor.open_file(openfile);
