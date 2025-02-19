@@ -45,9 +45,11 @@ export class Jsdos {
             ci.events().onMessage((type, ...args) => { console.log(type, args) })
             ci.events().onStdout(data => this._stdout.push(data))
         },
-        (ci: CommandInterface) => { 
+        async (ci: CommandInterface) => { 
             const b=this.bundles_info?.bundles.find(a=>a.name===this.select_bundle.value);
-            this.jsdos_editor.on_ci(ci,b?.dosplay) 
+            await this.jsdos_editor.on_ci(ci,b?.dosplay) 
+            if(b&&b.dosplay&&b.dosplay.open)
+                this.jsdos_editor.open_file(b?.dosplay?.open)
         },
         this._ready_ci_resolve,
         set_canvas_ci
@@ -98,7 +100,7 @@ export class Jsdos {
             this.button_start.disabled = true;
             this.button_stop.disabled = false;
             this.ci = ci;
-            this.on_ci.forEach(call => call(ci))
+            this.on_ci.forEach(async call => await call(ci))
 
             this.button_stop.addEventListener("click", async () => {
                 await ci?.exit();

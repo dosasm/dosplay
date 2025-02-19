@@ -155,6 +155,7 @@ export class Editor {
     }
 
     public async open_file(filename: string, force = false) {
+        const dos_path=new DosPath(filename);
         if (!this.ci) {
             return;
         }
@@ -170,14 +171,19 @@ export class Editor {
         this.editor.setValue(text, 1);
         this.writefile.hidden = true;
 
-        if (filename.endsWith(".c")) {
-            this.editor.getSession().setMode("ace/mode/c_cpp");
-        } else if (filename.endsWith(".h")) {
-            this.editor.getSession().setMode("ace/mode/c_cpp");
-        } else if (filename.endsWith(".asm")) {
-            this.editor.getSession().setMode("ace/mode/assembly_x86");
-        } else {
-            this.editor.getSession().setMode("ace/mode/text");
+        switch(dos_path.ext.toLowerCase()){
+            case "c":
+            case "cpp":
+            case "cxx":
+            case "h":
+            case "hpp":
+                this.editor.getSession().setMode("ace/mode/c_cpp");
+                break
+            case "asm":
+                this.editor.getSession().setMode("ace/mode/assembly_x86");
+                break
+            default:
+                this.editor.getSession().setMode("ace/mode/text");
         }
     }
 
