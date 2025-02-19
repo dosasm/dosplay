@@ -1,12 +1,12 @@
 {
     "version": "1.0",
     "homepage": "https://github.com/dosasm/dosplay",
-    "build_time": 1739957430586,
+    "build_time": 1739968211845,
     "bundles": [
         {
             "name": "TASM",
-            "filepath": "TASM_24e1fe.jsdos.zip",
-            "hash": "24e1fe51fed42f33e25580cef466d868",
+            "filepath": "TASM_268408.jsdos.zip",
+            "hash": "26840833cce6a933c8a3d5a7dbea93f1",
             "dosplay": {
                 "open": "/D/main.asm",
                 "actions": {
